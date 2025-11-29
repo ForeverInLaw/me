@@ -46,8 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     gsap.registerPlugin(SplitText, ScrollTrigger);
     ScrollTrigger.config({ ignoreMobileResize: true });
-    // Normalize scroll to prevent iOS jumpiness/address bar issues
-    ScrollTrigger.normalizeScroll(true); 
 
     function updateHeroTitleColors() {
         const heroTitle = document.querySelector('.hero__inner h1');
@@ -612,9 +610,34 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add interactive listeners for mobile tap-to-animate-then-navigate
             const cards = container.querySelectorAll('.playlist-card');
             cards.forEach(card => {
+                let isScrolling = false;
+                let startX = 0;
+                let startY = 0;
+
+                card.addEventListener('touchstart', (e) => {
+                    isScrolling = false;
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+
+                card.addEventListener('touchmove', (e) => {
+                    if (isScrolling) return;
+                    const currentX = e.touches[0].clientX;
+                    const currentY = e.touches[0].clientY;
+                    if (Math.abs(currentX - startX) > 10 || Math.abs(currentY - startY) > 10) {
+                        isScrolling = true;
+                    }
+                }, { passive: true });
+
                 card.addEventListener('click', (e) => {
                     // Check for mobile breakpoint
                     if (window.matchMedia('(max-width: 768px)').matches) {
+                        if (isScrolling) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
+                        }
+
                         e.preventDefault();
 
                         // Prevent double tap if animation is already running
