@@ -53,7 +53,7 @@
 .projects-row {
     list-style: none;
     position: relative;
-    margin-top: 32px;
+    margin-top: 0;
 }
 
 .projects-row>li {
@@ -71,7 +71,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 40px;
-    margin-top: 80px;
+    margin-top: 0;
 }
 
 .playlist-card {
