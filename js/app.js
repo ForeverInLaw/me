@@ -6,7 +6,7 @@
 })();
 
 window.addEventListener('scroll', () => {
-    document.body.style.cssText += `--scrollTop: ${window.scrollY}px`;
+    document.body.style.setProperty('--scrollTop', `${window.scrollY}px`);
 }, { passive: true });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     gsap.registerPlugin(SplitText, ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    // Normalize scroll to prevent iOS jumpiness/address bar issues
+    ScrollTrigger.normalizeScroll(true); 
 
     function updateHeroTitleColors() {
         const heroTitle = document.querySelector('.hero__inner h1');
@@ -493,7 +496,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let resizeTimeout;
+    let lastWidth = window.innerWidth;
+
     window.addEventListener('resize', () => {
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
+
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(window.masonryLayout, 150);
     });
