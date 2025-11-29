@@ -26,17 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Update aria-hidden attributes for GitHub stats images
-            const darkImg = document.querySelector('.github-stats-img--dark');
-            const lightImg = document.querySelector('.github-stats-img--light');
-            if (darkImg && lightImg) {
-                if (newTheme === 'dark') {
-                    darkImg.setAttribute('aria-hidden', 'false');
-                    lightImg.setAttribute('aria-hidden', 'true');
-                } else {
-                    darkImg.setAttribute('aria-hidden', 'true');
-                    lightImg.setAttribute('aria-hidden', 'false');
-                }
-            }
+            const updateStatsImages = () => {
+                const darkImgs = document.querySelectorAll('.stats-img--dark, .graph-img--dark');
+                const lightImgs = document.querySelectorAll('.stats-img--light, .graph-img--light');
+
+                darkImgs.forEach(img => {
+                    img.setAttribute('aria-hidden', newTheme === 'dark' ? 'false' : 'true');
+                });
+
+                lightImgs.forEach(img => {
+                    img.setAttribute('aria-hidden', newTheme === 'light' ? 'false' : 'true');
+                });
+            };
+            updateStatsImages();
 
             // Update hero title gradient colors with smooth transition
             updateHeroTitleColors();

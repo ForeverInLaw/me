@@ -283,43 +283,142 @@
 
 /* Github Stats */
 .github-stats {
-    margin-top: 80px;
-    margin-bottom: 100px;
+    margin-top: 100px;
+    margin-bottom: 120px;
 }
 
-.github-stats-card {
+.section-header-wrapper {
+    margin-bottom: 40px;
+    animation: fade-in-up 0.8s var(--transition-smooth) forwards;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 400;
+    max-width: 600px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: 1.5fr 2fr;
+        align-items: start;
+    }
+}
+
+.stat-card {
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 24px;
     overflow: hidden;
-    transition: transform 0.3s ease;
-    max-width: 580px;
+    position: relative;
+    transition: transform 0.4s var(--transition-smooth), border-color 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.github-stats-card:hover {
+.stat-card:hover {
     transform: translateY(-4px);
     border-color: var(--border-hover);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
 }
 
-.github-stats-images {
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--accent-glow), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+    transform: scale(0.8);
+}
+
+.stat-card:hover .card-glow {
+    opacity: 0.15;
+    transform: scale(1);
+}
+
+.card-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
     position: relative;
-    width: 100%;
-    line-height: 0;
+    z-index: 1;
 }
 
-.github-stats-img {
-    display: block;
+.card-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    opacity: 0.9;
+}
+
+.card-icon {
+    color: var(--muted);
+    font-size: 18px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.stat-card:hover .card-icon {
+    color: var(--accent);
+    transform: rotate(15deg);
+}
+
+.card-content {
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+/* Images */
+.stats-image-wrapper,
+.graph-wrapper {
+    width: 100%;
+    position: relative;
+    line-height: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.stats-img,
+.graph-img {
     width: 100%;
     height: auto;
-    transition: opacity 0.3s ease;
+    display: block;
+    transition: opacity 0.4s ease, filter 0.4s ease;
 }
 
-.github-stats-img--dark {
+/* Theme Switching for Images */
+.stats-img--dark, .graph-img--dark {
     position: relative;
     opacity: 1;
     z-index: 2;
 }
 
-.github-stats-img--light {
+.stats-img--light, .graph-img--light {
     position: absolute;
     top: 0;
     left: 0;
@@ -327,14 +426,47 @@
     z-index: 1;
 }
 
-:root[data-theme="light"] .github-stats-img--dark {
+:root[data-theme="light"] .stats-img--dark,
+:root[data-theme="light"] .graph-img--dark {
     opacity: 0;
     z-index: 1;
 }
 
-:root[data-theme="light"] .github-stats-img--light {
+:root[data-theme="light"] .stats-img--light,
+:root[data-theme="light"] .graph-img--light {
     opacity: 1;
     z-index: 2;
+}
+
+/* Graph Specifics */
+.graph-card .card-content {
+    overflow-x: hidden;
+    justify-content: center;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.graph-wrapper {
+    width: 100%;
+    position: relative;
+    line-height: 0;
+    border-radius: 8px;
+    overflow: hidden; 
+}
+
+.graph-img--dark {
+    filter: invert(1) brightness(2.1);
+    opacity: 0.9;
+}
+
+.graph-img--light {
+    filter: saturate(2) brightness(0.9);
+    mix-blend-mode: multiply;
+}
+
+.graph-card .card-content::-webkit-scrollbar {
+    display: none;
 }
 
 .split-char {
