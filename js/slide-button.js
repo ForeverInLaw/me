@@ -80,14 +80,18 @@
             document.body.classList.add('slider-dragging');
             
             e.preventDefault();
-            e.stopPropagation();
+            if (e.type.startsWith('touch')) {
+                e.stopPropagation();
+            }
         }
         
         function handleDragMove(e) {
             if (!isDragging) return;
             
             e.preventDefault();
-            e.stopPropagation(); // Critical: Stop event from bubbling to iOS navigation handlers
+            if (e.type.startsWith('touch')) {
+                e.stopPropagation(); // Critical: Stop event from bubbling to iOS navigation handlers
+            }
             targetDragX = Math.max(0, Math.min(getClientX(e) - startX, maxDragDistance));
             
             animState.x = currentX;
