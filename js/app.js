@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     gsap.registerPlugin(SplitText, ScrollTrigger);
+    // Disable auto-refresh to prevent iOS address bar resize jumps
+    ScrollTrigger.config({ autoRefreshEvents: "visibilitychange,DOMContentLoaded,load" }); 
     ScrollTrigger.config({ ignoreMobileResize: true });
 
     function updateHeroTitleColors() {
@@ -501,7 +503,10 @@ document.addEventListener('DOMContentLoaded', () => {
         lastWidth = window.innerWidth;
 
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(window.masonryLayout, 150);
+        resizeTimeout = setTimeout(() => {
+            window.masonryLayout();
+            ScrollTrigger.refresh(); // Manually refresh only on width change
+        }, 150);
     });
 
     const observer = new MutationObserver(() => {
