@@ -89,7 +89,7 @@
 								</a>
 							</li>
 							<li>
-								<a class="link-card email" href="mailto:x@c0.md">
+								<a class="link-card email" href="#" data-user="x" data-host="c0" data-tld="md">
 									<i class="fas fa-envelope" aria-hidden="true"></i>
 									<span>Email</span>
 								</a>
@@ -293,6 +293,20 @@
 
 	<script>
 		document.getElementById('year').textContent = new Date().getFullYear();
+
+		const obfuscatedEmailLink = document.querySelector('.link-card.email[data-user][data-host][data-tld]');
+		if (obfuscatedEmailLink) {
+			obfuscatedEmailLink.addEventListener('click', function (event) {
+				event.preventDefault();
+				const user = this.dataset.user;
+				const host = this.dataset.host;
+				const tld = this.dataset.tld;
+				if (!user || !host || !tld) return;
+				const mailto = 'mailto:' + user + '@' + host + '.' + tld;
+				this.href = mailto;
+				window.location.href = mailto;
+			});
+		}
 	</script>
 
 </body>
