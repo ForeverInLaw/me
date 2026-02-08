@@ -25,11 +25,19 @@
         
         if (!entryScreen || !container || !handle || !track || !statusElement) {
             console.error('Slide button elements not found');
+            document.body.classList.remove('entry-active');
             return;
+        }
+
+        if (!entryScreen.classList.contains('hidden')) {
+            document.body.classList.add('entry-active');
+        } else {
+            document.body.classList.remove('entry-active');
         }
         
         if (typeof gsap === 'undefined') {
             console.error('GSAP not loaded');
+            document.body.classList.remove('entry-active');
             return;
         }
     
@@ -156,6 +164,7 @@
             
             setTimeout(() => {
                 entryScreen.classList.add('hidden');
+                document.body.classList.remove('entry-active');
                 // Оповещаем что entry screen завершен
                 window.dispatchEvent(new Event('entryCompleted'));
                 
