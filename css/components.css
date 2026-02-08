@@ -60,6 +60,47 @@
     letter-spacing: -0.01em;
 }
 
+.hero__links .link-card {
+    --code-x: 50%;
+    --code-y: 50%;
+    --code-mask-radius: 150px;
+    isolation: isolate;
+}
+
+.hero__links .link-card > :not(.link-card__code-bg) {
+    position: relative;
+    z-index: 2;
+}
+
+.link-card__code-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    padding: 0;
+    overflow: hidden;
+    word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 11px;
+    line-height: 1.05;
+    letter-spacing: 0.015em;
+    color: rgba(255, 255, 255, 0.38);
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 0.28s ease;
+    -webkit-mask-image: radial-gradient(circle var(--code-mask-radius) at var(--code-x) var(--code-y), #000 18%, rgba(0, 0, 0, 0.28) 46%, transparent 74%);
+    mask-image: radial-gradient(circle var(--code-mask-radius) at var(--code-x) var(--code-y), #000 18%, rgba(0, 0, 0, 0.28) 46%, transparent 74%);
+}
+
+.hero__links .link-card:hover .link-card__code-bg,
+.hero__links .link-card.is-code-hover .link-card__code-bg {
+    opacity: 0.95;
+}
+
+:root[data-theme="light"] .link-card__code-bg {
+    color: rgba(17, 17, 17, 0.35);
+}
+
 /* Card Hover Effects */
 .link-card::after,
 .project-card::after {
