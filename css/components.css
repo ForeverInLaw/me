@@ -393,18 +393,6 @@ a.project-card:hover::before {
     text-overflow: ellipsis;
 }
 
-.preview-status {
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #78f5a3;
-    border: 1px solid rgba(120, 245, 163, 0.35);
-    background: rgba(120, 245, 163, 0.12);
-    border-radius: 999px;
-    padding: 5px 8px;
-}
 
 .preview-image-wrapper {
     position: relative;
@@ -559,12 +547,6 @@ a.project-card:hover::before {
 :root[data-theme="light"] .preview-browser-bar {
     border-bottom-color: rgba(0, 0, 0, 0.08);
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
-}
-
-:root[data-theme="light"] .preview-status {
-    color: #196f3d;
-    border-color: rgba(22, 163, 74, 0.25);
-    background: rgba(22, 163, 74, 0.12);
 }
 
 :root[data-theme="light"] .preview-image-shade {

@@ -723,14 +723,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const previewTitle = document.getElementById('preview-title');
         const previewDesc = document.getElementById('preview-desc');
         const previewDomain = document.getElementById('preview-domain');
-        const previewStatus = document.getElementById('preview-status');
         const previewTags = document.getElementById('preview-tags');
         const previewBrowser = modal.querySelector('.preview-browser');
         const previewInfo = modal.querySelector('.preview-info');
         const cardSelector = '.projects .project-card[data-screenshot]';
         const projectCards = document.querySelectorAll(cardSelector);
 
-        if (!previewImage || !previewTitle || !previewDesc || !previewDomain || !previewStatus || !previewTags || !previewBrowser || !previewInfo || projectCards.length === 0) {
+        if (!previewImage || !previewTitle || !previewDesc || !previewDomain || !previewTags || !previewBrowser || !previewInfo || projectCards.length === 0) {
             return;
         }
 
@@ -877,26 +876,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const href = card.tagName.toLowerCase() === 'a' ? card.getAttribute('href') || '' : '';
 
             let domainLabel = 'Private project';
-            let statusLabel = 'Draft';
 
             if (href && /^https?:\/\//i.test(href)) {
                 try {
                     const url = new URL(href);
                     domainLabel = url.hostname.replace(/^www\./, '');
-                    statusLabel = 'Live';
                 } catch (error) {
                     domainLabel = href;
-                    statusLabel = 'Open';
                 }
             } else if (href) {
                 domainLabel = href;
-                statusLabel = 'Repository';
             }
 
             previewTitle.textContent = title;
             previewDesc.textContent = desc;
             previewDomain.textContent = domainLabel;
-            previewStatus.textContent = statusLabel;
             fillPreviewTags(card);
 
             modal.classList.remove('is-error');
