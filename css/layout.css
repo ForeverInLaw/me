@@ -12,6 +12,8 @@
     pointer-events: none;
     overflow: hidden;
     opacity: 0.78;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .grainient-bg canvas {

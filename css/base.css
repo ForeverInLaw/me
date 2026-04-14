@@ -20,6 +20,7 @@
 
 html {
     scrollbar-width: none;
+    background-color: var(--bg);
 }
 
 ::-webkit-scrollbar {
