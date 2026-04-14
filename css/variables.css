@@ -1,5 +1,5 @@
 :root {
-    --bg: #050505;
+    --bg: #1B1628;
     --fg: #f0f0f2;
     --muted: #88888d;
     --card: rgba(255, 255, 255, 0.03);
@@ -15,7 +15,7 @@
 }
 
 :root[data-theme="light"] {
-    --bg: #fafafa;
+    --bg: #D7C9F0;
     --fg: #111111;
     --muted: #666666;
     --card: rgba(0, 0, 0, 0.03);
