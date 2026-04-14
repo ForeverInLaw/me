@@ -22,10 +22,18 @@
         const handle = document.getElementById('slide-handle');
         const track = document.getElementById('slide-track');
         const statusElement = document.getElementById('slide-status');
-        
+
         if (!entryScreen || !container || !handle || !track || !statusElement) {
             console.error('Slide button elements not found');
             document.body.classList.remove('entry-active');
+            return;
+        }
+
+        // Skip entry screen if already completed this session
+        if (sessionStorage.getItem('entryCompleted')) {
+            entryScreen.classList.add('hidden');
+            document.body.classList.remove('entry-active');
+            window.dispatchEvent(new Event('entryCompleted'));
             return;
         }
 
@@ -165,6 +173,7 @@
             setTimeout(() => {
                 entryScreen.classList.add('hidden');
                 document.body.classList.remove('entry-active');
+                sessionStorage.setItem('entryCompleted', '1');
                 // Оповещаем что entry screen завершен
                 window.dispatchEvent(new Event('entryCompleted'));
                 

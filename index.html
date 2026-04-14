@@ -34,7 +34,7 @@
 </head>
 
 <body class="entry-active">
-	<div class="grainient-bg" id="grainient-bg" aria-hidden="true"></div>
+		<div class="grainient-bg" id="grainient-bg" aria-hidden="true"></div>
 
 	<div class="entry-screen" id="entry-screen">
 		<div class="entry-screen-grain"></div>
@@ -58,6 +58,7 @@
 			</div>
 		</div>
 	</div>
+	<script>if(sessionStorage.getItem('entryCompleted')){document.body.classList.remove('entry-active');document.getElementById('entry-screen').classList.add('hidden')}</script>
 
 	<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle dark/light mode">
 		<span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"></span>
@@ -299,7 +300,7 @@
 									rel="noopener noreferrer" data-screenshot="screenshots/corelogicx.webp">
 									<div>
 										<h3>Core LogicX</h3>
-										<p>Bilingual (DE/RU) landing page built with Next.js 16, featuring route-based i18n, SEO metadata, structured data, and scroll-driven UI interactions. Production-ready setup with TypeScript, Playwright smoke e2e coverage, and Docker standalone deployment.</p>
+										<p>Bilingual page built with Next.js 16. Route-based i18n, SEO metadata, structured data, and scroll-driven UI interactions. Production-ready setup with TypeScript, Playwright smoke e2e coverage, and Docker standalone deployment.</p>
 									</div>
 									<div class="project-tags">
 										<span class="project-tag">Next.js</span>
@@ -326,6 +327,10 @@
 								</a>
 							</li>
 						</ul>
+						<button class="projects-show-more" id="projects-show-more" aria-expanded="false">
+							<span class="projects-show-more__text">Show all projects</span>
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+						</button>
 					</div>
 
 					<div class="playlists-section">

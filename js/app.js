@@ -19,17 +19,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = Array.from(container.children);
         if (items.length < 2) return;
 
+        const isMobile = window.innerWidth <= 768;
+
+        // Mobile: pin specific projects to top in exact order
+        const mobilePinned = ['Core LogicX', 'Naturalis by Anastasiia', 'Mlefia', 'Axiome Chat', 'Eugen Hergert'];
+
+        const getTitle = (li) => {
+            const h3 = li.querySelector('.project-card h3');
+            return h3 ? h3.textContent.trim() : '';
+        };
+
         const sortedItems = items
             .map((item, index) => {
                 const card = item.querySelector('.project-card');
-                const hasScreenshot = Boolean(card && card.hasAttribute('data-screenshot'));
-                const hasHref = Boolean(
-                    card &&
-                    card.tagName === 'A' &&
-                    (card.getAttribute('href') || '').trim().length > 0
-                );
+                const title = getTitle(item);
 
-                const priority = hasScreenshot ? 0 : hasHref ? 1 : 2;
+                let priority;
+                if (isMobile) {
+                    const pinnedIndex = mobilePinned.indexOf(title);
+                    priority = pinnedIndex !== -1 ? pinnedIndex : mobilePinned.length + index;
+                } else {
+                    const hasScreenshot = Boolean(card && card.hasAttribute('data-screenshot'));
+                    const hasHref = Boolean(
+                        card &&
+                        card.tagName === 'A' &&
+                        (card.getAttribute('href') || '').trim().length > 0
+                    );
+                    priority = hasScreenshot ? 0 : hasHref ? 1 : 2;
+                }
+
                 return { item, index, priority };
             })
             .sort((a, b) => {
@@ -1201,6 +1219,222 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { timeout: 2000 });
     }
 
+    // Projects "Show more" toggle (mobile)
+    const showMoreBtn = document.getElementById('projects-show-more');
+    if (showMoreBtn) {
+        const projectsRow = document.querySelector('.projects-row');
+        const btnText = showMoreBtn.querySelector('.projects-show-more__text');
+        const totalCount = projectsRow ? projectsRow.children.length : 0;
+        const VISIBLE_COUNT = 5;
+
+        if (totalCount <= VISIBLE_COUNT) {
+            showMoreBtn.style.display = 'none';
+        } else {
+            showMoreBtn.addEventListener('click', () => {
+                const isExpanding = !projectsRow.classList.contains('is-expanded');
+                const hiddenItems = Array.from(projectsRow.children).slice(VISIBLE_COUNT);
+
+                if (isExpanding) {
+                    projectsRow.classList.add('is-expanded');
+                    showMoreBtn.setAttribute('aria-expanded', 'true');
+                    btnText.textContent = 'Show less';
+
+                    gsap.fromTo(hiddenItems, {
+                        autoAlpha: 0,
+                        y: 20,
+                    }, {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.4,
+                        stagger: 0.06,
+                        ease: 'power3.out',
+                        onComplete: () => {
+                            gsap.set(hiddenItems, { clearProps: 'transform,opacity,visibility' });
+                        }
+                    });
+
+                } else {
+                    // Scroll to projects section first, then collapse
+                    const projectsSection = projectsRow.closest('.projects');
+                    if (projectsSection) {
+                        projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+
+                    // Wait for scroll to settle, then collapse
+                    setTimeout(() => {
+                        gsap.to(hiddenItems.reverse(), {
+                            autoAlpha: 0,
+                            y: -10,
+                            duration: 0.2,
+                            stagger: 0.02,
+                            ease: 'power2.in',
+                            onComplete: () => {
+                                projectsRow.classList.remove('is-expanded');
+                                showMoreBtn.setAttribute('aria-expanded', 'false');
+                                btnText.textContent = `Show all projects (${totalCount})`;
+                                gsap.set(hiddenItems, { clearProps: 'transform,opacity,visibility' });
+                            }
+                        });
+                    }, 400);
+                }
+            });
+            btnText.textContent = `Show all projects (${totalCount})`;
+        }
+    }
+
+    // Graph scroll fade hint (mobile) — start scrolled to the right (latest contributions)
+    const graphContent = document.querySelector('.graph-card .card-content');
+    if (graphContent) {
+        const scrollToEnd = () => { graphContent.scrollLeft = graphContent.scrollWidth; };
+
+        // Scroll to right once images load
+        const graphImgs = graphContent.querySelectorAll('img');
+        if (graphImgs.length) {
+            graphImgs.forEach(img => {
+                if (img.complete) return;
+                img.addEventListener('load', scrollToEnd, { once: true });
+            });
+        }
+        scrollToEnd();
+
+        // Fade edges based on scroll position
+        const updateFade = () => {
+            const atLeft = graphContent.scrollLeft <= 10;
+            const atRight = graphContent.scrollLeft + graphContent.clientWidth >= graphContent.scrollWidth - 10;
+
+            graphContent.classList.remove('fade-left', 'fade-right', 'fade-both');
+            if (!atLeft && !atRight) graphContent.classList.add('fade-both');
+            else if (!atLeft) graphContent.classList.add('fade-left');
+            else if (!atRight) graphContent.classList.add('fade-right');
+        };
+        graphContent.addEventListener('scroll', updateFade, { passive: true });
+        updateFade();
+    }
+
+    // Playlist stack carousel (mobile)
+    function initPlaylistStack(container) {
+        const items = Array.from(container.children);
+        if (items.length === 0) return;
+
+        let current = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchDeltaX = 0;
+        let isSwiping = false;
+
+        // Create dots
+        const dotsWrapper = document.createElement('div');
+        dotsWrapper.className = 'stack-dots';
+        items.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'stack-dot';
+            dot.setAttribute('aria-label', `Playlist ${i + 1}`);
+            dot.addEventListener('click', () => goTo(i));
+            dotsWrapper.appendChild(dot);
+        });
+        container.parentNode.appendChild(dotsWrapper);
+        const dots = dotsWrapper.querySelectorAll('.stack-dot');
+
+        // Set initial container height from first item
+        function updateHeight() {
+            const activeItem = items[current];
+            if (activeItem) {
+                container.style.height = activeItem.offsetHeight + 'px';
+            }
+        }
+
+        function applyStack() {
+            items.forEach((item, i) => {
+                item.classList.remove('stack-active', 'stack-next', 'stack-after', 'stack-hidden', 'stack-exit-left', 'stack-exit-right');
+
+                const offset = ((i - current) + items.length) % items.length;
+                if (offset === 0) {
+                    item.classList.add('stack-active');
+                } else if (offset === 1) {
+                    item.classList.add('stack-next');
+                } else if (offset === 2) {
+                    item.classList.add('stack-after');
+                } else {
+                    item.classList.add('stack-hidden');
+                }
+            });
+            dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+            updateHeight();
+        }
+
+        function goTo(index, direction) {
+            if (index === current) return;
+            const exitClass = direction === 'right' ? 'stack-exit-right' : 'stack-exit-left';
+            const exitingItem = items[current];
+
+            exitingItem.classList.remove('stack-active');
+            exitingItem.classList.add(exitClass);
+
+            current = index;
+
+            // Apply stack to non-exiting items immediately
+            items.forEach((item, i) => {
+                if (item === exitingItem) return;
+                item.classList.remove('stack-active', 'stack-next', 'stack-after', 'stack-hidden');
+                const offset = ((i - current) + items.length) % items.length;
+                if (offset === 0) item.classList.add('stack-active');
+                else if (offset === 1) item.classList.add('stack-next');
+                else if (offset === 2) item.classList.add('stack-after');
+                else item.classList.add('stack-hidden');
+            });
+            dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+            updateHeight();
+
+            // Clean up exit class after animation
+            setTimeout(() => {
+                exitingItem.classList.remove(exitClass);
+                const offset = ((items.indexOf(exitingItem) - current) + items.length) % items.length;
+                if (offset === 1) exitingItem.classList.add('stack-next');
+                else if (offset === 2) exitingItem.classList.add('stack-after');
+                else exitingItem.classList.add('stack-hidden');
+            }, 450);
+        }
+
+        function next() { goTo((current + 1) % items.length, 'left'); }
+        function prev() { goTo((current - 1 + items.length) % items.length, 'right'); }
+
+        // Touch swipe
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchDeltaX = 0;
+            isSwiping = false;
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+            touchDeltaX = e.touches[0].clientX - touchStartX;
+            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+            if (!isSwiping && Math.abs(touchDeltaX) > 15 && Math.abs(touchDeltaX) > deltaY) {
+                isSwiping = true;
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => {
+            if (isSwiping && Math.abs(touchDeltaX) > 50) {
+                if (touchDeltaX < 0) next();
+                else prev();
+            }
+            isSwiping = false;
+        }, { passive: true });
+
+        // Intercept clicks on active card to allow navigation
+        items.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!item.classList.contains('stack-active')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        });
+
+        applyStack();
+    }
+
     // Fetch and render playlists
     async function fetchPlaylists() {
         const container = document.getElementById('playlists-container');
@@ -1236,62 +1470,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 </li>
             `).join('');
 
-            // Add interactive listeners for mobile tap-to-animate-then-navigate
-            const cards = container.querySelectorAll('.playlist-card');
-            cards.forEach(card => {
-                let isScrolling = false;
-                let startX = 0;
-                let startY = 0;
-
-                card.addEventListener('touchstart', (e) => {
-                    isScrolling = false;
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
-                }, { passive: true });
-
-                card.addEventListener('touchmove', (e) => {
-                    if (isScrolling) return;
-                    const currentX = e.touches[0].clientX;
-                    const currentY = e.touches[0].clientY;
-                    if (Math.abs(currentX - startX) > 10 || Math.abs(currentY - startY) > 10) {
-                        isScrolling = true;
-                    }
-                }, { passive: true });
-
-                card.addEventListener('click', (e) => {
-                    // Check for mobile breakpoint
-                    if (window.matchMedia('(max-width: 768px)').matches) {
-                        if (isScrolling) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            return;
-                        }
-
+            // Mobile: stacked card carousel with swipe
+            if (window.matchMedia('(max-width: 768px)').matches) {
+                initPlaylistStack(container);
+            } else {
+                // Desktop: tap-to-animate-then-navigate on touch devices
+                const cards = container.querySelectorAll('.playlist-card');
+                cards.forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (!window.matchMedia('(max-width: 768px)').matches) return;
                         e.preventDefault();
-
-                        // Prevent double tap if animation is already running
                         if (card.classList.contains('is-active')) return;
-
                         const url = card.href;
-
-                        // Reset others
                         cards.forEach(c => c.classList.remove('is-active'));
-
-                        // Activate current
                         card.classList.add('is-active');
-
-                        // Wait for animation then navigate
                         setTimeout(() => {
                             window.open(url, '_blank');
-
-                            // Reset state after a short delay so it closes smoothly
-                            setTimeout(() => {
-                                card.classList.remove('is-active');
-                            }, 100);
+                            setTimeout(() => card.classList.remove('is-active'), 100);
                         }, 1000);
-                    }
+                    });
                 });
-            });
+            }
 
             // Trigger scroll animations for new elements
             if (typeof ScrollTrigger !== 'undefined') {
