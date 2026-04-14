@@ -33,9 +33,10 @@
     border-radius: 16px;
     color: var(--fg);
     text-decoration: none;
-    transition: all 0.4s var(--transition-smooth);
+    transition: transform 0.4s var(--transition-smooth), border-color 0.4s var(--transition-smooth), box-shadow 0.4s var(--transition-smooth), background 0.4s var(--transition-smooth);
     position: relative;
     overflow: hidden;
+    will-change: transform;
 }
 
 .link-card {
@@ -351,6 +352,8 @@ a.project-card:hover::before {
     opacity: 0;
     visibility: hidden;
     transform: scale(0.95);
+    will-change: transform, opacity;
+    contain: layout style;
     --preview-tilt-x: 0deg;
     --preview-tilt-y: 0deg;
 }
@@ -361,41 +364,50 @@ a.project-card:hover::before {
 
 .project-preview-shell {
     display: grid;
-    gap: 14px;
-    padding: 14px;
+    gap: 12px;
+    padding: 12px;
     border-radius: 20px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background:
-        radial-gradient(120% 90% at 5% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
-        linear-gradient(160deg, rgba(22, 22, 24, 0.92), rgba(10, 10, 11, 0.86));
-    backdrop-filter: blur(20px) saturate(130%);
-    -webkit-backdrop-filter: blur(20px) saturate(130%);
-    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        radial-gradient(120% 80% at 10% 0%, rgba(244, 146, 240, 0.06), transparent 50%),
+        radial-gradient(80% 120% at 95% 100%, rgba(244, 146, 240, 0.04), transparent 50%),
+        linear-gradient(160deg, rgba(24, 24, 28, 0.96), rgba(12, 12, 14, 0.94));
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    box-shadow:
+        0 28px 60px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transform-style: preserve-3d;
     transform: perspective(1000px) rotateX(var(--preview-tilt-x)) rotateY(var(--preview-tilt-y));
     transition: transform 0.18s var(--transition-smooth), box-shadow 0.3s ease;
+    will-change: transform;
 }
 
 .project-preview-modal.is-visible .project-preview-shell {
-    box-shadow: 0 34px 74px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 36px 80px rgba(0, 0, 0, 0.6),
+        0 0 80px -20px rgba(244, 146, 240, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .preview-browser {
     position: relative;
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.35);
     overflow: hidden;
 }
 
 .preview-browser-bar {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
 }
 
 .preview-window-dots {
@@ -408,7 +420,7 @@ a.project-card:hover::before {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.18);
 }
 
 .preview-window-dots span:nth-child(1) {
@@ -425,25 +437,31 @@ a.project-card:hover::before {
 
 .preview-domain {
     margin: 0;
+    padding: 4px 12px;
     color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 240px;
 }
 
 
 .preview-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 16/10;
-    border-radius: 10px;
+    aspect-ratio: var(--preview-aspect, 16/10);
+    border-radius: 0 0 10px 10px;
     overflow: hidden;
     background:
-        radial-gradient(90% 130% at 50% 0%, rgba(255, 255, 255, 0.14), transparent 55%),
-        linear-gradient(165deg, #2a2a2e, #090909);
+        radial-gradient(90% 130% at 50% 0%, rgba(255, 255, 255, 0.1), transparent 55%),
+        linear-gradient(165deg, #1a1a1e, #090909);
+    transition: aspect-ratio 0.3s var(--transition-smooth);
 }
 
 .preview-image-wrapper::before {
@@ -471,9 +489,10 @@ a.project-card:hover::before {
 .preview-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 0.45s var(--transition-smooth), opacity 0.3s ease, filter 0.3s ease;
+    will-change: transform;
 }
 
 .project-preview-modal.is-visible .preview-image-wrapper img {
@@ -490,7 +509,9 @@ a.project-card:hover::before {
     inset: 0;
     pointer-events: none;
     z-index: 1;
-    background: linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.35));
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, transparent 20%, transparent 55%, rgba(0, 0, 0, 0.3) 100%),
+        radial-gradient(ellipse at 50% 0%, transparent 60%, rgba(0, 0, 0, 0.12));
     mix-blend-mode: multiply;
 }
 
@@ -520,35 +541,37 @@ a.project-card:hover::before {
 
 .preview-info {
     display: grid;
-    gap: 8px;
+    gap: 6px;
+    padding: 2px 4px 4px;
 }
 
 .preview-eyebrow {
     margin: 0;
     font-size: 10px;
     font-weight: 700;
-    color: var(--muted);
+    color: var(--accent);
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    opacity: 0.7;
 }
 
 .preview-info h3 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
     color: var(--fg);
     margin: 0;
 }
 
 #preview-desc {
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--muted);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.55;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -556,38 +579,61 @@ a.project-card:hover::before {
 .preview-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    min-height: 24px;
+    gap: 5px;
+    margin-top: 2px;
+    min-height: 22px;
 }
 
 .preview-tag-chip {
     display: inline-flex;
     align-items: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: rgba(244, 146, 240, 0.08);
+    border: 1px solid rgba(244, 146, 240, 0.12);
     color: var(--fg);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.02em;
 }
 
 :root[data-theme="light"] .project-preview-shell {
+    border-color: rgba(0, 0, 0, 0.08);
     background:
-        radial-gradient(120% 90% at 5% 0%, rgba(255, 255, 255, 0.85), transparent 55%),
-        linear-gradient(165deg, rgba(255, 255, 255, 0.96), rgba(244, 244, 246, 0.9));
-    box-shadow: 0 28px 60px rgba(16, 19, 24, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        radial-gradient(120% 80% at 10% 0%, rgba(208, 78, 197, 0.06), transparent 50%),
+        radial-gradient(80% 120% at 95% 100%, rgba(208, 78, 197, 0.04), transparent 50%),
+        linear-gradient(165deg, rgba(255, 255, 255, 0.97), rgba(246, 246, 248, 0.94));
+    box-shadow:
+        0 28px 60px rgba(16, 19, 24, 0.18),
+        0 0 0 1px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+:root[data-theme="light"] .project-preview-modal.is-visible .project-preview-shell {
+    box-shadow:
+        0 36px 80px rgba(16, 19, 24, 0.22),
+        0 0 60px -20px rgba(208, 78, 197, 0.1),
+        0 0 0 1px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 :root[data-theme="light"] .preview-browser {
     border-color: rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.8);
 }
 
 :root[data-theme="light"] .preview-browser-bar {
-    border-bottom-color: rgba(0, 0, 0, 0.08);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.005));
+}
+
+:root[data-theme="light"] .preview-domain {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] .preview-window-dots span {
+    background: rgba(0, 0, 0, 0.12);
 }
 
 :root[data-theme="light"] .preview-image-shade {
@@ -596,8 +642,8 @@ a.project-card:hover::before {
 }
 
 :root[data-theme="light"] .preview-tag-chip {
-    background: rgba(17, 17, 17, 0.06);
-    border-color: rgba(17, 17, 17, 0.1);
+    background: rgba(208, 78, 197, 0.07);
+    border-color: rgba(208, 78, 197, 0.12);
 }
 
 @media (max-width: 1200px) {

@@ -805,6 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const previewTags = document.getElementById('preview-tags');
         const previewBrowser = modal.querySelector('.preview-browser');
         const previewInfo = modal.querySelector('.preview-info');
+        const previewImageWrapper = modal.querySelector('.preview-image-wrapper');
         const cardSelector = '.projects .project-card[data-screenshot]';
         const projectCards = document.querySelectorAll(cardSelector);
 
@@ -985,8 +986,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            const applyNaturalAspect = () => {
+                if (previewImage.naturalWidth > 0 && previewImage.naturalHeight > 0) {
+                    previewImageWrapper.style.setProperty(
+                        '--preview-aspect',
+                        `${previewImage.naturalWidth} / ${previewImage.naturalHeight}`
+                    );
+                }
+            };
+
             previewImage.onload = () => {
                 if (token !== activeImageToken) return;
+                applyNaturalAspect();
                 modal.classList.remove('is-loading', 'is-error');
             };
 
@@ -1000,6 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (previewImage.complete) {
                 if (previewImage.naturalWidth > 0) {
+                    applyNaturalAspect();
                     modal.classList.remove('is-loading', 'is-error');
                 } else {
                     modal.classList.remove('is-loading');
@@ -1173,6 +1185,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Only on non-touch devices
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         initProjectPreview();
+
+        // Preload screenshot images to avoid lag on first hover
+        requestIdleCallback(() => {
+            document.querySelectorAll('.project-card[data-screenshot]').forEach(card => {
+                const src = card.getAttribute('data-screenshot');
+                if (src) {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'image';
+                    link.href = src;
+                    document.head.appendChild(link);
+                }
+            });
+        }, { timeout: 2000 });
     }
 
     // Fetch and render playlists
