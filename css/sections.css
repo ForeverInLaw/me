@@ -698,6 +698,38 @@
         margin-bottom: 16px;
     }
 
+    /* Disable vinyl hover/active effects on mobile */
+    .playlist-card:hover .vinyl-record,
+    .playlist-card.is-active .vinyl-record {
+        transform: none;
+    }
+
+    .playlist-card:hover .vinyl-rotator,
+    .playlist-card.is-active .vinyl-rotator {
+        animation-play-state: paused;
+    }
+
+    .playlist-card:hover .playlist-cover-art,
+    .playlist-card.is-active .playlist-cover-art {
+        transform: none;
+        box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .playlist-card:hover .playlist-cover-art img,
+    .playlist-card.is-active .playlist-cover-art img {
+        transform: none;
+    }
+
+    .playlist-card:hover .playlist-cover-art::after,
+    .playlist-card.is-active .playlist-cover-art::after {
+        background-position: 100% 0;
+    }
+
+    .playlist-card:hover .playlist-header h3,
+    .playlist-card.is-active .playlist-header h3 {
+        color: var(--fg);
+    }
+
     .github-stats {
         margin-top: 64px;
         margin-bottom: 64px;
