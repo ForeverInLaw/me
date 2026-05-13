@@ -402,8 +402,9 @@ void main(){
     });
 
     window.addEventListener(
-      "beforeunload",
-      () => {
+      "pagehide",
+      (event) => {
+        if (event.persisted) return;
         observer.disconnect();
         grainient.destroy();
       },

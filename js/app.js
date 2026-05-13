@@ -724,7 +724,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(markInteractiveIfDone, 500);
         }
 
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener('pagehide', (event) => {
+            if (event.persisted) return;
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
         });
     }
