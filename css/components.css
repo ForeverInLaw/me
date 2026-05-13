@@ -358,25 +358,178 @@ a.project-card:hover::before {
     }
 }
 
+.spotify-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.spotify-title.loading {
+    opacity: 0.45;
+}
+
 #spotify-now-playing {
-    height: 154px;
+    min-height: 96px;
     width: 100%;
     border-radius: 16px;
     overflow: hidden;
     background: var(--card);
     border: 1px solid var(--border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#spotify-now-playing iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 #spotify-now-playing:hover {
     transform: scale(1.02);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-color: var(--border-hover);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.np-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    color: var(--fg);
+    text-decoration: none;
+    height: 100%;
+    min-height: 96px;
+}
+
+.np-card__art {
+    flex: 0 0 76px;
+    width: 76px;
+    height: 76px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    position: relative;
+}
+
+.np-card__art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.np-card__info {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.np-card__title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.np-card__artist {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.np-card__progress {
+    margin-top: 6px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.np-card__bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #1DB954);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s linear;
+}
+
+.np-card__badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1DB954;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.np-card__badge svg {
+    width: 11px;
+    height: 11px;
+    fill: #000;
+}
+
+.np-card__pulse {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1DB954;
+    box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.6);
+    animation: np-pulse 1.8s infinite;
+}
+
+@keyframes np-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(29, 185, 84, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0); }
+}
+
+.np-card.is-stale .np-card__pulse {
+    display: none;
+}
+
+.np-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 96px;
+    padding: 12px;
+}
+
+.np-placeholder > div {
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(90deg, var(--card) 0%, rgba(255, 255, 255, 0.08) 50%, var(--card) 100%);
+    background-size: 200% 100%;
+    border-radius: 3px;
+    animation: np-shimmer 1.6s linear infinite;
+}
+
+@keyframes np-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+:root[data-theme="light"] .np-card__progress {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .np-placeholder > div {
+    background: linear-gradient(90deg, var(--card) 0%, rgba(0, 0, 0, 0.08) 50%, var(--card) 100%);
+    background-size: 200% 100%;
 }
 
 /* Theme Toggle */
