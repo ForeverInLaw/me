@@ -214,6 +214,102 @@ a.project-card:hover::before {
     line-height: 1.6;
 }
 
+.project-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-wrap: wrap;
+}
+
+.project-meta__sep {
+    opacity: 0.35;
+}
+
+.project-meta__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.project-meta__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    box-shadow: 0 0 0 0 currentColor;
+}
+
+.project-meta__status--active {
+    color: #4ade80;
+}
+
+.project-meta__status--active .project-meta__dot {
+    background: #4ade80;
+    box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+}
+
+.project-meta__status--wip {
+    color: #facc15;
+}
+
+.project-meta__status--wip .project-meta__dot {
+    background: #facc15;
+    box-shadow: 0 0 6px rgba(250, 204, 21, 0.45);
+}
+
+.project-meta__status--archived {
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+.project-meta__status--archived .project-meta__dot {
+    background: var(--muted);
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+.project-meta__status--oss {
+    color: #38bdf8;
+}
+
+.project-meta__status--oss .project-meta__dot {
+    background: #38bdf8;
+    box-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+}
+
+:root[data-theme="light"] .project-meta__status--oss {
+    color: #0284c7;
+}
+
+:root[data-theme="light"] .project-meta__status--oss .project-meta__dot {
+    background: #0284c7;
+    box-shadow: 0 0 6px rgba(2, 132, 199, 0.4);
+}
+
+:root[data-theme="light"] .project-meta__status--active {
+    color: #16a34a;
+}
+
+:root[data-theme="light"] .project-meta__status--active .project-meta__dot {
+    background: #16a34a;
+    box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
+}
+
+:root[data-theme="light"] .project-meta__status--wip {
+    color: #ca8a04;
+}
+
+:root[data-theme="light"] .project-meta__status--wip .project-meta__dot {
+    background: #ca8a04;
+    box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);
+}
+
 .project-tags {
     margin-top: 16px;
     display: flex;
