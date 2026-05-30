@@ -7,7 +7,7 @@ export function prioritizeScreenshotProjects() {
 
     const isMobile = window.innerWidth <= 768;
 
-    const mobilePinned = ['Moss', 'Mlefia', 'Mosh', 'Naturalis by Anastasiia', 'Core LogicX', 'WhisperToCode', 'Eugen Hergert', 'CosyMC'];
+    const mobilePinned = ['Redstone', 'Moss', 'Mlefia', 'Mosh', 'Naturalis by Anastasiia', 'Core LogicX', 'WhisperToCode', 'Eugen Hergert', 'CosyMC'];
 
     const getTitle = (li) => {
         const h3 = li.querySelector('.project-card h3');
