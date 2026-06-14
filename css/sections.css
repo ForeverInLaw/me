@@ -250,13 +250,13 @@
 
 .playlist-card:hover .playlist-header h3,
 .playlist-card.is-active .playlist-header h3 {
-    color: var(--accent);
+    color: var(--accent-ink);
 }
 
 .playlist-meta {
     font-size: 12px;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--accent-ink);
     letter-spacing: 0.05em;
     text-transform: uppercase;
     margin-bottom: 8px;
