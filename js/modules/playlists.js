@@ -1,5 +1,15 @@
 const PLAYLISTS_API = 'https://spotify-show-last-68db402e666c.herokuapp.com/api/playlists';
 
+const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+})[c]);
+
+// Only allow http(s) URLs so remote data can't inject javascript:/data: into href/src
+const safeUrl = (u) => {
+    const s = String(u ?? '').trim();
+    return /^https?:\/\//i.test(s) ? s : '';
+};
+
 function initPlaylistStack(container) {
     const items = Array.from(container.children);
     if (items.length === 0) return;
@@ -127,29 +137,38 @@ export async function initPlaylists() {
 
         const playlists = await response.json();
 
-        container.innerHTML = playlists.map(playlist => `
+        container.innerHTML = playlists.map(playlist => {
+            const image = escapeHtml(safeUrl(playlist.image));
+            const name = escapeHtml(playlist.name);
+            return `
             <li>
-                <a class="playlist-card" href="${playlist.url}" target="_blank" rel="noopener noreferrer">
+                <a class="playlist-card" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer">
                     <div class="vinyl-wrapper">
                         <div class="vinyl-record">
                             <div class="vinyl-rotator">
-                                <div class="vinyl-label" style="background-image: url('${playlist.image}')"></div>
+                                <div class="vinyl-label" data-image="${image}"></div>
                             </div>
                         </div>
                         <div class="playlist-cover-art">
-                            <img src="${playlist.image}" alt="${playlist.name}" loading="lazy" />
+                            <img src="${image}" alt="${name}" loading="lazy" />
                         </div>
                     </div>
                     <div class="playlist-content">
-                        <span class="playlist-meta">${playlist.tracks} Tracks</span>
+                        <span class="playlist-meta">${escapeHtml(playlist.tracks)} Tracks</span>
                         <div class="playlist-header">
-                            <h3>${playlist.name}</h3>
+                            <h3>${name}</h3>
                         </div>
-                        <p class="playlist-description">${playlist.description || 'A curated Spotify playlist.'}</p>
+                        <p class="playlist-description">${escapeHtml(playlist.description || 'A curated Spotify playlist.')}</p>
                     </div>
                 </a>
-            </li>
-        `).join('');
+            </li>`;
+        }).join('');
+
+        // Apply the vinyl-label art via the CSSOM (avoids CSS url() injection from remote data)
+        container.querySelectorAll('.vinyl-label[data-image]').forEach(el => {
+            const src = (el.getAttribute('data-image') || '').replace(/["\\]/g, '');
+            if (src) el.style.backgroundImage = `url("${src}")`;
+        });
 
         if (window.matchMedia('(max-width: 768px)').matches) {
             initPlaylistStack(container);
