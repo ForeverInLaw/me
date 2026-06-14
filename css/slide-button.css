@@ -196,3 +196,80 @@ body.entry-active .project-preview-modal {
         width: 6rem;
     }
 }
+
+/* Entry hint — tells the visitor the gate is a slider without killing the ritual */
+.entry-hint {
+    margin: 1.6rem 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0;
+    transition: opacity 0.4s var(--transition-smooth), transform 0.4s var(--transition-smooth);
+    animation: entryHintIn 0.8s var(--transition-smooth) 1.1s forwards;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.entry-hint__label {
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    /* cancel the trailing tracking so the arrow sits at an even optical gap */
+    margin-right: -0.16em;
+}
+
+.entry-hint__arrow {
+    flex: none;
+    color: var(--muted);
+    animation: entryHintArrow 1.8s var(--transition-smooth) infinite;
+}
+
+.entry-hint.is-hidden {
+    opacity: 0 !important;
+    transform: translateY(-4px);
+    animation: none;
+    pointer-events: none;
+}
+
+@keyframes entryHintIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 0.9; transform: translateY(0); }
+}
+
+@keyframes entryHintArrow {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(3px); }
+}
+
+/* Pulsing ring signals the handle is interactive (the native cursor is hidden) */
+.slide-button-container:not(.completed) .slide-button-handle {
+    animation: entryHandlePulse 2.4s var(--transition-smooth) infinite;
+}
+
+@keyframes entryHandlePulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+    50%      { box-shadow: 0 0 0 9px rgba(244, 146, 240, 0); }
+}
+
+/* Keyboard focus affordance — must be visible since body cursor is hidden */
+.slide-button-container:not(.completed) .slide-button-handle:focus-visible {
+    outline: none;
+    animation: none;
+    box-shadow: 0 0 0 3px var(--accent-glow), 0 0 0 1px var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .entry-hint {
+        animation: none;
+        opacity: 0.9;
+    }
+
+    .entry-hint__arrow,
+    .slide-button-container:not(.completed) .slide-button-handle {
+        animation: none;
+    }
+}
