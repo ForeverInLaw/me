@@ -116,7 +116,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    will-change: transform;
 }
 
 .vinyl-record::after {
@@ -138,7 +137,6 @@
     justify-content: center;
     animation: spin-continuous 4s linear infinite;
     animation-play-state: paused;
-    will-change: transform;
 }
 
 /* The Center Label of the Record */
@@ -166,7 +164,6 @@
         inset 0 0 0 1px rgba(255,255,255,0.1);
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-origin: center bottom;
-    will-change: transform;
 }
 
 .playlist-cover-art img {
@@ -612,7 +609,6 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         transition: transform 0.5s var(--transition-smooth), opacity 0.5s ease;
         transform-origin: center bottom;
-        will-change: transform, opacity;
     }
 
     /* First card (active) */

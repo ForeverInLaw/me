@@ -36,7 +36,6 @@
     transition: transform 0.4s var(--transition-smooth), border-color 0.4s var(--transition-smooth), box-shadow 0.4s var(--transition-smooth), background 0.4s var(--transition-smooth);
     position: relative;
     overflow: hidden;
-    will-change: transform;
 }
 
 .link-card {
@@ -741,7 +740,6 @@ a.project-card:hover::before {
     object-fit: contain;
     display: block;
     transition: transform 0.45s var(--transition-smooth), opacity 0.3s ease, filter 0.3s ease;
-    will-change: transform;
 }
 
 .project-preview-modal.is-visible .preview-image-wrapper img {
