@@ -107,6 +107,14 @@ body.entry-active .project-preview-modal {
     will-change: transform;
 }
 
+/* Expand the drag handle's touch target to >=44px without changing its look */
+.slide-button-handle::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+}
+
 .slide-button-handle svg {
     width: 1rem;
     height: 1rem;

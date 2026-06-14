@@ -673,6 +673,7 @@
     }
 
     .stack-dot {
+        position: relative;
         width: 6px;
         height: 6px;
         border-radius: 50%;
@@ -682,6 +683,14 @@
         cursor: pointer;
         border: none;
         padding: 0;
+    }
+
+    /* Tall tap target (44px) without overlapping neighbours: the dots sit
+       8px apart, so widen only into the gap, not a full 44px square */
+    .stack-dot::before {
+        content: '';
+        position: absolute;
+        inset: -19px -4px;
     }
 
     .stack-dot.is-active {
