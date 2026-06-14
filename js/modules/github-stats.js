@@ -1,4 +1,22 @@
 export function initGithubStats() {
+    // Stat/graph images are static SVGs; if an asset 404s, swap the broken
+    // image box for a readable fallback instead of a broken-image icon.
+    const handleStatImgError = (img) => {
+        const wrap = img.closest('.stats-image-wrapper, .graph-wrapper');
+        if (!wrap || wrap.querySelector('.stats-error')) return;
+        const msg = document.createElement('p');
+        msg.className = 'stats-error';
+        msg.textContent = 'GitHub stats are unavailable right now.';
+        wrap.replaceChildren(msg);
+    };
+    document.querySelectorAll('.stats-img, .graph-img').forEach(img => {
+        if (img.complete && img.naturalWidth === 0) {
+            handleStatImgError(img);
+            return;
+        }
+        img.addEventListener('error', () => handleStatImgError(img), { once: true });
+    });
+
     const graphContent = document.querySelector('.graph-card .card-content');
     if (!graphContent) return;
 

@@ -26,6 +26,7 @@ export function initSpotify() {
         rafId: 0,
     };
     let npFetching = false;
+    let npFailCount = 0;
 
     function setTitleText(text) {
         if (!spotifyTitle || spotifyTitle.textContent === text) return;
@@ -70,6 +71,14 @@ export function initSpotify() {
         spotifyWidget.innerHTML = '<div class="np-placeholder" aria-hidden="true"><div></div></div>';
     }
 
+    function showMessage(text) {
+        if (!spotifyWidget) return;
+        const el = document.createElement('div');
+        el.className = 'np-message';
+        el.textContent = text;
+        spotifyWidget.replaceChildren(el);
+    }
+
     function stopProgressLoop() {
         if (npState.rafId) {
             cancelAnimationFrame(npState.rafId);
@@ -109,13 +118,14 @@ export function initSpotify() {
             clearTimeout(timeoutId);
             if (!res.ok) throw new Error(`status ${res.status}`);
             const data = await res.json();
+            npFailCount = 0;
 
             if (!data || !data.track) {
                 npState.trackId = null;
                 npState.isPlaying = false;
                 stopProgressLoop();
-                setTitleText('Loading...');
-                showEmpty();
+                setTitleText('Not playing');
+                showMessage('Nothing playing right now.');
                 return;
             }
 
@@ -147,7 +157,13 @@ export function initSpotify() {
             startProgressLoop();
         } catch (err) {
             console.error('now-playing fetch failed:', err);
-            setTitleText('Loading...');
+            npFailCount++;
+            // Keep the last view on a single blip; only show an error once it's clearly down
+            if (npFailCount >= 2) {
+                stopProgressLoop();
+                setTitleText('Unavailable');
+                showMessage("Can't reach Spotify right now.");
+            }
         } finally {
             npFetching = false;
         }

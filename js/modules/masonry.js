@@ -16,37 +16,49 @@ export function masonryLayout() {
         return;
     }
 
-    const gap = 16;
-    const containerWidth = container.offsetWidth;
-    const itemMinWidth = 280;
-    const columns = Math.max(1, Math.floor((containerWidth + gap) / (itemMinWidth + gap)));
-    const itemWidth = (containerWidth - (gap * (columns - 1))) / columns;
+    try {
+        const gap = 16;
+        const containerWidth = container.offsetWidth;
+        const itemMinWidth = 280;
+        const columns = Math.max(1, Math.floor((containerWidth + gap) / (itemMinWidth + gap)));
+        const itemWidth = (containerWidth - (gap * (columns - 1))) / columns;
 
-    const columnHeights = new Array(columns).fill(0);
+        const columnHeights = new Array(columns).fill(0);
 
-    items.forEach((item) => {
-        item.style.width = `${itemWidth}px`;
-        item.style.position = 'absolute';
+        items.forEach((item) => {
+            item.style.width = `${itemWidth}px`;
+            item.style.position = 'absolute';
 
-        let minHeight = columnHeights[0];
-        let column = 0;
-        for (let i = 1; i < columns; i++) {
-            if (columnHeights[i] < minHeight) {
-                minHeight = columnHeights[i];
-                column = i;
+            let minHeight = columnHeights[0];
+            let column = 0;
+            for (let i = 1; i < columns; i++) {
+                if (columnHeights[i] < minHeight) {
+                    minHeight = columnHeights[i];
+                    column = i;
+                }
             }
+
+            item.style.left = `${column * (itemWidth + gap)}px`;
+            item.style.top = `${columnHeights[column]}px`;
+
+            columnHeights[column] += item.offsetHeight + gap;
+        });
+
+        container.style.height = `${Math.max(...columnHeights)}px`;
+
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
         }
-
-        item.style.left = `${column * (itemWidth + gap)}px`;
-        item.style.top = `${columnHeights[column]}px`;
-
-        columnHeights[column] += item.offsetHeight + gap;
-    });
-
-    container.style.height = `${Math.max(...columnHeights)}px`;
-
-    if (typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.refresh();
+    } catch (err) {
+        // Never leave cards absolutely positioned and overlapping: fall back to flow
+        console.warn('masonry layout failed; falling back to single-column flow:', err);
+        container.style.height = 'auto';
+        items.forEach(item => {
+            item.style.position = 'relative';
+            item.style.top = 'auto';
+            item.style.left = 'auto';
+            item.style.width = '100%';
+        });
     }
 }
 
