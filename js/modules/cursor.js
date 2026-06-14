@@ -4,6 +4,8 @@ export function initCursor() {
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
+    // Only now hide the native cursor — no-JS / failed-init users keep a real pointer
+    document.body.classList.add('has-custom-cursor');
 
     let mouseX = 0;
     let mouseY = 0;

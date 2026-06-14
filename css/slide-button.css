@@ -273,3 +273,59 @@ body.entry-active .project-preview-modal {
         animation: none;
     }
 }
+
+/* ───────────────────────────────────────────────
+   No-JS fallback — the hub's core (links, projects,
+   navigation) must stay usable without JavaScript:
+   disabled, blocked, crawler, or CDN failure.
+   `.js` is set synchronously in <head>; these rules
+   apply only when it is absent, so JS users never
+   see a flash.
+   ─────────────────────────────────────────────── */
+html:not(.js) .entry-screen {
+    display: none;
+}
+
+html:not(.js) body.entry-active .wrapper,
+html:not(.js) body.entry-active .theme-toggle,
+html:not(.js) body.entry-active .project-preview-modal {
+    visibility: visible;
+}
+
+/* Connect links are hidden-by-default for the JS reveal; show them when no JS runs */
+html:not(.js) .link-card {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+/* Projects are JS-positioned (masonry); fall back to a clean single column */
+html:not(.js) .projects-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+html:not(.js) .projects-row > li {
+    position: relative;
+    width: 100%;
+}
+
+/* These sections are populated by JS (playlists injected, Spotify fetched).
+   Without JS they would sit empty or stuck on "Loading…" — hide them so the
+   no-JS view shows only real content (links, projects, static stats, footer). */
+html:not(.js) .playlists-section,
+html:not(.js) .spotify-widget-container {
+    display: none;
+}
+
+/* Restore a real cursor whenever the custom one is not proven active
+   (no JS, coarse pointer, or a failed cursor init) */
+body:not(.has-custom-cursor),
+body:not(.has-custom-cursor) a,
+body:not(.has-custom-cursor) button,
+body:not(.has-custom-cursor) .project-card,
+body:not(.has-custom-cursor) .theme-toggle,
+body:not(.has-custom-cursor) .slide-button-handle {
+    cursor: auto;
+}
