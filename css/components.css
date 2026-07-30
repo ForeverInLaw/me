@@ -184,26 +184,26 @@ a.project-card::before {
     right: 16px;
     width: 16px;
     height: 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
+    /* One SVG asset, recolored per state via the mask + background-color trick.
+       States (hover, theme) are pure CSS — no per-state data URIs. */
+    background-color: var(--muted);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
     opacity: 0.5;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
     z-index: 2;
 }
 
 a.project-card:hover::before {
     opacity: 1;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f492f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
+    background-color: var(--accent);
     transform: translate(2px, -2px);
-}
-
-:root[data-theme="light"] a.project-card::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
-}
-
-:root[data-theme="light"] a.project-card:hover::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d04ec5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7h10v10'/%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E");
 }
 
 .project-card h3 {
@@ -382,7 +382,8 @@ a.project-card:hover::before {
     flex: 0 0 76px;
     width: 76px;
     height: 76px;
-    border-radius: 10px;
+    /* Concentric: container 16px radius − 10px np-card padding = 6px */
+    border-radius: 6px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.04);
     position: relative;
@@ -393,6 +394,19 @@ a.project-card:hover::before {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+/* Image outlines — neutral pure-black/white ring for consistent depth.
+   Never a tinted neutral (would read as dirt on the image edge). */
+.np-card__art,
+.preview-image-wrapper {
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+}
+
+:root[data-theme="light"] .np-card__art,
+:root[data-theme="light"] .preview-image-wrapper {
+    outline-color: oklch(0 0 0 / 0.1);
 }
 
 .np-card__info {
@@ -547,13 +561,16 @@ a.project-card:hover::before {
     border-color: var(--fg);
 }
 
+.theme-toggle:active {
+    transform: rotate(15deg) scale(0.96);
+}
+
 .theme-toggle__icon {
     width: 20px;
     height: 20px;
     position: absolute;
     background-repeat: no-repeat;
     background-position: center;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     transition: opacity 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
@@ -696,7 +713,7 @@ a.project-card:hover::before {
     position: relative;
     width: 100%;
     aspect-ratio: var(--preview-aspect, 16/10);
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 14px 14px;
     overflow: hidden;
     background:
         radial-gradient(90% 130% at 50% 0%, rgba(255, 255, 255, 0.1), transparent 55%),
