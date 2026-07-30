@@ -329,9 +329,10 @@ function initProjectPreview() {
     const hidePreview = (force = false) => {
         if (hideTimer) {
             clearTimeout(hideTimer);
+            hideTimer = null;
         }
 
-        hideTimer = setTimeout(() => {
+        const performHide = () => {
             if (!force) {
                 const elementUnderPointer = document.elementFromPoint(lastPointer.x, lastPointer.y);
                 const cardUnderPointer = elementUnderPointer && elementUnderPointer.closest ? elementUnderPointer.closest(cardSelector) : null;
@@ -361,7 +362,18 @@ function initProjectPreview() {
                     modal.classList.remove('is-visible');
                 }
             });
-        }, 40);
+        };
+
+        // Force (scroll, blur, tab-hidden): hide immediately. The 40ms
+        // debounce only serves the non-force case (mouse jumped to a sibling
+        // card). For forced hides it stalls hiding during inertial scroll,
+        // where scroll events fire every frame and keep resetting the timer.
+        if (force) {
+            performHide();
+            return;
+        }
+
+        hideTimer = setTimeout(performHide, 40);
     };
 
     projectCards.forEach(card => {
@@ -377,7 +389,13 @@ function initProjectPreview() {
     document.addEventListener('mousemove', movePreview);
     document.addEventListener('mouseleave', () => hidePreview(true));
 
-    window.addEventListener('scroll', () => hidePreview(true), { passive: true });
+    // Fire hide once per scroll gesture. performHide sets activeCard=null, so
+    // the guard skips the 60fps follow-up scroll events that would otherwise
+    // call gsap.killTweensOf + a fresh gsap.to every frame — restarting the
+    // fade from the current opacity and stalling it until scrolling stops.
+    window.addEventListener('scroll', () => {
+        if (activeCard) hidePreview(true);
+    }, { passive: true });
     window.addEventListener('blur', () => hidePreview(true));
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState !== 'visible') {
