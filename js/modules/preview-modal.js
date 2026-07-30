@@ -388,6 +388,7 @@ function initProjectPreview() {
 
 export function initPreviewModal() {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     initProjectPreview();
 
     if ('requestIdleCallback' in window) {

@@ -9,6 +9,7 @@
     display: inline-block;
     position: relative;
     padding-left: 20px;
+    text-wrap: balance;
 }
 
 .section-title::before {
@@ -124,6 +125,11 @@
     transform: translateY(-4px);
     border-color: var(--border-hover);
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+}
+
+.link-card:active,
+.project-card:active {
+    transform: translateY(-2px) scale(0.96);
 }
 
 .link-card:hover i {
@@ -245,26 +251,26 @@ a.project-card:hover::before {
 }
 
 .project-meta__status--active {
-    color: #4ade80;
+    color: var(--status-active);
 }
 
 .project-meta__status--active .project-meta__dot {
-    background: #4ade80;
-    box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+    background: var(--status-active);
+    box-shadow: 0 0 6px var(--status-active-glow);
 }
 
 .project-meta__status--wip {
-    color: #facc15;
+    color: var(--status-wip);
 }
 
 .project-meta__status--wip .project-meta__dot {
-    background: #facc15;
-    box-shadow: 0 0 6px rgba(250, 204, 21, 0.45);
+    background: var(--status-wip);
+    box-shadow: 0 0 6px var(--status-wip-glow);
 }
 
 .project-meta__status--archived {
-    color: var(--muted);
-    opacity: 0.7;
+    color: var(--status-archived);
+    opacity: var(--status-archived-opacity);
 }
 
 .project-meta__status--archived .project-meta__dot {
@@ -274,39 +280,39 @@ a.project-card:hover::before {
 }
 
 .project-meta__status--oss {
-    color: #38bdf8;
+    color: var(--status-oss);
 }
 
 .project-meta__status--oss .project-meta__dot {
-    background: #38bdf8;
-    box-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+    background: var(--status-oss);
+    box-shadow: 0 0 6px var(--status-oss-glow);
 }
 
 :root[data-theme="light"] .project-meta__status--oss {
-    color: #0284c7;
+    color: var(--status-oss);
 }
 
 :root[data-theme="light"] .project-meta__status--oss .project-meta__dot {
-    background: #0284c7;
-    box-shadow: 0 0 6px rgba(2, 132, 199, 0.4);
+    background: var(--status-oss);
+    box-shadow: 0 0 6px var(--status-oss-glow);
 }
 
 :root[data-theme="light"] .project-meta__status--active {
-    color: #16a34a;
+    color: var(--status-active);
 }
 
 :root[data-theme="light"] .project-meta__status--active .project-meta__dot {
-    background: #16a34a;
-    box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
+    background: var(--status-active);
+    box-shadow: 0 0 6px var(--status-active-glow);
 }
 
 :root[data-theme="light"] .project-meta__status--wip {
-    color: #ca8a04;
+    color: var(--status-wip);
 }
 
 :root[data-theme="light"] .project-meta__status--wip .project-meta__dot {
-    background: #ca8a04;
-    box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);
+    background: var(--status-wip);
+    box-shadow: 0 0 6px var(--status-wip-glow);
 }
 
 .project-tags {
@@ -345,7 +351,7 @@ a.project-card:hover::before {
     margin-bottom: 40px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1240px) {
     .spotify-widget-container {
         position: fixed;
         bottom: 32px;
@@ -560,7 +566,7 @@ a.project-card:hover::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s var(--transition-smooth);
+    transition: transform 0.3s var(--transition-smooth), border-color 0.3s var(--transition-smooth), background 0.3s var(--transition-smooth);
 }
 
 .theme-toggle:hover {

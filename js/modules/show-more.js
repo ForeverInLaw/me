@@ -15,11 +15,14 @@ export function initShowMore() {
     showMoreBtn.addEventListener('click', () => {
         const isExpanding = !projectsRow.classList.contains('is-expanded');
         const hiddenItems = Array.from(projectsRow.children).slice(VISIBLE_COUNT);
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (isExpanding) {
             projectsRow.classList.add('is-expanded');
             showMoreBtn.setAttribute('aria-expanded', 'true');
             btnText.textContent = 'Show less';
+
+            if (prefersReducedMotion) return;
 
             gsap.fromTo(hiddenItems, {
                 autoAlpha: 0,
@@ -36,6 +39,13 @@ export function initShowMore() {
             });
 
         } else {
+            if (prefersReducedMotion) {
+                projectsRow.classList.remove('is-expanded');
+                showMoreBtn.setAttribute('aria-expanded', 'false');
+                btnText.textContent = `Show all projects (${totalCount})`;
+                return;
+            }
+
             const projectsSection = projectsRow.closest('.projects');
             if (projectsSection) {
                 projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });

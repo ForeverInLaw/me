@@ -56,6 +56,7 @@
 	</script>
 
 	<link rel="preload" href="fonts/raleway-black.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="fonts/raleway-variable.woff2" as="font" type="font/woff2" crossorigin>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="css/variables.css">
@@ -72,6 +73,7 @@
 </head>
 
 <body class="entry-active">
+		<a href="#main-content" class="skip-link">Skip to content</a>
 		<div class="grainient-bg" id="grainient-bg" aria-hidden="true"></div>
 
 	<div class="entry-screen" id="entry-screen" role="group" aria-label="Enter zaebal.dev">
@@ -107,13 +109,13 @@
 	</div>
 	<script>if(sessionStorage.getItem('entryCompleted')){document.body.classList.remove('entry-active');document.getElementById('entry-screen').classList.add('hidden')}</script>
 
-	<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+	<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" aria-pressed="true" title="Toggle dark/light mode">
 		<span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"></span>
 		<span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"></span>
 	</button>
 
 	<div class="wrapper">
-		<main class="content">
+		<main class="content" id="main-content" style="scroll-margin-top: 80px;">
 
 			<section class="hero">
 				<div class="hero__inner">

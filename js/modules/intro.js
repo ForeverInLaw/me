@@ -165,6 +165,15 @@ export function initPageAnimations() {
     };
 
     const runIntroSequence = () => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            forceShowPrimarySections();
+            if (heroTitle) gsap.set(heroTitle, { opacity: 1, clearProps: 'all' });
+            initScrollAnimations();
+            return;
+        }
+
         runHeroAnimation();
         runSectionsIntro();
         initScrollAnimations();

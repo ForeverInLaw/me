@@ -1,8 +1,22 @@
+function syncImageAriaHidden(theme) {
+    const darkImgs = document.querySelectorAll('.stats-img--dark, .graph-img--dark');
+    const lightImgs = document.querySelectorAll('.stats-img--light, .graph-img--light');
+    darkImgs.forEach(img => img.setAttribute('aria-hidden', theme === 'dark' ? 'false' : 'true'));
+    lightImgs.forEach(img => img.setAttribute('aria-hidden', theme === 'light' ? 'false' : 'true'));
+}
+
 export function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = savedTheme || (prefersDark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', theme);
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+    }
+
+    syncImageAriaHidden(theme);
 }
 
 export function updateHeroTitleColors() {
@@ -63,15 +77,14 @@ export function attachThemeToggle() {
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
 
+        themeToggle.setAttribute('aria-pressed', String(newTheme === 'dark'));
+
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
-            metaThemeColor.setAttribute('content', newTheme === 'dark' ? '#050505' : '#fafafa');
+            metaThemeColor.setAttribute('content', newTheme === 'dark' ? '#1B1628' : '#D7C9F0');
         }
 
-        const darkImgs = document.querySelectorAll('.stats-img--dark, .graph-img--dark');
-        const lightImgs = document.querySelectorAll('.stats-img--light, .graph-img--light');
-        darkImgs.forEach(img => img.setAttribute('aria-hidden', newTheme === 'dark' ? 'false' : 'true'));
-        lightImgs.forEach(img => img.setAttribute('aria-hidden', newTheme === 'light' ? 'false' : 'true'));
+        syncImageAriaHidden(newTheme);
 
         updateHeroTitleColors();
     });

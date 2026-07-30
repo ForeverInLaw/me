@@ -280,6 +280,10 @@ body.entry-active .project-preview-modal {
     .slide-button-container:not(.completed) .slide-button-handle {
         animation: none;
     }
+
+    .entry-screen-grain {
+        animation: none;
+    }
 }
 
 /* ───────────────────────────────────────────────
