@@ -38,11 +38,25 @@
     font-display: swap;
 }
 
-/* Variable font covers weights 100–900 in one file */
+
 @font-face {
     font-family: raleway_f;
-    src: url(../fonts/raleway-variable.woff2);
-    font-weight: 100 900;
+    src: url(../fonts/raleway-medium.woff2);
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: raleway_f;
+    src: url(../fonts/raleway-semibold.woff2);
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: raleway_f;
+    src: url(../fonts/raleway-bold.woff2);
+    font-weight: 700;
     font-display: swap;
 }
 
