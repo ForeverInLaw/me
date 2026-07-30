@@ -1,4 +1,6 @@
-const NP_API = 'https://spotify-now-playing.foreverinlaw.workers.dev/';
+const NP_API = import.meta.env.DEV
+    ? '/api/now-playing'
+    : 'https://spotify-now-playing.foreverinlaw.workers.dev/';
 const POLL_INTERVAL_MS = 15000;
 
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({

@@ -1,4 +1,6 @@
-const PLAYLISTS_API = 'https://spotify-show-last-68db402e666c.herokuapp.com/api/playlists';
+const PLAYLISTS_API = import.meta.env.DEV
+    ? '/api/playlists'
+    : 'https://spotify-show-last-68db402e666c.herokuapp.com/api/playlists';
 
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
