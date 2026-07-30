@@ -30,33 +30,10 @@
     src: url(../fonts/raleway-regular.woff2);
     font-display: swap;
 }
-
 @font-face {
     font-family: raleway_f;
     src: url(../fonts/raleway-black.woff2);
     font-weight: 900;
-    font-display: swap;
-}
-
-
-@font-face {
-    font-family: raleway_f;
-    src: url(../fonts/raleway-medium.woff2);
-    font-weight: 500;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: raleway_f;
-    src: url(../fonts/raleway-semibold.woff2);
-    font-weight: 600;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: raleway_f;
-    src: url(../fonts/raleway-bold.woff2);
-    font-weight: 700;
     font-display: swap;
 }
 
