@@ -288,33 +288,6 @@ a.project-card:hover::before {
     box-shadow: 0 0 6px var(--status-oss-glow);
 }
 
-:root[data-theme="light"] .project-meta__status--oss {
-    color: var(--status-oss);
-}
-
-:root[data-theme="light"] .project-meta__status--oss .project-meta__dot {
-    background: var(--status-oss);
-    box-shadow: 0 0 6px var(--status-oss-glow);
-}
-
-:root[data-theme="light"] .project-meta__status--active {
-    color: var(--status-active);
-}
-
-:root[data-theme="light"] .project-meta__status--active .project-meta__dot {
-    background: var(--status-active);
-    box-shadow: 0 0 6px var(--status-active-glow);
-}
-
-:root[data-theme="light"] .project-meta__status--wip {
-    color: var(--status-wip);
-}
-
-:root[data-theme="light"] .project-meta__status--wip .project-meta__dot {
-    background: var(--status-wip);
-    box-shadow: 0 0 6px var(--status-wip-glow);
-}
-
 .project-tags {
     margin-top: 16px;
     display: flex;
@@ -581,6 +554,7 @@ a.project-card:hover::before {
     background-repeat: no-repeat;
     background-position: center;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: opacity 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .theme-toggle__icon--sun {
