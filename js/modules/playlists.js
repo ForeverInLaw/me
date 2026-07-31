@@ -1,4 +1,4 @@
-const PLAYLISTS_API = import.meta.env.DEV
+const PLAYLISTS_API = import.meta.env?.DEV
     ? '/api/playlists'
     : 'https://spotify-show-last-68db402e666c.herokuapp.com/api/playlists';
 
