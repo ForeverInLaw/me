@@ -1,5 +1,7 @@
+import { hasFinePointer } from './viewport.js';
+
 export function initCursor() {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (!hasFinePointer()) return;
 
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
