@@ -902,24 +902,38 @@
 /* Mobile screenshot reel (works-reel.js)
 
    Touch devices never get the hover preview, so each card carries its own shot.
-   The frame is always laid out — only the image fades and settles — so nothing
-   below a card moves while scrolling past it.
+   Each frame opens once, as its card reaches the lower third of the viewport,
+   and stays open — see works-reel.js for why the reveal is one-way.
 
    Query is bound to the masonry breakpoint (masonry.js) plus hover:none, so a
    narrow desktop window keeps the hover preview and never gets both. */
 @media (max-width: 768px) and (hover: none) {
+    /* 0fr -> 1fr animates to the frame's natural height, which max-height cannot
+       do without a magic number. The inner frame owns the clipping. */
     .project-shot {
-        /* Seven unrelated sites read as one set only once their palettes are pulled
-           together. Idle dims away from the page ground, which means darkening on
-           dark and washing out on light — hence the per-theme idle filter. */
-        --shot-focus-filter: saturate(0.85) contrast(1.05);
-        --shot-idle-filter: saturate(0.85) contrast(1.05) brightness(0.62);
-
-        margin-top: 14px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.35);
+        display: grid;
+        grid-template-rows: 0fr;
+        margin-top: 0;
+        /* Clips the frame's own 1px borders, which a 0fr row cannot collapse. */
         overflow: hidden;
+        opacity: 0;
+        transition: grid-template-rows 0.5s var(--transition-smooth),
+            margin-top 0.5s var(--transition-smooth),
+            opacity 0.3s ease;
+    }
+
+    .project-card.is-revealed .project-shot {
+        grid-template-rows: 1fr;
+        margin-top: 14px;
+        opacity: 1;
+    }
+
+    .project-shot__frame {
+        overflow: hidden;
+        border-radius: 12px;
+        /* Ring instead of a border: a border keeps 2px of box even at 0fr. */
+        box-shadow: 0 0 0 1px var(--border);
+        background: rgba(0, 0, 0, 0.35);
     }
 
     .project-shot__bar {
@@ -959,42 +973,16 @@
         aspect-ratio: 4 / 3;
         object-fit: cover;
         object-position: top center;
-        filter: var(--shot-idle-filter);
-        opacity: 0.5;
-        transform: scale(1.03);
-        transition: opacity 0.45s var(--transition-smooth),
-            transform 0.55s var(--transition-smooth),
-            filter 0.45s var(--transition-smooth);
+        /* Seven unrelated sites read as one set only once their palettes are pulled together. */
+        filter: saturate(0.85) contrast(1.05);
     }
 
-    .project-card.is-focus .project-shot {
-        border-color: var(--border-hover);
-    }
-
-    .project-card.is-focus .project-shot img {
-        filter: var(--shot-focus-filter);
-        opacity: 1;
-        transform: none;
-    }
-
-    /* Light theme: the chrome flips to dark-on-white like .preview-browser does,
-       and idle washes the shot out instead of darkening it. */
-    :root[data-theme="light"] .project-shot {
-        --shot-idle-filter: saturate(0.6) contrast(0.92) brightness(1.14);
-
+    /* Light theme: the chrome flips to dark-on-white like .preview-browser does. */
+    :root[data-theme="light"] .project-shot__frame {
         background: rgba(255, 255, 255, 0.8);
     }
 
     :root[data-theme="light"] .project-shot__bar {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.005));
-    }
-
-    /* Without motion the dimming reads as a broken image rather than as focus. */
-    @media (prefers-reduced-motion: reduce) {
-        .project-shot img {
-            filter: var(--shot-focus-filter);
-            opacity: 1;
-            transform: none;
-        }
     }
 }

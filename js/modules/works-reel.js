@@ -2,22 +2,30 @@ import { getProjectDomain } from './project-card.js';
 
 // The desktop hover preview (preview-modal.js) is inert on touch, so the project
 // screenshots never reached mobile at all. Here every card that has one carries
-// it inline in a browser frame: the card crossing the middle of the viewport
-// lights its shot up, the rest stay dimmed. Scroll is the only input, so the
-// card can stay a plain <a> and tapping still just opens the project.
+// it inline in a browser frame that opens as the card scrolls into view. Scroll
+// is the only input, so the card can stay a plain <a> and tapping still just
+// opens the project.
+//
+// The reveal is one-way on purpose. Collapsing a card again would change the
+// page height above the viewport and yank the view out from under the reader,
+// and compensating for that means scrolling the page programmatically — worse
+// than simply leaving a shot open once it has been seen.
 
 const REEL_QUERY = '(max-width: 768px) and (hover: none)';
 
-// A card counts as focused only while it crosses the middle 10% of the viewport,
-// which keeps exactly one shot lit at a time.
-const FOCUS_BAND = '-45% 0px -45% 0px';
+// Reveal once the card reaches the lower third of the viewport. Anchored to the
+// bottom edge only, so even the last card in the list still triggers.
+const REVEAL_MARGIN = '0px 0px -30% 0px';
 
+// The inner frame is the single grid item the 0fr -> 1fr reveal collapses.
 const FRAME_TEMPLATE = `
-    <div class="project-shot__bar">
-        <span></span><span></span><span></span>
-        <em class="project-shot__domain"></em>
-    </div>
-    <img alt="" loading="lazy" decoding="async">`;
+    <div class="project-shot__frame">
+        <div class="project-shot__bar">
+            <span></span><span></span><span></span>
+            <em class="project-shot__domain"></em>
+        </div>
+        <img alt="" loading="lazy" decoding="async">
+    </div>`;
 
 // Returns false when the card has no usable screenshot, so the caller can skip
 // observing a card that would never have anything to reveal.
@@ -47,11 +55,13 @@ export function initWorksReel() {
     const cards = document.querySelectorAll('.projects .project-card[data-screenshot]');
     if (!cards.length) return;
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, self) => {
         entries.forEach((entry) => {
-            entry.target.classList.toggle('is-focus', entry.isIntersecting);
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-revealed');
+            self.unobserve(entry.target);
         });
-    }, { rootMargin: FOCUS_BAND });
+    }, { rootMargin: REVEAL_MARGIN });
 
     cards.forEach((card) => {
         if (mountShot(card)) observer.observe(card);
