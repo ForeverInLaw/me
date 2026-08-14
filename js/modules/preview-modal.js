@@ -1,4 +1,5 @@
-import { getProjectDomain } from './project-card.js';
+import { readProjectCard, screenshotCards, SCREENSHOT_CARD_SELECTOR } from './project-card.js';
+import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 
 function initProjectPreview() {
     const modal = document.getElementById('project-preview-modal');
@@ -12,8 +13,8 @@ function initProjectPreview() {
     const previewBrowser = modal.querySelector('.preview-browser');
     const previewInfo = modal.querySelector('.preview-info');
     const previewImageWrapper = modal.querySelector('.preview-image-wrapper');
-    const cardSelector = '.projects .project-card[data-screenshot]';
-    const projectCards = document.querySelectorAll(cardSelector);
+    const cardSelector = SCREENSHOT_CARD_SELECTOR;
+    const projectCards = screenshotCards();
 
     if (!previewImage || !previewTitle || !previewDesc || !previewDomain || !previewTags || !previewBrowser || !previewInfo || projectCards.length === 0) {
         return;
@@ -139,31 +140,24 @@ function initProjectPreview() {
         tiltYTo(rotateY);
     };
 
-    const fillPreviewTags = (card) => {
-        previewTags.innerHTML = '';
-        const tags = card.querySelectorAll('.project-tag');
-        if (!tags.length) return;
-
+    const fillPreviewTags = (tags) => {
         const fragment = document.createDocumentFragment();
-        tags.forEach((tag, index) => {
-            if (index > 3) return;
+        tags.forEach((tag) => {
             const chip = document.createElement('span');
             chip.className = 'preview-tag-chip';
-            chip.textContent = tag.textContent?.trim() || '';
+            chip.textContent = tag;
             fragment.appendChild(chip);
         });
-        previewTags.appendChild(fragment);
+        previewTags.replaceChildren(fragment);
     };
 
     const updatePreviewContent = (card) => {
-        const screenshot = card.getAttribute('data-screenshot') || '';
-        const title = card.querySelector('h3')?.textContent?.trim() || 'Project';
-        const desc = card.querySelector('p')?.textContent?.trim() || 'No short description provided.';
+        const { title, description, screenshot, domain, tags } = readProjectCard(card);
 
         previewTitle.textContent = title;
-        previewDesc.textContent = desc;
-        previewDomain.textContent = getProjectDomain(card);
-        fillPreviewTags(card);
+        previewDesc.textContent = description;
+        previewDomain.textContent = domain;
+        fillPreviewTags(tags);
 
         modal.classList.remove('is-error');
         modal.classList.add('is-loading');
@@ -393,21 +387,20 @@ function initProjectPreview() {
 }
 
 export function initPreviewModal() {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!canHoverPreview()) return;
+    if (prefersReducedMotion()) return;
     initProjectPreview();
 
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-            document.querySelectorAll('.project-card[data-screenshot]').forEach(card => {
-                const src = card.getAttribute('data-screenshot');
-                if (src) {
-                    const link = document.createElement('link');
-                    link.rel = 'preload';
-                    link.as = 'image';
-                    link.href = src;
-                    document.head.appendChild(link);
-                }
+            screenshotCards().forEach(card => {
+                const { screenshot } = readProjectCard(card);
+                if (!screenshot) return;
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = screenshot;
+                document.head.appendChild(link);
             });
         }, { timeout: 2000 });
     }
