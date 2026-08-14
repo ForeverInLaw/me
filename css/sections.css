@@ -898,3 +898,103 @@
         margin-bottom: 16px;
     }
 }
+
+/* Mobile screenshot reel (works-reel.js)
+
+   Touch devices never get the hover preview, so each card carries its own shot.
+   The frame is always laid out — only the image fades and settles — so nothing
+   below a card moves while scrolling past it.
+
+   Query is bound to the masonry breakpoint (masonry.js) plus hover:none, so a
+   narrow desktop window keeps the hover preview and never gets both. */
+@media (max-width: 768px) and (hover: none) {
+    .project-shot {
+        /* Seven unrelated sites read as one set only once their palettes are pulled
+           together. Idle dims away from the page ground, which means darkening on
+           dark and washing out on light — hence the per-theme idle filter. */
+        --shot-focus-filter: saturate(0.85) contrast(1.05);
+        --shot-idle-filter: saturate(0.85) contrast(1.05) brightness(0.62);
+
+        margin-top: 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+    }
+
+    .project-shot__bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+    }
+
+    .project-shot__bar span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+    }
+
+    .project-shot__bar span:nth-child(1) { background: #ff5f57; }
+    .project-shot__bar span:nth-child(2) { background: #ffbd2f; }
+    .project-shot__bar span:nth-child(3) { background: #28ca42; }
+
+    .project-shot__domain {
+        margin-left: 6px;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 10px;
+        font-style: normal;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .project-shot img {
+        display: block;
+        width: 100%;
+        /* Top crop: these are full-page shots and the hero is the part worth showing. */
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        object-position: top center;
+        filter: var(--shot-idle-filter);
+        opacity: 0.5;
+        transform: scale(1.03);
+        transition: opacity 0.45s var(--transition-smooth),
+            transform 0.55s var(--transition-smooth),
+            filter 0.45s var(--transition-smooth);
+    }
+
+    .project-card.is-focus .project-shot {
+        border-color: var(--border-hover);
+    }
+
+    .project-card.is-focus .project-shot img {
+        filter: var(--shot-focus-filter);
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Light theme: the chrome flips to dark-on-white like .preview-browser does,
+       and idle washes the shot out instead of darkening it. */
+    :root[data-theme="light"] .project-shot {
+        --shot-idle-filter: saturate(0.6) contrast(0.92) brightness(1.14);
+
+        background: rgba(255, 255, 255, 0.8);
+    }
+
+    :root[data-theme="light"] .project-shot__bar {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.005));
+    }
+
+    /* Without motion the dimming reads as a broken image rather than as focus. */
+    @media (prefers-reduced-motion: reduce) {
+        .project-shot img {
+            filter: var(--shot-focus-filter);
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
