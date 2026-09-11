@@ -154,6 +154,39 @@ body.entry-active .project-preview-modal {
     flex: none;
 }
 
+/* Two icons share the handle. The arrow is JS-driven: from mid-drag it
+   dissolves into the fill (opacity 1 -> 0 across progress 0.5 -> 1), so
+   no CSS transition on it — it would lag a frame behind the grip.
+   The check waits off to the right and flies into the center once the
+   commit starts (is-done), with a small delay so it lands as the morph
+   finishes opening the pill. */
+.slide-button-icon {
+    position: absolute;
+}
+
+.slide-button-icon--arrow {
+    opacity: 1;
+}
+
+.slide-button-icon--check {
+    opacity: 0;
+    transform: translateX(28px) scale(0.5);
+    filter: blur(2px);
+    transition: opacity 250ms ease-out 120ms,
+        transform 350ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
+        filter 250ms ease-out 120ms;
+}
+
+.slide-button-container.is-done .slide-button-icon--arrow {
+    opacity: 0;
+}
+
+.slide-button-container.is-done .slide-button-icon--check {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+}
+
 @media (pointer: coarse) {
     .slide-button-handle {
         cursor: auto;
@@ -164,26 +197,9 @@ body.entry-active .project-preview-modal {
     }
 }
 
-/* Pulsing ring signals the handle is interactive (the native cursor is hidden) */
-.slide-button-container:not(.is-done) .slide-button-handle {
-    animation: entryHandlePulse 2.4s var(--transition-smooth) infinite;
-}
-
-@keyframes entryHandlePulse {
-    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-    50%      { box-shadow: 0 0 0 9px rgba(244, 146, 240, 0); }
-}
-
-/* Keyboard focus affordance - must be visible since body cursor is hidden */
-.slide-button-container:not(.is-done) .slide-button-handle:focus-visible {
-    outline: none;
-    animation: none;
-    box-shadow: 0 0 0 3px var(--accent-glow), 0 0 0 1px var(--accent);
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .slide-button-container:not(.is-done) .slide-button-handle {
-        animation: none;
+    .slide-button-icon--check {
+        transition: none;
     }
 
     .entry-screen-grain {

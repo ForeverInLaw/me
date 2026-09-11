@@ -101,10 +101,16 @@ export function initSlideButton() {
         // track's left edge to the grip's right edge, so at rest it sits
         // exactly under the grip and the union reads as one pill.
         if (fill) gsap.set(fill, { width: (geom.left - PAD) + geom.w });
-        handle.setAttribute('aria-valuenow', String(Math.round(progress() * 100)));
+        const p = progress();
+        handle.setAttribute('aria-valuenow', String(Math.round(p * 100)));
         // The label lives inside the track under the fill: it fades as the
         // fill slides over it, and stays gone once the morph commits.
-        if (label) label.style.opacity = done ? '0' : String(Math.max(0, 1 - progress() * 1.6));
+        if (label) label.style.opacity = done ? '0' : String(Math.max(0, 1 - p * 1.6));
+        // The arrow dissolves into the fill across the second half of the
+        // drag (progress 0.5 -> 1), so by commit time the handle is blank
+        // and the check can fly in clean.
+        const arrow = handle.querySelector('.slide-button-icon--arrow');
+        if (arrow && !done) arrow.style.opacity = String(Math.max(0, 1 - (p - 0.5) * 2));
     }
 
     // Track-local pointer position, centered on the grip.
@@ -195,6 +201,8 @@ export function initSlideButton() {
         container.classList.add('is-done');
         handle.setAttribute('aria-valuenow', '100');
         if (label) label.style.opacity = '0';
+        const arrow = handle.querySelector('.slide-button-icon--arrow');
+        if (arrow) arrow.style.opacity = '0';
         if (reduceMotion()) {
             geom.left = PAD;
             geom.w = fullWidth();
