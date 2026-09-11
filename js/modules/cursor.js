@@ -2,6 +2,15 @@ import { hasFinePointer } from './viewport.js';
 import { createFollower } from './pointer-follower.js';
 import { INTERACTIVE_ELEMENTS } from './interactive.js';
 
+let activeFollower = null;
+
+/* Jump the cursor dot straight to (x, y). The slider calls this on
+   down/move: with pointer capture + preventDefault on pointerdown the
+   compat mousemove is suppressed, so easing toward a stale target would
+   leave the dot frozen mid-drag. */
+export function snapCursorTo(x, y) {
+    activeFollower?.jumpTo(x, y);
+}
 export function initCursor() {
     if (!hasFinePointer()) return;
 
@@ -17,21 +26,22 @@ export function initCursor() {
             cursor.style.setProperty('--cursor-y', `${y}px`);
         }
     });
+    activeFollower = follower;
 
     let hasMovedMouse = false;
 
-    window.addEventListener('mousemove', (e) => {
-        // The first move places the dot under the pointer instead of easing it
-        // in from the top-left corner.
+    function onPointerMove(e) {
         if (!hasMovedMouse) {
             hasMovedMouse = true;
             cursor.classList.add('has-moved');
             follower.jumpTo(e.clientX, e.clientY);
             return;
         }
-
         follower.moveTo(e.clientX, e.clientY);
-    });
+    }
+
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove);
 
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest(INTERACTIVE_ELEMENTS)) {
