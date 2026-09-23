@@ -1,5 +1,7 @@
+/* global gsap, ScrollTrigger -- loaded as a global by libs/gsap/gsap-bundle.min.js */
+
 import { apiEndpoint, escapeHtml, fetchJson, safeUrl } from './remote.js';
-import { isCompact } from './viewport.js';
+import { isCompact, prefersReducedMotion } from './viewport.js';
 
 const PLAYLISTS_API = apiEndpoint(
     '/api/playlists',
@@ -188,6 +190,41 @@ export async function initPlaylists() {
                     }, 1000);
                 });
             });
+        }
+
+        // The cards arrive over the network after the page has settled - without
+        // an entrance the whole grid pops in mid-scroll. Reuse the projects grid's
+        // reveal vocabulary so both card grids read as one system.
+        if (typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion()) {
+            if (isCompact()) {
+                gsap.fromTo(container, { autoAlpha: 0, y: 12 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            } else {
+                const cards = container.querySelectorAll('.playlist-card');
+                gsap.set(cards, { autoAlpha: 0, y: 26, filter: 'blur(8px)' });
+                ScrollTrigger.batch(cards, {
+                    start: 'top 90%',
+                    once: true,
+                    onEnter: (batch) => gsap.to(batch, {
+                        duration: 0.6,
+                        autoAlpha: 1,
+                        y: 0,
+                        filter: 'blur(0px)',
+                        stagger: 0.08,
+                        ease: 'power3.out',
+                        overwrite: 'auto'
+                    }).then(() => {
+                        // Same marker scroll-reveal.js writes, so a grep for
+                        // already-entered cards finds both grids.
+                        batch.forEach(el => { el.dataset.revealed = 'true'; });
+                        gsap.set(batch, { clearProps: 'transform,opacity,visibility,filter' });
+                    })
+                });
+            }
         }
 
         if (typeof ScrollTrigger !== 'undefined') {
