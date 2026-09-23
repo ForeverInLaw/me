@@ -9,14 +9,14 @@ self-contained spec for any executor.
 The site's motion is already disciplined (transitions.dev tokens in
 `css/variables.css`, reduced-motion handled, hover gated via `matchMedia`
 in `js/modules/viewport.js`). These plans only close the remaining seams:
-one half-broken theme change and three places that still teleport. Two
-smaller audit findings were logged and deliberately not planned:
+one half-broken theme change and three places that still teleport. The two
+smaller audit findings were also fixed after execution — commit `521c9e6`:
 
-- `css/base.css:90-91` + `js/modules/cursor.js:24-28` — the cursor dot
-  positions via `left/top` custom properties (layout per frame; a
-  transform + `scale`-property split would fix it). LOW, cosmetic.
-- `css/base.css:21` — the skip link animates `top` on keyboard focus
-  (focus-initiated motion should be instant). LOW.
+- `css/base.css` + `js/modules/cursor.js:24-28` — the cursor dot now rides
+  `transform: translate3d(...)` with the hover growth on the separate
+  `scale` property (no more per-frame `left/top` layout). DONE.
+- `css/base.css` — the skip link appears instantly on focus (focus/keyboard
+  reveals stay unanimated). DONE.
 
 ## Plans
 
