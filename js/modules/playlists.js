@@ -22,6 +22,7 @@ function initPlaylistStack(container) {
     let current = 0;
     let touchStartX = 0;
     let touchStartY = 0;
+    let touchStartTime = 0;
     let touchDeltaX = 0;
     let isSwiping = false;
 
@@ -97,10 +98,36 @@ function initPlaylistStack(container) {
     function next() { goTo((current + 1) % items.length, 'left'); }
     function prev() { goTo((current - 1 + items.length) % items.length, 'right'); }
 
+    /* Finger-follow: the active card rides the finger (inline transform, no
+       transition) so commit/release hands off from the finger's position, not
+       from the stack's rest pose. Direct manipulation, not autonomous motion. */
+    const activeCard = () => items[current];
+
+    function dragFollow() {
+        const card = activeCard();
+        if (!card) return;
+        card.style.transition = 'none';
+        const rotate = Math.max(-6, Math.min(6, touchDeltaX / 24));
+        card.style.transform = `translateX(${touchDeltaX}px) rotate(${rotate}deg)`;
+    }
+
+    // Release without committing: spring back to the class-applied rest pose.
+    function dragRelease() {
+        const card = activeCard();
+        if (!card || !card.style.transform) return;
+        card.style.transition = 'transform 300ms var(--transition-bounce)';
+        card.style.transform = 'none';
+        setTimeout(() => {
+            card.style.transition = '';
+            card.style.transform = '';
+        }, 320);
+    }
+
     container.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
         touchDeltaX = 0;
+        touchStartTime = e.timeStamp;
         isSwiping = false;
     }, { passive: true });
 
@@ -110,13 +137,35 @@ function initPlaylistStack(container) {
         if (!isSwiping && Math.abs(touchDeltaX) > 15 && Math.abs(touchDeltaX) > deltaY) {
             isSwiping = true;
         }
+        if (isSwiping && !prefersReducedMotion()) dragFollow();
     }, { passive: true });
 
-    container.addEventListener('touchend', () => {
-        if (isSwiping && Math.abs(touchDeltaX) > 50) {
-            if (touchDeltaX < 0) next();
-            else prev();
+    container.addEventListener('touchend', (e) => {
+        if (isSwiping) {
+            const elapsedMs = Math.max(1, e.timeStamp - touchStartTime);
+            const flick = Math.abs(touchDeltaX) / elapsedMs > 0.11; // px/ms
+            if (Math.abs(touchDeltaX) > 50 || flick) {
+                // Clear inline styles in the same task that applies the exit
+                // class, so the class transition starts from the dragged pose
+                // instead of snapping to center first.
+                const card = activeCard();
+                if (card) {
+                    card.style.transition = '';
+                    card.style.transform = '';
+                }
+                if (touchDeltaX < 0) next();
+                else prev();
+            } else {
+                dragRelease();
+            }
         }
+        isSwiping = false;
+    }, { passive: true });
+
+    // A stolen gesture (notification shade, system swipe) must not strand the
+    // card half-dragged: spring back like an abandoned release.
+    container.addEventListener('touchcancel', () => {
+        if (isSwiping) dragRelease();
         isSwiping = false;
     }, { passive: true });
 
