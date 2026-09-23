@@ -1,6 +1,8 @@
 // Live local-time clock in the footer ("Hand-built after dark") - the 2am
 // joke becomes real. Runs on a 1s interval, paused when the tab is hidden.
-// No motion beyond a CSS glow; reduced-motion users get a static label.
+// Minute/hour text changes go through swapText (.t-text-swap); the CSS glow
+// stays, and reduced-motion users get instant text changes (no transform).
+import { swapText } from './text-swap.js';
 export function initLocalTime() {
     const timeEl = document.getElementById('local-time');
     const stateEl = document.getElementById('night-clock-state');
@@ -22,12 +24,14 @@ export function initLocalTime() {
         const now = new Date();
         const hhmm = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
         if (timeEl.textContent !== hhmm) {
-            timeEl.textContent = hhmm;
+            // datetime is machine-readable metadata, not pixels: it updates
+            // immediately, while the visible text goes through the swap.
             timeEl.setAttribute('datetime', hhmm);
+            swapText(timeEl, hhmm);
         }
         if (stateEl) {
             const label = stateFor(now.getHours());
-            if (stateEl.textContent !== label) stateEl.textContent = label;
+            if (stateEl.textContent !== label) swapText(stateEl, label);
         }
     };
 
