@@ -18,7 +18,7 @@
     font-weight: 700;
     text-decoration: none;
     border-radius: var(--radius-sm);
-    transition: top 0.2s var(--transition-smooth);
+    /* No transition: focus reveals are keyboard-initiated and stay instant. */
 }
 
 .skip-link:focus {
@@ -95,11 +95,16 @@ body::before {
     background-color: #ffffff;
     pointer-events: none;
     z-index: 99999;
-    left: var(--cursor-x, 0);
-    top: var(--cursor-y, 0);
-    transform: translate(-50%, -50%) scale(1);
+    left: 0;
+    top: 0;
+    /* Position rides the transform (compositor): the rAF loop rewrites
+       --cursor-x/--cursor-y every frame, and left/top would re-run layout
+       each time. The hover growth lives on the separate `scale` property so
+       its transition never retargets the per-frame position. */
+    transform: translate3d(var(--cursor-x, 0), var(--cursor-y, 0), 0) translate(-50%, -50%);
+    scale: 1;
     mix-blend-mode: difference;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    transition: scale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
     opacity: 0;
     will-change: transform, opacity;
 }
@@ -109,7 +114,7 @@ body:hover .custom-cursor.has-moved {
 }
 
 .custom-cursor.cursor-hover {
-    transform: translate(-50%, -50%) scale(3);
+    scale: 3;
     background-color: #ffffff;
     opacity: 1;
     mix-blend-mode: difference;
