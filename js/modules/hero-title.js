@@ -112,10 +112,17 @@ export function revealHeroTitle() {
 
 /**
  * Re-runs the gradient against the current theme, tweening each character.
- * No-op until revealHeroTitle() has run.
+ * `immediate` paints the new colors in the same task instead of tweening —
+ * used when a View Transition already crossfades the whole page, where a
+ * second 500ms tween would double-animate the title. No-op until
+ * revealHeroTitle() has run.
  */
-export function recolorHeroTitle() {
+export function recolorHeroTitle(immediate = false) {
     paint((char, color) => {
+        if (immediate) {
+            char.style.color = color;
+            return;
+        }
         gsap.to(char, { color, duration: 0.5, ease: 'power2.out' });
     });
 }

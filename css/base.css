@@ -61,6 +61,14 @@ body {
     touch-action: manipulation;
 }
 
+/* The theme toggle rides the View Transitions API crossfade. While it runs,
+   the body's own background/color transition is disabled: the API snapshots
+   the post-callback state, and a still-tweening body would lag the crossfade
+   by its own 500ms. Non-VTA browsers keep the 0.5s fade as their fallback. */
+html.is-theme-vt body {
+    transition: none;
+}
+
 @media (pointer: coarse) {
     body {
         cursor: auto;
