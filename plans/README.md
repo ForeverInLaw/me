@@ -22,10 +22,17 @@ smaller audit findings were logged and deliberately not planned:
 
 | # | Plan | Severity | Status | Files touched |
 | --- | --- | --- | --- | --- |
-| 001 | [Theme switch rides a View Transitions API crossfade](001-theme-view-transition.md) | HIGH | TODO | `theme.js`, `hero-title.js`, `base.css` |
-| 002 | [Playlists grid gets an entrance (scroll-reveal vocabulary)](002-playlists-grid-entrance.md) | MEDIUM | TODO | `playlists.js` |
-| 003 | [Playlist stack swipe follows the finger](003-playlist-stack-drag-follow.md) | MEDIUM | TODO | `playlists.js` |
-| 004 | [Footer clock swaps text through the site's text-swap utility](004-footer-clock-text-swap.md) | LOW | TODO | `local-time.js`, `index.html` |
+| 001 | [Theme switch rides a View Transitions API crossfade](001-theme-view-transition.md) | HIGH | DONE — `62cccbc` | `theme.js`, `hero-title.js`, `base.css` |
+| 002 | [Playlists grid gets an entrance (scroll-reveal vocabulary)](002-playlists-grid-entrance.md) | MEDIUM | DONE — `482b25d` | `playlists.js` |
+| 003 | [Playlist stack swipe follows the finger](003-playlist-stack-drag-follow.md) | MEDIUM | DONE — `5473e9e` | `playlists.js` |
+| 004 | [Footer clock swaps text through the site's text-swap utility](004-footer-clock-text-swap.md) | LOW | DONE — `a22fd6c` | `local-time.js`, `index.html` |
+
+All four plans were executed (workers, batch 001∥002∥004 then 003), reviewed
+against the review-animations bar (verdict: Approve on all four), and landed
+atomically. Mechanical verification (`npm test` 8/8, `npm run build`) green at
+every step. Browser feel checks from each plan's Verification section remain
+with a human: theme crossfade + reduced-motion emulation in Chrome/Edge/Safari,
+playlist entrance on Slow 4G, and the drag-follow on a real touch device.
 
 ## Recommended execution order
 
