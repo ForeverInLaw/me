@@ -51,6 +51,9 @@ body {
     color: var(--fg);
     font-family: raleway_f, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
+    /* Raleway defaults to old-style figures; lining ones sit on the baseline
+       next to caps ("P2P", "2026") instead of dipping below it */
+    font-variant-numeric: lining-nums;
     position: relative;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

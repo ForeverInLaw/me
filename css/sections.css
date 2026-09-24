@@ -259,7 +259,6 @@
 
 .playlist-meta {
     font-size: 12px;
-    font-weight: 600;
     color: var(--accent-ink);
     margin-bottom: 8px;
     display: block;
@@ -370,10 +369,8 @@
 }
 
 .card-label {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 15px;
     color: var(--fg);
-    opacity: 0.9;
 }
 
 .card-icon {
@@ -900,7 +897,6 @@
     }
 
     .section-title {
-        font-size: 11px;
         margin-bottom: 16px;
     }
 }
