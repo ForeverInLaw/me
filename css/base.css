@@ -97,16 +97,21 @@ body::before {
     z-index: 99999;
     left: 0;
     top: 0;
-    /* Position rides the transform (compositor): the rAF loop rewrites
+    /* Position rides the `translate` property: the rAF loop rewrites
        --cursor-x/--cursor-y every frame, and left/top would re-run layout
-       each time. The hover growth lives on the separate `scale` property so
-       its transition never retargets the per-frame position. */
-    transform: translate3d(var(--cursor-x, 0), var(--cursor-y, 0), 0) translate(-50%, -50%);
-    scale: 1;
+       each time. The hover growth stays in `transform` - individual
+       transform properties compose as translate -> rotate -> scale ->
+       transform, so putting the position inside `transform` while `scale`
+       eases would multiply the positional shift by the hover size.
+       Only `transform` carries a transition; a transition on `translate`
+       would restart from the current position every frame and lag the
+       pointer. */
+    translate: var(--cursor-x, 0) var(--cursor-y, 0);
+    transform: translate(-50%, -50%) scale(1);
     mix-blend-mode: difference;
-    transition: scale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
     opacity: 0;
-    will-change: transform, opacity;
+    will-change: translate, transform, opacity;
 }
 
 body:hover .custom-cursor.has-moved {
@@ -114,7 +119,7 @@ body:hover .custom-cursor.has-moved {
 }
 
 .custom-cursor.cursor-hover {
-    scale: 3;
+    transform: translate(-50%, -50%) scale(3);
     background-color: #ffffff;
     opacity: 1;
     mix-blend-mode: difference;
