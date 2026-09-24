@@ -290,7 +290,6 @@
 
 .section-header-wrapper {
     margin-bottom: 40px;
-    animation: fade-in-up 0.8s var(--transition-smooth) forwards;
 }
 
 .section-subtitle {
