@@ -252,6 +252,15 @@ html:not(.js) .spotify-widget-container {
     display: none;
 }
 
+/* The inverse of the restore below: while the custom cursor is proven
+   active, the native one stays hidden everywhere. cursor:none inherited
+   from body loses to the UA's pointer hand on links and to :active rules
+   (the slider's grabbing); the invariant is absolute, so the class-gated
+   !important is deliberate - no native cursor may show while the dot is on. */
+body.has-custom-cursor * {
+    cursor: none !important;
+}
+
 /* Restore a real cursor whenever the custom one is not proven active
    (no JS, coarse pointer, or a failed cursor init) */
 body:not(.has-custom-cursor),
