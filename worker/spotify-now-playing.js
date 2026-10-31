@@ -78,8 +78,8 @@ async function nowPlayingCard(env, theme) {
 // Rendered with system fonts: track names can use any script, so a subset font cannot cover them.
 export function renderCard(payload, theme) {
     const colors = theme === 'light'
-        ? { accent: '#8F2784', fg: '#1D1421', hairline: '#E2DCE7' }
-        : { accent: '#F492F0', fg: '#F4EFF8', hairline: '#2A2433' };
+        ? { accent: '#1B3FD6', fg: '#141210', hairline: '#E2DFD8' }
+        : { accent: '#8EA6FF', fg: '#F2F0EB', hairline: '#2B2B2E' };
     const label = payload.isPlaying ? 'Now playing' : 'Last played';
     const line = payload.track
         ? `${payload.track.name} — ${payload.track.artists}`
