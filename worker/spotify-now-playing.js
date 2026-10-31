@@ -17,43 +17,14 @@ export default {
             return jsonResponse({ error: 'method not allowed' }, 405, origin);
         }
 
+        const { pathname, searchParams } = new URL(request.url);
+
+        if (pathname === '/now-playing.svg') {
+            return svgResponse(await nowPlayingCard(env, searchParams.get('theme')));
+        }
+
         try {
-            const token = await getAccessToken(env);
-
-            const nowRes = await fetch(NOW_PLAYING_URL, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (nowRes.status === 200) {
-                const data = await nowRes.json();
-                if (data && data.item) {
-                    return jsonResponse(
-                        buildPayload(data.item, !!data.is_playing, null, data.progress_ms),
-                        200,
-                        origin
-                    );
-                }
-            }
-
-            const recentRes = await fetch(RECENT_URL, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (!recentRes.ok) {
-                return jsonResponse({ isPlaying: false, track: null }, 200, origin);
-            }
-
-            const recent = await recentRes.json();
-            const entry = recent.items && recent.items[0];
-            if (!entry || !entry.track) {
-                return jsonResponse({ isPlaying: false, track: null }, 200, origin);
-            }
-
-            return jsonResponse(
-                buildPayload(entry.track, false, entry.played_at, null),
-                200,
-                origin
-            );
+            return jsonResponse(await getNowPlaying(env), 200, origin);
         } catch (err) {
             return jsonResponse(
                 { isPlaying: false, track: null, error: String(err && err.message || err) },
@@ -63,6 +34,74 @@ export default {
         }
     },
 };
+
+async function getNowPlaying(env) {
+    const token = await getAccessToken(env);
+
+    const nowRes = await fetch(NOW_PLAYING_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (nowRes.status === 200) {
+        const data = await nowRes.json();
+        if (data && data.item) {
+            return buildPayload(data.item, !!data.is_playing, null, data.progress_ms);
+        }
+    }
+
+    const recentRes = await fetch(RECENT_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!recentRes.ok) {
+        return { isPlaying: false, track: null };
+    }
+
+    const recent = await recentRes.json();
+    const entry = recent.items && recent.items[0];
+    if (!entry || !entry.track) {
+        return { isPlaying: false, track: null };
+    }
+
+    return buildPayload(entry.track, false, entry.played_at, null);
+}
+
+// Failures render a quiet card: a broken image on the GitHub profile is worse than no track.
+async function nowPlayingCard(env, theme) {
+    try {
+        return renderCard(await getNowPlaying(env), theme);
+    } catch {
+        return renderCard({ isPlaying: false, track: null }, theme);
+    }
+}
+
+// Rendered with system fonts: track names can use any script, so a subset font cannot cover them.
+export function renderCard(payload, theme) {
+    const colors = theme === 'light'
+        ? { accent: '#8F2784', fg: '#1D1421', hairline: '#E2DCE7' }
+        : { accent: '#F492F0', fg: '#F4EFF8', hairline: '#2A2433' };
+    const label = payload.isPlaying ? 'Now playing' : 'Last played';
+    const line = payload.track
+        ? `${payload.track.name} — ${payload.track.artists}`
+        : 'Nothing on the turntable';
+    const clipped = line.length > 72 ? `${line.slice(0, 71)}…` : line;
+    const font = 'font-family="ui-monospace,Consolas,Menlo,monospace" font-size="15"';
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 72" width="840" height="72" role="img">`
+        + `<title>${escapeXml(`${label}: ${line}`)}</title>`
+        + `<rect width="840" height="1" fill="${colors.hairline}"/>`
+        + `<text x="0" y="44" ${font} fill="${colors.accent}">${label}</text>`
+        + `<text x="124" y="44" ${font} fill="${colors.fg}">${escapeXml(clipped)}</text>`
+        + `</svg>`;
+}
+
+function escapeXml(text) {
+    return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+}
 
 async function getAccessToken(env) {
     const basic = btoa(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`);
@@ -126,6 +165,15 @@ function jsonResponse(data, status, origin) {
             'Content-Type': 'application/json; charset=utf-8',
             'Cache-Control': 'public, max-age=15, s-maxage=15',
             ...corsHeaders(origin),
+        },
+    });
+}
+
+function svgResponse(svg) {
+    return new Response(svg, {
+        headers: {
+            'Content-Type': 'image/svg+xml; charset=utf-8',
+            'Cache-Control': 'no-cache, max-age=0',
         },
     });
 }
