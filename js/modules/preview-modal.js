@@ -1,312 +1,186 @@
+/* global gsap -- loaded as a classic script before the modules (index.html). */
+// Floating project preview for pointer devices: a screenshot card that hangs off
+// the cursor over any project row with data-screenshot. It rises in on the first
+// hover, leans with the pointer's speed, and wipes to the next shot from the
+// direction the pointer travelled through the list (shot-stack.js).
+
 import { readProjectCard, screenshotCards, SCREENSHOT_CARD_SELECTOR } from './project-card.js';
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 import { createFollower, placeNearPointer } from './pointer-follower.js';
-import { createImageSlot } from './image-slot.js';
+import { createShotStack, CLIP_FULL, CLIP_FROM_BELOW } from './shot-stack.js';
 
-function initProjectPreview() {
-    const modal = document.getElementById('project-preview-modal');
-    if (!modal) return;
+const POINTER_OFFSET = 20;
+const HIDE_DELAY_MS = 60;     // bridges the hairline between two rows
+const LEAN_PER_PX = 0.35;     // degrees of lean per px of travel in one frame
+const LEAN_MAX = 5;
 
-    const previewImage = document.getElementById('preview-image');
-    const previewTitle = document.getElementById('preview-title');
-    const previewDesc = document.getElementById('preview-desc');
-    const previewDomain = document.getElementById('preview-domain');
-    const previewTags = document.getElementById('preview-tags');
-    const previewBrowser = modal.querySelector('.preview-browser');
-    const previewInfo = modal.querySelector('.preview-info');
-    const previewImageWrapper = modal.querySelector('.preview-image-wrapper');
-    const cardSelector = SCREENSHOT_CARD_SELECTOR;
-    const projectCards = screenshotCards();
-
-    if (!previewImage || !previewTitle || !previewDesc || !previewDomain || !previewTags || !previewBrowser || !previewInfo || projectCards.length === 0) {
-        return;
-    }
-
-    const pointerOffset = 20;
-    let hideTimer = null;
-    let activeCard = null;
-    let contentTransitionToken = 0;
-    const lastPointer = { x: 0, y: 0 };
-    const contentTargets = [previewBrowser, previewInfo];
-    const tiltState = { x: 0, y: 0 };
+/**
+ * Keeps `modal` beside the pointer. The card hangs from the corner nearest the
+ * cursor and trails behind horizontal movement: hanging below the cursor it
+ * swings like a pendulum, propped above it, it tips the other way.
+ */
+function createPlacement(modal, calm) {
+    let leanSign = 1;
+    let prevX = null;
 
     const follower = createFollower({
-        ease: 0.3,
-        onUpdate: (x, y) => gsap.set(modal, { x, y })
+        ease: calm ? 1 : 0.3,
+        onUpdate: (x, y) => {
+            const travel = prevX === null ? 0 : x - prevX;
+            prevX = x;
+            const lean = calm ? 0 : gsap.utils.clamp(-LEAN_MAX, LEAN_MAX, travel * LEAN_PER_PX * leanSign);
+            gsap.set(modal, { x, y, rotation: lean });
+        }
     });
 
-    const imageSlot = createImageSlot(previewImage, (state, aspect) => {
-        modal.classList.toggle('is-loading', state === 'loading');
-        modal.classList.toggle('is-error', state === 'error');
-        if (aspect) previewImageWrapper.style.setProperty('--preview-aspect', aspect);
-    });
+    return {
+        place(pointer, immediate) {
+            const size = { width: modal.offsetWidth, height: modal.offsetHeight };
+            const viewport = { width: window.innerWidth, height: window.innerHeight };
+            const { x, y } = placeNearPointer(pointer, size, viewport, POINTER_OFFSET);
 
-    const applyTiltState = () => {
-        modal.style.setProperty('--preview-tilt-x', `${tiltState.x.toFixed(2)}deg`);
-        modal.style.setProperty('--preview-tilt-y', `${tiltState.y.toFixed(2)}deg`);
-    };
+            const above = y < pointer.y;
+            leanSign = above ? -1 : 1;
+            gsap.set(modal, { transformOrigin: `${x < pointer.x ? 'right' : 'left'} ${above ? 'bottom' : 'top'}` });
 
-    const tiltXTo = gsap.quickTo(tiltState, 'x', {
-        duration: 0.2,
-        ease: 'power3.out',
-        onUpdate: applyTiltState
-    });
-    const tiltYTo = gsap.quickTo(tiltState, 'y', {
-        duration: 0.2,
-        ease: 'power3.out',
-        onUpdate: applyTiltState
-    });
-
-    const resetTilt = () => {
-        tiltXTo(0);
-        tiltYTo(0);
-    };
-
-    const setModalPosition = (pointerX, pointerY, immediate = false) => {
-        const { x, y } = placeNearPointer(
-            { x: pointerX, y: pointerY },
-            modal.getBoundingClientRect(),
-            { width: window.innerWidth, height: window.innerHeight },
-            pointerOffset
-        );
-
-        if (immediate) follower.jumpTo(x, y);
-        else follower.moveTo(x, y);
-    };
-
-    const setTiltFromPointer = (event, card = activeCard) => {
-        if (!card) return;
-
-        const bounds = card.getBoundingClientRect();
-        const width = Math.max(bounds.width, 1);
-        const height = Math.max(bounds.height, 1);
-
-        const localX = (event.clientX - bounds.left) / width;
-        const localY = (event.clientY - bounds.top) / height;
-
-        const normalizedX = gsap.utils.clamp(-1, 1, (localX - 0.5) * 2);
-        const normalizedY = gsap.utils.clamp(-1, 1, (localY - 0.5) * 2);
-
-        const maxTiltY = 14;
-        const maxTiltX = 11;
-        const rotateY = normalizedX * maxTiltY;
-        const rotateX = -normalizedY * maxTiltX;
-
-        tiltXTo(rotateX);
-        tiltYTo(rotateY);
-    };
-
-    const fillPreviewTags = (tags) => {
-        const fragment = document.createDocumentFragment();
-        tags.forEach((tag) => {
-            const chip = document.createElement('span');
-            chip.className = 'preview-tag-chip';
-            chip.textContent = tag;
-            fragment.appendChild(chip);
-        });
-        previewTags.replaceChildren(fragment);
-    };
-
-    const updatePreviewContent = (card) => {
-        const { title, description, screenshot, domain, tags } = readProjectCard(card);
-
-        previewTitle.textContent = title;
-        previewDesc.textContent = description;
-        previewDomain.textContent = domain;
-        fillPreviewTags(tags);
-
-        imageSlot.show(screenshot, `${title} screenshot`);
-    };
-
-    const transitionPreviewContent = (card) => {
-        const token = ++contentTransitionToken;
-        gsap.killTweensOf(contentTargets);
-
-        gsap.to(contentTargets, {
-            autoAlpha: 0.44,
-            filter: 'blur(6px)',
-            scale: 0.988,
-            duration: 0.08,
-            ease: 'power2.out',
-            overwrite: true,
-            onComplete: () => {
-                if (token !== contentTransitionToken) return;
-                updatePreviewContent(card);
-
-                gsap.fromTo(contentTargets, {
-                    autoAlpha: 0.44,
-                    filter: 'blur(6px)',
-                    scale: 0.988
-                }, {
-                    autoAlpha: 1,
-                    filter: 'blur(0px)',
-                    scale: 1,
-                    duration: 0.12,
-                    ease: 'power2.out',
-                    overwrite: true
-                });
+            if (immediate) {
+                prevX = null;
+                follower.jumpTo(x, y);
+            } else {
+                follower.moveTo(x, y);
             }
-        });
+        },
+        stop: follower.stop
     };
+}
 
-    const showPreview = (event, card) => {
-        if (hideTimer) {
-            clearTimeout(hideTimer);
-            hideTimer = null;
-        }
-
-        const wasVisible = modal.classList.contains('is-visible');
-        const switchedCard = wasVisible && activeCard && activeCard !== card;
-        activeCard = card;
-
-        modal.classList.add('is-visible');
-        modal.setAttribute('aria-hidden', 'false');
-
-        if (switchedCard) {
-            transitionPreviewContent(card);
-        } else {
-            gsap.set(contentTargets, { autoAlpha: 1, filter: 'blur(0px)', scale: 1 });
-            updatePreviewContent(card);
-        }
-
-        setModalPosition(event.clientX, event.clientY, !wasVisible);
-        setTiltFromPointer(event, card);
-
-        if (!wasVisible) {
-            gsap.killTweensOf(modal, 'autoAlpha,scale');
-            gsap.to(modal, {
-                autoAlpha: 1,
-                scale: 1,
-                duration: 0.34,
-                ease: 'power3.out'
-            });
-            return;
-        }
-
-        gsap.killTweensOf(modal, 'autoAlpha');
-        gsap.to(modal, {
-            autoAlpha: 1,
-            duration: 0.12,
-            overwrite: true
-        });
-    };
-
-    const movePreview = (event) => {
-        lastPointer.x = event.clientX;
-        lastPointer.y = event.clientY;
-
-        const elementUnderPointer = document.elementFromPoint(event.clientX, event.clientY);
-        const cardUnderPointer = elementUnderPointer && elementUnderPointer.closest ? elementUnderPointer.closest(cardSelector) : null;
-
-        if (cardUnderPointer) {
-            if (hideTimer) {
-                clearTimeout(hideTimer);
-                hideTimer = null;
-            }
-
-            if (activeCard !== cardUnderPointer) {
-                showPreview(event, cardUnderPointer);
-                return;
-            }
-        } else {
-            if (activeCard && !hideTimer) {
-                hidePreview(false);
-            }
-            return;
-        }
-
-        if (!modal.classList.contains('is-visible')) return;
-        setModalPosition(event.clientX, event.clientY);
-        setTiltFromPointer(event, cardUnderPointer || activeCard);
-    };
-
-    const hidePreview = (force = false) => {
-        if (hideTimer) {
-            clearTimeout(hideTimer);
-            hideTimer = null;
-        }
-
-        const performHide = () => {
-            if (!force) {
-                const elementUnderPointer = document.elementFromPoint(lastPointer.x, lastPointer.y);
-                const cardUnderPointer = elementUnderPointer && elementUnderPointer.closest ? elementUnderPointer.closest(cardSelector) : null;
-                if (cardUnderPointer) {
-                    showPreview({ clientX: lastPointer.x, clientY: lastPointer.y }, cardUnderPointer);
-                    return;
-                }
-            }
-
-            hideTimer = null;
-            activeCard = null;
-            modal.setAttribute('aria-hidden', 'true');
-            modal.classList.remove('is-loading');
-            imageSlot.cancel();
-            resetTilt();
-            follower.stop();
-            contentTransitionToken += 1;
-            gsap.killTweensOf(contentTargets);
-            gsap.set(contentTargets, { autoAlpha: 1, filter: 'blur(0px)', scale: 1 });
-
-            gsap.killTweensOf(modal, 'autoAlpha,scale');
-            gsap.to(modal, {
-                autoAlpha: 0,
-                scale: 0.95,
-                duration: 0.22,
-                ease: 'power2.in',
-                onComplete: () => {
-                    modal.classList.remove('is-visible');
-                }
-            });
-        };
-
-        // Force (scroll, blur, tab-hidden): hide immediately. The 40ms
-        // debounce only serves the non-force case (mouse jumped to a sibling
-        // card). For forced hides it stalls hiding during inertial scroll,
-        // where scroll events fire every frame and keep resetting the timer.
-        if (force) {
-            performHide();
-            return;
-        }
-
-        hideTimer = setTimeout(performHide, 40);
-    };
-
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', (event) => showPreview(event, card));
-        card.addEventListener('mouseleave', (event) => {
-            const nextCard = event.relatedTarget && event.relatedTarget.closest
-                ? event.relatedTarget.closest(cardSelector)
-                : null;
-            hidePreview(!nextCard);
-        });
-    });
-
-    document.addEventListener('mousemove', movePreview);
-    document.addEventListener('mouseleave', () => hidePreview(true));
-
-    // Fire hide once per scroll gesture. performHide sets activeCard=null, so
-    // the guard skips the 60fps follow-up scroll events that would otherwise
-    // call gsap.killTweensOf + a fresh gsap.to every frame - restarting the
-    // fade from the current opacity and stalling it until scrolling stops.
-    window.addEventListener('scroll', () => {
-        if (activeCard) hidePreview(true);
+/**
+ * Feeds `track` the element under the mouse as it moves and as the page scrolls
+ * beneath it, and calls `hide` when the pointer or the window goes away.
+ */
+function listen(pointer, track, hide) {
+    document.addEventListener('pointermove', (event) => {
+        if (event.pointerType !== 'mouse') return;
+        Object.assign(pointer, { x: event.clientX, y: event.clientY, known: true });
+        track(event.target);
     }, { passive: true });
-    window.addEventListener('blur', () => hidePreview(true));
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState !== 'visible') {
-            hidePreview(true);
-        }
+
+    let scrollFrame = 0;
+    window.addEventListener('scroll', () => {
+        if (!pointer.known || scrollFrame) return;
+        scrollFrame = requestAnimationFrame(() => {
+            scrollFrame = 0;
+            track(document.elementFromPoint(pointer.x, pointer.y));
+        });
+    }, { passive: true });
+
+    document.documentElement.addEventListener('pointerleave', () => {
+        pointer.known = false;
+        hide();
     });
+    window.addEventListener('blur', hide);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') hide();
+    });
+}
+
+function initProjectPreview() {
+    const modal = document.getElementById('project-preview');
+    const cards = Array.from(screenshotCards());
+    if (!modal || cards.length === 0) return;
+
+    const card = modal.querySelector('.preview-card');
+    const domain = modal.querySelector('#preview-domain');
+    const calm = prefersReducedMotion();
+    const placement = createPlacement(modal, calm);
+    const shots = createShotStack(modal.querySelector('.preview-media'), {
+        calm,
+        onState: (state) => { modal.dataset.state = state; }
+    });
+
+    const pointer = { x: 0, y: 0, known: false };
+    let active = null;
+    let activeIndex = -1;
+    let hideTimer = 0;
+
+    const cancelHide = () => {
+        clearTimeout(hideTimer);
+        hideTimer = 0;
+    };
+
+    // First hover: the card rises out of the row from its bottom edge.
+    const enter = () => {
+        gsap.killTweensOf([modal, card]);
+        gsap.fromTo(modal, { autoAlpha: 0, scale: 1 }, { autoAlpha: 1, duration: calm ? 0.15 : 0.2, ease: 'power2.out' });
+        if (!calm) gsap.fromTo(card, { clipPath: CLIP_FROM_BELOW }, { clipPath: CLIP_FULL, duration: 0.7, ease: 'expo.out' });
+    };
+
+    const show = (row) => {
+        cancelHide();
+        const index = cards.indexOf(row);
+        const direction = index > activeIndex ? 1 : -1;
+        // Still on screen while fading out counts as showing: wipe, don't re-rise.
+        const showing = active !== null || modal.classList.contains('is-visible');
+        active = row;
+        activeIndex = index;
+
+        const { title, screenshot, domain: label, href } = readProjectCard(row);
+        const alt = `${title} screenshot`;
+        domain.textContent = label;
+        modal.classList.toggle('is-private', !href);
+        modal.classList.add('is-visible');
+        placement.place(pointer, !showing);
+
+        if (showing) {
+            gsap.killTweensOf(modal);
+            gsap.to(modal, { autoAlpha: 1, scale: 1, duration: 0.2, ease: 'power2.out' });
+            shots.wipeTo(screenshot, alt, direction);
+        } else {
+            enter();
+            shots.reveal(screenshot, alt);
+        }
+    };
+
+    const hide = () => {
+        cancelHide();
+        if (!active) return;
+        active = null;
+        activeIndex = -1;
+        placement.stop();
+        gsap.killTweensOf(modal);
+        gsap.to(modal, {
+            autoAlpha: 0,
+            scale: 0.96,
+            duration: 0.18,
+            ease: 'power2.in',
+            onComplete: () => {
+                modal.classList.remove('is-visible');
+                gsap.set(modal, { rotation: 0 });
+                shots.reset();
+            }
+        });
+    };
+
+    // One hit test serves pointer movement and scrolling: while the wheel
+    // carries rows under a still cursor, the preview flips through them too.
+    const track = (target) => {
+        const row = target?.closest?.(SCREENSHOT_CARD_SELECTOR);
+        if (row && row !== active) show(row);
+        else if (row) placement.place(pointer, false);
+        else if (active && !hideTimer) hideTimer = setTimeout(hide, HIDE_DELAY_MS);
+    };
+
+    listen(pointer, track, hide);
 }
 
 export function initPreviewModal() {
     if (!canHoverPreview()) return;
-    if (prefersReducedMotion()) return;
     initProjectPreview();
 
+    // Warm the cache so the first wipe to each shot does not wait on the network.
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-            screenshotCards().forEach(card => {
+            screenshotCards().forEach((card) => {
                 const { screenshot } = readProjectCard(card);
                 if (!screenshot) return;
                 const link = document.createElement('link');

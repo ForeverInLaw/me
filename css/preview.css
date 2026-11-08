@@ -1,123 +1,72 @@
-/* Floating project preview: a browser-framed screenshot that follows the
-   cursor over any project row with data-screenshot (preview-modal.js). */
-.project-preview-modal {
-    --preview-tilt-x: 0deg;
-    --preview-tilt-y: 0deg;
+/* Floating project preview (preview-modal.js): a screenshot card that hangs off
+   the cursor over any project row with data-screenshot. The row already names
+   the project, so the card is the picture plus where the link goes. */
+.project-preview {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
-    width: min(500px, calc(100vw - 32px));
+    width: min(480px, calc(100vw - 40px));
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transform: scale(0.95);
-    contain: layout style;
+    /* The card is clipped while it rises in. A filter shadow on the parent is
+       drawn around whatever the clip leaves, where a box-shadow on the card
+       itself would be cut off with it. */
+    filter: drop-shadow(0 28px 32px rgb(0 0 0 / 0.5)) drop-shadow(0 6px 10px rgb(0 0 0 / 0.35));
+    will-change: transform, opacity;
 }
 
-.project-preview-modal.is-visible {
+.project-preview.is-visible {
     visibility: visible;
 }
 
-.project-preview-shell {
-    /* The browser frame derives its corner from these two, so the shell and
-       the frame stay concentric. */
-    --shell-radius: var(--radius-xl);
-    --shell-pad: 10px;
-    display: grid;
-    gap: var(--shell-pad);
-    padding: var(--shell-pad);
-    border-radius: var(--shell-radius);
-    background: var(--raised);
-    box-shadow: 0 30px 70px -18px rgb(0 0 0 / 0.75);
-    transform: perspective(1000px) rotateX(var(--preview-tilt-x)) rotateY(var(--preview-tilt-y));
-    transform-style: preserve-3d;
-}
-
-.preview-browser {
+.preview-card {
     overflow: hidden;
-    border-radius: calc(var(--shell-radius) - var(--shell-pad));
-    background: var(--bg);
-}
-
-.preview-browser-bar {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 12px;
-    background: var(--panel);
-}
-
-.preview-window-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.preview-window-dots span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--raised-hover);
-}
-
-.preview-domain {
-    justify-self: start;
-    max-width: 240px;
-    padding: 3px 10px;
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-lg);
     background: var(--raised);
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.preview-image-wrapper {
+/* Shots differ in proportion (1.4 to 2.0); one frame keeps the card steady
+   between rows and crops from the top, where a site's hero is. */
+.preview-media {
     position: relative;
-    width: 100%;
-    aspect-ratio: var(--preview-aspect, 16 / 10);
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     background: var(--panel);
-    transition: aspect-ratio var(--resize-dur) var(--ease-out);
 }
 
-/* Loading sweep while the screenshot decodes. */
-.preview-image-wrapper::before {
+/* Two stacked layers: the shot on show and the one wiping in over it. */
+.preview-shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+/* Loading sweep while a shot decodes. */
+.preview-media::after {
     content: "";
     position: absolute;
     inset: 0;
-    z-index: 2;
-    background: linear-gradient(110deg, transparent 24%, rgb(255 255 255 / 0.12) 45%, transparent 65%);
+    z-index: 3;
+    background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.08) 45%, transparent 65%);
     transform: translateX(-120%);
     opacity: 0;
-    pointer-events: none;
 }
 
-.project-preview-modal.is-loading .preview-image-wrapper::before {
+.project-preview[data-state="loading"] .preview-media::after {
     opacity: 1;
-    animation: preview-loader 1.2s linear infinite;
+    animation: preview-sweep 1.2s linear infinite;
 }
 
-@keyframes preview-loader {
+@keyframes preview-sweep {
     to { transform: translateX(130%); }
 }
 
-.preview-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: opacity 0.3s ease, filter 0.3s ease;
-}
-
-.project-preview-modal.is-loading .preview-image-wrapper img {
-    opacity: 0.45;
-    filter: blur(1.5px);
-}
-
-.preview-image-empty {
+.preview-empty {
     position: absolute;
     inset: 0;
     z-index: 3;
@@ -126,51 +75,43 @@
     color: var(--muted);
     font-size: 13px;
     opacity: 0;
-    transition: opacity 0.2s ease;
 }
 
-.project-preview-modal.is-error .preview-image-wrapper img {
-    opacity: 0;
+.project-preview[data-state="error"] .preview-shot {
+    visibility: hidden;
 }
 
-.project-preview-modal.is-error .preview-image-empty {
+.project-preview[data-state="error"] .preview-empty {
     opacity: 1;
 }
 
-.preview-info {
-    display: grid;
-    gap: 6px;
-    padding: 4px 6px 6px;
-}
-
-.preview-info h3 {
-    font-size: 17px;
-    font-weight: 800;
-    font-stretch: 112%;
-}
-
-#preview-desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.preview-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px 12px 16px;
     color: var(--muted);
     font-size: 13px;
-    line-height: 1.5;
+    font-weight: 500;
+    line-height: 1.2;
 }
 
-.preview-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    min-height: 22px;
+.preview-domain {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.preview-tag-chip {
-    padding: 2px 9px;
-    border-radius: 999px;
-    background: var(--raised-hover);
-    color: var(--fg);
-    font-size: 12px;
+.preview-caption svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+}
+
+/* Private projects are plain articles with nowhere to go. */
+.project-preview.is-private .preview-caption svg {
+    display: none;
 }
