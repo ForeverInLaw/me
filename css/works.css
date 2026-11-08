@@ -133,19 +133,24 @@ a.project-card:hover h3 {
    the rest, which sizes its cells so both panels end at about the same height. */
 .grind__body {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
+    /* Past ~1100px the cells would swell; extra width goes to the list. */
+    grid-template-columns: minmax(0, 1100px) minmax(320px, 1fr);
     gap: 20px;
     margin-top: 32px;
 }
 
-/* The heatmap's height follows its width, the list's does not, so the row
-   rarely matches exactly. Centring the year in its panel turns whatever is
-   left over into even padding instead of a band under the caption. */
+/* The heatmap sets the row height (square cells, so its height follows its
+   width); the pushes panel takes no height of its own and shows as many
+   pushes as fit beside it. */
 .heatmap {
+    min-width: 0;
+}
+
+.pushes {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     min-width: 0;
+    contain: size;
 }
 
 .heatmap,
@@ -209,36 +214,40 @@ a.project-card:hover h3 {
     font-variant-numeric: tabular-nums;
 }
 
-.pushes {
-    min-width: 0;
-}
-
 .pushes__title {
     color: var(--muted);
     font-size: 13px;
     font-weight: 500;
 }
 
+/* auto-fill makes one row per push that fits; the rest land in zero-height
+   implicit rows and stay hidden, so a short panel never clips a push in half. */
 .pushes__list {
     display: grid;
+    flex: 1;
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(auto-fill, 36px);
+    grid-auto-rows: 0;
+    overflow: hidden;
     margin-top: 6px;
+}
+
+.pushes__list li {
+    overflow: hidden;
 }
 
 /* One line per push: repo on the left, language and time on the right, so
    five of them stand about as tall as the heatmap beside them. */
 .push {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 5px 0;
+    height: 36px;
     border-bottom: 1px solid var(--line);
 }
 
-.pushes__list li:last-child .push {
-    border-bottom: 0;
-}
+
 
 .push__name {
     min-width: 0;
@@ -289,6 +298,16 @@ a.project-card:hover h3 {
 @container (max-width: 1100px) {
     .grind__body {
         grid-template-columns: 1fr;
+    }
+
+    /* Stacked, the list has its own row again and shows every push. */
+    .pushes {
+        contain: none;
+    }
+
+    .pushes__list {
+        grid-template-rows: none;
+        grid-auto-rows: 36px;
     }
 }
 
