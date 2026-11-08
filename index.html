@@ -265,17 +265,17 @@
 			<section class="grind" aria-labelledby="grind-title">
 				<header class="works__head">
 					<h2 id="grind-title">The grind</h2>
-					<p class="works__count">GitHub, last 12 months</p>
+					<p class="works__count" id="grind-total">GitHub, last 12 months</p>
 				</header>
 				<p class="grind__sentence" id="grind-sentence">Counting commits&hellip;</p>
 				<div class="grind__body">
-					<figure class="heatmap">
+					<div class="heatmap">
 						<div class="heatmap__scroll">
 							<div class="heatmap__months" id="heatmap-months" aria-hidden="true"></div>
 							<div class="heatmap__grid" id="heatmap" role="img" aria-label="Contribution heatmap"></div>
 						</div>
-						<figcaption class="heatmap__caption" id="heatmap-caption"></figcaption>
-					</figure>
+						<p class="heatmap__tip" id="heatmap-tip" aria-hidden="true"></p>
+					</div>
 					<div class="pushes">
 						<h3 class="pushes__title">Latest pushes</h3>
 						<ol class="pushes__list" id="recent-pushes"></ol>

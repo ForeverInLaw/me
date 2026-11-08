@@ -66,7 +66,7 @@ function renderSentence(target, { commits, pullRequests, issues, repos }) {
     target.replaceChildren(...parts.map((text, i) => (i % 2 === 0 ? el('strong', '', text) : text)));
 }
 
-function renderHeatmap(grid, months, caption, { start, counts }, total) {
+function renderHeatmap(grid, months, tip, totalLabel, { start, counts }, total) {
     const startMs = Date.parse(`${start}T00:00:00Z`);
     const offset = new Date(startMs).getUTCDay(); // weeks run Sunday..Saturday, like GitHub
     const thresholds = levelThresholds(counts);
@@ -99,17 +99,25 @@ function renderHeatmap(grid, months, caption, { start, counts }, total) {
     }
     months.replaceChildren(...labels);
 
-    const resting = `${total.toLocaleString('en')} contributions in the last year`;
-    grid.setAttribute('aria-label', resting);
-    caption.textContent = resting;
+    const summary = `${total.toLocaleString('en')} contributions`;
+    grid.setAttribute('aria-label', `${summary} in the last year`);
+    totalLabel.textContent = summary;
 
+    // Day details float over the hovered cell, like GitHub's tooltip, instead
+    // of a caption line that would pad the panel's bottom.
+    const panel = grid.closest('.heatmap');
     grid.addEventListener('pointerover', (event) => {
         const i = event.target.dataset?.i;
         if (i === undefined) return;
         const count = counts[Number(i)];
-        caption.textContent = `${count || 'No'} contribution${count === 1 ? '' : 's'} · ${dateFormat.format(dayAt(Number(i)))}`;
+        tip.textContent = `${count || 'No'} contribution${count === 1 ? '' : 's'} · ${dateFormat.format(dayAt(Number(i)))}`;
+        const cell = event.target.getBoundingClientRect();
+        const box = panel.getBoundingClientRect();
+        tip.style.setProperty('--x', `${cell.left - box.left + cell.width / 2}px`);
+        tip.style.setProperty('--y', `${cell.top - box.top}px`);
+        tip.classList.add('is-visible');
     });
-    grid.addEventListener('pointerleave', () => { caption.textContent = resting; });
+    grid.addEventListener('pointerleave', () => tip.classList.remove('is-visible'));
 
     // On narrow screens the year scrolls sideways; open on the latest weeks.
     const scroller = grid.closest('.heatmap__scroll');
@@ -165,7 +173,8 @@ export async function initGithubActivity() {
 
     renderSentence(sentence, data.totals);
     renderHeatmap(section.querySelector('#heatmap'), section.querySelector('#heatmap-months'),
-        section.querySelector('#heatmap-caption'), data.calendar, data.totals.contributions);
+        section.querySelector('#heatmap-tip'), section.querySelector('#grind-total'),
+        data.calendar, data.totals.contributions);
     renderRecent(section.querySelector('#recent-pushes'), data.recent);
     section.classList.add('is-ready');
 }

@@ -143,6 +143,7 @@ a.project-card:hover h3 {
    width); the pushes panel takes no height of its own and shows as many
    pushes as fit beside it. */
 .heatmap {
+    position: relative;
     min-width: 0;
 }
 
@@ -160,6 +161,12 @@ a.project-card:hover h3 {
     padding: 20px;
 }
 
+/* The month labels already add height above the cells; trimming the top
+   padding keeps the cells optically centred in the panel. */
+.heatmap {
+    padding-top: 14px;
+}
+
 .heatmap__scroll {
     overflow-x: auto;
     scrollbar-width: none;
@@ -174,9 +181,10 @@ a.project-card:hover h3 {
 }
 
 .heatmap__months {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.2;
 }
 
 .heatmap__grid {
@@ -207,11 +215,26 @@ a.project-card:hover h3 {
     outline-color: var(--fg);
 }
 
-.heatmap__caption {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
+.heatmap__tip {
+    position: absolute;
+    left: var(--x, 0);
+    top: var(--y, 0);
+    z-index: 2;
+    padding: 5px 10px;
+    border-radius: var(--radius-xs);
+    background: var(--fg);
+    color: var(--on-accent);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 6px));
+    transition: opacity 120ms ease-out;
+}
+
+.heatmap__tip.is-visible {
+    opacity: 1;
 }
 
 .pushes__title {
