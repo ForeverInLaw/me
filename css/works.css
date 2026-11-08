@@ -138,9 +138,13 @@ a.project-card:hover h3 {
     margin-top: 32px;
 }
 
+/* The heatmap's height follows its width, the list's does not, so the row
+   rarely matches exactly. Centring the year in its panel turns whatever is
+   left over into even padding instead of a band under the caption. */
 .heatmap {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     min-width: 0;
 }
 
