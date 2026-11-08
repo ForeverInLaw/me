@@ -1,4 +1,5 @@
 import jpeg from 'jpeg-js';
+import { BOLD, REGULAR } from './font.js';
 
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const NOW_PLAYING_URL = 'https://api.spotify.com/v1/me/player/currently-playing';
@@ -84,6 +85,45 @@ const COVER_LIMIT = 64;
 // Per isolate: a cover only changes with the track, so most requests skip the fetch and decode.
 const coverCache = new Map();
 
+const BORDER = { maxShare: 0.2, flat: 0.04, nearCorner: 0.06 };
+
+/**
+ * Many covers sit on a flat border. Left in, the contrast stretch blows it into a solid glyph
+ * frame on dark and a blank margin on paper, so flat lines matching the corner are trimmed first.
+ */
+function trimBorder(lum, width, height) {
+    const corner = lum[0];
+    const flatLine = (count, at) => {
+        let sum = 0;
+        let sq = 0;
+        for (let k = 0; k < count; k++) {
+            const v = at(k);
+            sum += v;
+            sq += v * v;
+        }
+        const mean = sum / count;
+        return Math.sqrt(Math.max(0, sq / count - mean * mean)) < BORDER.flat && Math.abs(mean - corner) < BORDER.nearCorner;
+    };
+    const maxX = Math.floor(width * BORDER.maxShare);
+    const maxY = Math.floor(height * BORDER.maxShare);
+    let top = 0;
+    let bottom = height;
+    let left = 0;
+    let right = width;
+    while (top < maxY && flatLine(width, (x) => lum[top * width + x])) top++;
+    while (height - bottom < maxY && flatLine(width, (x) => lum[(bottom - 1) * width + x])) bottom--;
+    while (left < maxX && flatLine(height, (y) => lum[y * width + left])) left++;
+    while (width - right < maxX && flatLine(height, (y) => lum[y * width + right - 1])) right--;
+    // JPEG blurs the border into the art; a trimmed side loses a little more so no seam survives.
+    const seam = Math.max(1, Math.round(width / 32));
+    return {
+        left: left ? left + seam : 0,
+        top: top ? top + seam : 0,
+        right: right < width ? right - seam : width,
+        bottom: bottom < height ? bottom - seam : height,
+    };
+}
+
 /** The album cover as COVER_CELLS² brightness levels 0…1, contrast-stretched, or null. */
 async function coverLevels(url) {
     if (!url) return null;
@@ -92,13 +132,19 @@ async function coverLevels(url) {
     const res = await fetch(url);
     if (!res.ok) return null;
     const { width, height, data } = jpeg.decode(new Uint8Array(await res.arrayBuffer()), { useTArray: true, maxResolutionInMP: 1 });
+    const lum = new Float64Array(width * height);
+    for (let p = 0; p < lum.length; p++) {
+        lum[p] = (0.2126 * data[p * 4] + 0.7152 * data[p * 4 + 1] + 0.0722 * data[p * 4 + 2]) / 255;
+    }
+    const { left, top, right, bottom } = trimBorder(lum, width, height);
     const sums = new Float64Array(COVER_CELLS * COVER_CELLS);
     const counts = new Uint32Array(COVER_CELLS * COVER_CELLS);
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            const i = (y * width + x) * 4;
-            const cell = Math.floor((y / height) * COVER_CELLS) * COVER_CELLS + Math.floor((x / width) * COVER_CELLS);
-            sums[cell] += (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+    const w = right - left;
+    const h = bottom - top;
+    for (let y = top; y < bottom; y++) {
+        for (let x = left; x < right; x++) {
+            const cell = Math.floor(((y - top) / h) * COVER_CELLS) * COVER_CELLS + Math.floor(((x - left) / w) * COVER_CELLS);
+            sums[cell] += lum[y * width + x];
             counts[cell] += 1;
         }
     }
@@ -113,17 +159,17 @@ async function coverLevels(url) {
 }
 
 // Matches the profile README's slices (ForeverInLaw/ForeverInLaw, src/theme.ts): stone tones from
-// the avatar, amber only for the live state. Light has no ground so ink sits on GitHub's page.
+// the avatar, amber only for the live state. No ground in either theme: ink sits on GitHub's page.
 const THEMES = {
-    dark: { ground: '#12100e', stone: ['#4f4943', '#8c857b', '#b8b1a9', '#e6e5e4'], accent: '#ffb43a', ink: false },
-    light: { ground: null, stone: ['#c9c3bb', '#6f685e', '#5d564e', '#2d2824'], accent: '#8f4a0a', ink: true },
+    dark: { stone: ['#4f4943', '#8c857b', '#b8b1a9', '#e6e5e4'], accent: '#ffb43a', ink: false },
+    light: { stone: ['#c9c3bb', '#6f685e', '#5d564e', '#2d2824'], accent: '#8f4a0a', ink: true },
 };
 const RAMP = ' .:-=+*#%@';
 const tierOf = (density) => (density <= 2 ? 0 : density <= 4 ? 1 : density <= 6 ? 2 : 3);
 
 /**
  * The cover drawn from the same glyph ramp as the profile portrait: density is light on the dark
- * ground and ink on paper. Every glyph gets its own x, so any monospace fallback keeps the grid.
+ * page and ink on paper. Every glyph gets its own x, so any monospace fallback keeps the grid.
  */
 function coverGlyphs(levels, t, x0, y0, side) {
     const cell = side / COVER_CELLS;
@@ -150,6 +196,8 @@ const LAYOUTS = {
     narrow: { width: 420, margin: 20, height: 132, barCells: 14 },
 };
 const SIZE = 15;
+const face = (weight, base64) => `@font-face{font-family:jbm;font-weight:${weight};src:url(data:font/woff2;base64,${base64}) format("woff2")}`;
+const FONT_STYLE = `<style>${face(400, REGULAR)}${face(700, BOLD)}</style>`;
 const ADVANCE = 0.6;
 const GAP = 28;
 
@@ -189,7 +237,8 @@ function progressBar(payload, t, x, y, cells, id) {
         + row('=', t.accent, `${id}-done`, true);
 }
 
-// Rendered with system fonts: track names can use any script, so a subset font cannot cover them.
+// Set in the profile's JetBrains Mono, carried inline; glyphs outside its subset (track names in
+// other scripts) fall back per character through the rest of the font-family stack.
 // A miniature of the profile's first screen: text on the README's left edge, the cover as a
 // full-height glyph plate flush with the right edge, like the portrait on the profile cover.
 export function renderCard(payload, theme, layout, cover, now = Date.now()) {
@@ -216,8 +265,8 @@ export function renderCard(payload, theme, layout, cover, now = Date.now()) {
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img">`
         + `<title>${escapeXml(track ? `${payload.isPlaying ? 'Now playing' : 'Last played'}: ${track.name} — ${track.artists}` : 'Nothing playing')}</title>`
-        + `<g font-family="JetBrains Mono,ui-monospace,Consolas,Menlo,monospace" font-size="${SIZE}">`
-        + (t.ground ? `<rect width="${width}" height="${height}" fill="${t.ground}"/>` : '')
+        + FONT_STYLE
+        + `<g font-family="jbm,JetBrains Mono,ui-monospace,Consolas,Menlo,monospace" font-size="${SIZE}">`
         + art
         + text(34, '~ $ now-playing', t.stone[3], { bold: true })
         + (status ? text(34, status, payload.isPlaying ? t.accent : t.stone[2], { bold: payload.isPlaying, anchor: 'end', x: right }) : '')
