@@ -197,9 +197,7 @@ a.project-card:hover h3 {
     aspect-ratio: 1;
     border-radius: 2px;
     background: var(--raised);
-    transition: outline-color 120ms ease-out;
-    outline: 1px solid transparent;
-    outline-offset: 1px;
+    transition: box-shadow 120ms ease-out;
 }
 
 .heatmap__cell.is-pad {
@@ -211,8 +209,10 @@ a.project-card:hover h3 {
 .heatmap__cell[data-level="3"] { background: #8f76c4; }
 .heatmap__cell[data-level="4"] { background: var(--accent); }
 
+/* An inset ring, not an outline: the scroll wrapper clips anything drawn
+   outside the cell, which cut the ring off the edge rows. */
 .heatmap__cell:not(.is-pad):hover {
-    outline-color: var(--fg);
+    box-shadow: inset 0 0 0 1.5px var(--fg);
 }
 
 .heatmap__tip {
