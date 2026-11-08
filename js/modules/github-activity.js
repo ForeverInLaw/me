@@ -3,6 +3,7 @@
 // latest public pushes.
 
 const DATA_URL = 'assets/github.json';
+const OWN_LOGIN = 'ForeverInLaw';
 const DAY_MS = 86_400_000;
 const LEVELS = 4;
 
@@ -122,17 +123,20 @@ function renderRecent(list, recent) {
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
 
+        // Language rides as a coloured dot before the name; the row only has
+        // room for the name and how long ago it was pushed.
         const title = el('span', 'push__name');
-        title.append(el('span', 'push__owner', `${owner}/`), el('strong', '', name));
-        const meta = el('span', 'push__meta');
-        if (repo.language) {
-            const dot = el('i', 'push__lang');
-            if (repo.color) dot.style.setProperty('--lang', repo.color);
-            meta.append(dot, `${repo.language} · `);
-        }
-        const time = el('time', '', timeAgo(repo.pushedAt));
-        time.dateTime = repo.pushedAt;
-        meta.append(time);
+        const dot = el('i', 'push__lang');
+        dot.setAttribute('aria-hidden', 'true');
+        if (repo.color) dot.style.setProperty('--lang', repo.color);
+        if (repo.language) dot.title = repo.language;
+        title.append(dot);
+        // Own repos go by name alone; orgs keep their prefix so they read as someone else's.
+        if (owner !== OWN_LOGIN) title.append(el('span', 'push__owner', `${owner}/`));
+        title.append(el('strong', '', name));
+
+        const meta = el('time', 'push__meta', timeAgo(repo.pushedAt));
+        meta.dateTime = repo.pushedAt;
 
         link.append(title, meta);
         const item = el('li');
