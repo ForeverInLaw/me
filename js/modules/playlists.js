@@ -1,286 +1,58 @@
-/* global gsap, ScrollTrigger -- loaded as a global by libs/gsap/gsap-bundle.min.js */
-
 import { apiEndpoint, escapeHtml, fetchJson, safeUrl } from './remote.js';
-import { isCompact, prefersReducedMotion } from './viewport.js';
+import { swapText } from './text-swap.js';
 
 const PLAYLISTS_API = apiEndpoint(
     '/api/playlists',
     'https://spotify-show-last-68db402e666c.herokuapp.com/api/playlists'
 );
 
-// Matches --stack-exit-dur; only used if the custom property goes missing.
-const EXIT_DUR_FALLBACK = 400;
-
-const exitDuration = () => parseFloat(
-    getComputedStyle(document.documentElement).getPropertyValue('--stack-exit-dur')
-) || EXIT_DUR_FALLBACK;
-
-function initPlaylistStack(container) {
-    const items = Array.from(container.children);
-    if (items.length === 0) return;
-
-    let current = 0;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let touchDeltaX = 0;
-    let isSwiping = false;
-
-    const dotsWrapper = document.createElement('div');
-    dotsWrapper.className = 'stack-dots';
-    items.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.className = 'stack-dot';
-        dot.setAttribute('aria-label', `Playlist ${i + 1}`);
-        dot.addEventListener('click', () => goTo(i));
-        dotsWrapper.appendChild(dot);
-    });
-    container.parentNode.appendChild(dotsWrapper);
-    const dots = dotsWrapper.querySelectorAll('.stack-dot');
-
-    function updateHeight() {
-        const activeItem = items[current];
-        if (activeItem) {
-            container.style.height = activeItem.offsetHeight + 'px';
-        }
-    }
-
-    function applyStack() {
-        items.forEach((item, i) => {
-            item.classList.remove('stack-active', 'stack-next', 'stack-after', 'stack-hidden', 'stack-exit-left', 'stack-exit-right');
-
-            const offset = ((i - current) + items.length) % items.length;
-            if (offset === 0) {
-                item.classList.add('stack-active');
-            } else if (offset === 1) {
-                item.classList.add('stack-next');
-            } else if (offset === 2) {
-                item.classList.add('stack-after');
-            } else {
-                item.classList.add('stack-hidden');
-            }
-        });
-        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
-        updateHeight();
-    }
-
-    function goTo(index, direction) {
-        if (index === current) return;
-        const exitClass = direction === 'right' ? 'stack-exit-right' : 'stack-exit-left';
-        const exitingItem = items[current];
-
-        exitingItem.classList.remove('stack-active');
-        exitingItem.classList.add(exitClass);
-
-        current = index;
-
-        items.forEach((item, i) => {
-            if (item === exitingItem) return;
-            item.classList.remove('stack-active', 'stack-next', 'stack-after', 'stack-hidden');
-            const offset = ((i - current) + items.length) % items.length;
-            if (offset === 0) item.classList.add('stack-active');
-            else if (offset === 1) item.classList.add('stack-next');
-            else if (offset === 2) item.classList.add('stack-after');
-            else item.classList.add('stack-hidden');
-        });
-        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
-        updateHeight();
-
-        setTimeout(() => {
-            exitingItem.classList.remove(exitClass);
-            const offset = ((items.indexOf(exitingItem) - current) + items.length) % items.length;
-            if (offset === 1) exitingItem.classList.add('stack-next');
-            else if (offset === 2) exitingItem.classList.add('stack-after');
-            else exitingItem.classList.add('stack-hidden');
-        }, exitDuration());
-    }
-
-    function next() { goTo((current + 1) % items.length, 'left'); }
-    function prev() { goTo((current - 1 + items.length) % items.length, 'right'); }
-
-    /* Finger-follow: the active card rides the finger (inline transform, no
-       transition) so commit/release hands off from the finger's position, not
-       from the stack's rest pose. Direct manipulation, not autonomous motion. */
-    const activeCard = () => items[current];
-
-    function dragFollow() {
-        const card = activeCard();
-        if (!card) return;
-        card.style.transition = 'none';
-        const rotate = Math.max(-6, Math.min(6, touchDeltaX / 24));
-        card.style.transform = `translateX(${touchDeltaX}px) rotate(${rotate}deg)`;
-    }
-
-    // Release without committing: spring back to the class-applied rest pose.
-    function dragRelease() {
-        const card = activeCard();
-        if (!card || !card.style.transform) return;
-        card.style.transition = 'transform 300ms var(--transition-bounce)';
-        card.style.transform = 'none';
-        setTimeout(() => {
-            card.style.transition = '';
-            card.style.transform = '';
-        }, 320);
-    }
-
-    container.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchDeltaX = 0;
-        touchStartTime = e.timeStamp;
-        isSwiping = false;
-    }, { passive: true });
-
-    container.addEventListener('touchmove', (e) => {
-        touchDeltaX = e.touches[0].clientX - touchStartX;
-        const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (!isSwiping && Math.abs(touchDeltaX) > 15 && Math.abs(touchDeltaX) > deltaY) {
-            isSwiping = true;
-        }
-        if (isSwiping && !prefersReducedMotion()) dragFollow();
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-        if (isSwiping) {
-            const elapsedMs = Math.max(1, e.timeStamp - touchStartTime);
-            const flick = Math.abs(touchDeltaX) / elapsedMs > 0.11; // px/ms
-            if (Math.abs(touchDeltaX) > 50 || flick) {
-                // Clear inline styles in the same task that applies the exit
-                // class, so the class transition starts from the dragged pose
-                // instead of snapping to center first.
-                const card = activeCard();
-                if (card) {
-                    card.style.transition = '';
-                    card.style.transform = '';
-                }
-                if (touchDeltaX < 0) next();
-                else prev();
-            } else {
-                dragRelease();
-            }
-        }
-        isSwiping = false;
-    }, { passive: true });
-
-    // A stolen gesture (notification shade, system swipe) must not strand the
-    // card half-dragged: spring back like an abandoned release.
-    container.addEventListener('touchcancel', () => {
-        if (isSwiping) dragRelease();
-        isSwiping = false;
-    }, { passive: true });
-
-    items.forEach(item => {
-        item.addEventListener('click', (e) => {
-            if (!item.classList.contains('stack-active')) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
-    });
-
-    applyStack();
-}
-
+/**
+ * Renders the playlists as a row of covers in the bio column. The covers are
+ * too small to carry their names, so the caption under the row names whichever
+ * cover is hovered or focused and falls back to the total.
+ */
 export async function initPlaylists() {
     const container = document.getElementById('playlists-container');
+    const caption = document.getElementById('playlists-caption');
     if (!container) return;
 
+    let playlists;
     try {
-        const playlists = await fetchJson(PLAYLISTS_API);
-
-        container.innerHTML = playlists.map(playlist => {
-            const image = escapeHtml(safeUrl(playlist.image));
-            const name = escapeHtml(playlist.name);
-            return `
-            <li>
-                <a class="playlist-card" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer">
-                    <div class="vinyl-wrapper">
-                        <div class="vinyl-record">
-                            <div class="vinyl-rotator">
-                                <div class="vinyl-label" data-image="${image}"></div>
-                            </div>
-                        </div>
-                        <div class="playlist-cover-art">
-                            <img src="${image}" alt="${name}" loading="lazy" />
-                        </div>
-                    </div>
-                    <div class="playlist-content">
-                        <span class="playlist-meta">${escapeHtml(playlist.tracks)} Tracks</span>
-                        <div class="playlist-header">
-                            <h3>${name}</h3>
-                        </div>
-                        <p class="playlist-description">${escapeHtml(playlist.description || 'A curated Spotify playlist.')}</p>
-                    </div>
-                </a>
-            </li>`;
-        }).join('');
-
-        // Apply the vinyl-label art via the CSSOM (avoids CSS url() injection from remote data)
-        container.querySelectorAll('.vinyl-label[data-image]').forEach(el => {
-            const src = (el.getAttribute('data-image') || '').replace(/["\\]/g, '');
-            if (src) el.style.backgroundImage = `url("${src}")`;
-        });
-
-        if (isCompact()) {
-            initPlaylistStack(container);
-        } else {
-            const cards = container.querySelectorAll('.playlist-card');
-            cards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (!isCompact()) return;
-                    e.preventDefault();
-                    if (card.classList.contains('is-active')) return;
-                    const url = card.href;
-                    cards.forEach(c => c.classList.remove('is-active'));
-                    card.classList.add('is-active');
-                    setTimeout(() => {
-                        window.open(url, '_blank');
-                        setTimeout(() => card.classList.remove('is-active'), 100);
-                    }, 1000);
-                });
-            });
-        }
-
-        // The cards arrive over the network after the page has settled - without
-        // an entrance the whole grid pops in mid-scroll. Reuse the projects grid's
-        // reveal vocabulary so both card grids read as one system.
-        if (typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion()) {
-            if (isCompact()) {
-                gsap.fromTo(container, { autoAlpha: 0, y: 12 }, {
-                    autoAlpha: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            } else {
-                const cards = container.querySelectorAll('.playlist-card');
-                gsap.set(cards, { autoAlpha: 0, y: 26, filter: 'blur(8px)' });
-                ScrollTrigger.batch(cards, {
-                    start: 'top 90%',
-                    once: true,
-                    onEnter: (batch) => gsap.to(batch, {
-                        duration: 0.6,
-                        autoAlpha: 1,
-                        y: 0,
-                        filter: 'blur(0px)',
-                        stagger: 0.08,
-                        ease: 'power3.out',
-                        overwrite: 'auto'
-                    }).then(() => {
-                        // Same marker scroll-reveal.js writes, so a grep for
-                        // already-entered cards finds both grids.
-                        batch.forEach(el => { el.dataset.revealed = 'true'; });
-                        gsap.set(batch, { clearProps: 'transform,opacity,visibility,filter' });
-                    })
-                });
-            }
-        }
-
-        if (typeof ScrollTrigger !== 'undefined') {
-            ScrollTrigger.refresh();
-        }
+        playlists = await fetchJson(PLAYLISTS_API);
     } catch (error) {
         console.error('Error loading playlists:', error);
-        container.innerHTML = '<p style="color: var(--muted); padding: 20px;">Unable to load playlists at the moment.</p>';
+        container.innerHTML = '<li class="playlists__error">Playlists are unavailable right now.</li>';
+        return;
     }
+
+    container.innerHTML = playlists.map((playlist, index) => {
+        const name = escapeHtml(playlist.name.trim());
+        return `
+        <li>
+            <a class="playlist" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer"
+                data-index="${index}" aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
+                <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" loading="lazy" decoding="async">
+            </a>
+        </li>`;
+    }).join('');
+
+    if (!caption) return;
+
+    const restingText = `${playlists.length} playlists on Spotify`;
+    const describe = (playlist) => `${playlist.name.trim()} · ${playlist.tracks} tracks`;
+    caption.textContent = restingText;
+
+    const show = (text) => {
+        if (caption.textContent !== text) swapText(caption, text);
+    };
+
+    container.querySelectorAll('.playlist').forEach((link) => {
+        const text = describe(playlists[Number(link.dataset.index)]);
+        link.addEventListener('pointerenter', () => show(text));
+        link.addEventListener('focus', () => show(text));
+    });
+    container.addEventListener('pointerleave', () => show(restingText));
+    container.addEventListener('focusout', (event) => {
+        if (!container.contains(event.relatedTarget)) show(restingText);
+    });
 }

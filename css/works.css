@@ -1,0 +1,255 @@
+/* The portfolio index: big names in rows, hairline rules, status on a dot. */
+.works__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+}
+
+.works__head h2 {
+    font-size: 18px;
+    font-weight: 800;
+    font-stretch: 125%;
+}
+
+.works__count {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.project-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 300px) 96px;
+    align-items: center;
+    gap: 28px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left 280ms var(--ease-out);
+}
+
+.project-card h3 {
+    font-size: clamp(30px, 3.4vw, 48px);
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    transition: color 200ms var(--ease-out);
+}
+
+a.project-card:hover {
+    padding-left: 14px;
+}
+
+a.project-card:hover h3 {
+    color: var(--accent);
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.project-tag {
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--raised);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.project-card__desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.project-meta {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 600;
+}
+
+.status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status--active { color: var(--status-active); }
+.status--wip { color: var(--status-wip); }
+.status--oss { color: var(--status-oss); }
+.status--archived { color: var(--status-archived); }
+
+/* ── the grind: GitHub stats ── */
+
+.grind {
+    margin-top: 80px;
+}
+
+.grind__stats,
+.graph-card {
+    margin-top: 18px;
+    border-radius: var(--radius-lg);
+    background: var(--panel);
+    overflow: hidden;
+}
+
+.grind__stats {
+    padding: 8px 12px;
+}
+
+/* The stats SVG is drawn for 467px; wider only spreads it thin. */
+.stats-img {
+    width: 100%;
+    max-width: 467px;
+}
+
+.graph-card .card-content {
+    padding: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.graph-img {
+    min-width: 720px;
+    width: 100%;
+}
+
+.stats-error {
+    padding: 24px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* ── narrow: rows stack; touch screens get the inline screenshot reel ── */
+
+@media (max-width: 1100px) {
+    .project-card {
+        grid-template-columns: minmax(0, 1fr) 96px;
+        gap: 10px 20px;
+    }
+
+    .project-card__desc {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        max-width: 60ch;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+    }
+}
+
+@media (max-width: 900px) {
+    .project-card {
+        padding: 20px 0;
+    }
+
+    a.project-card:hover {
+        padding-left: 0;
+    }
+}
+
+/* Touch screens never get the hover preview, so each card carries its own
+   shot, opening once as it scrolls into view (see works-reel.js). */
+@media (max-width: 768px) and (hover: none) {
+    .project-shot {
+        --reveal-ease: cubic-bezier(0.33, 1, 0.68, 1);
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-rows: 0fr;
+        overflow: hidden;
+        opacity: 0;
+        transition:
+            grid-template-rows var(--resize-dur) var(--reveal-ease),
+            opacity 180ms ease-out;
+    }
+
+    .project-card.is-revealed .project-shot {
+        grid-template-rows: 1fr;
+        opacity: 1;
+    }
+
+    .project-shot__frame {
+        overflow: hidden;
+        border-radius: var(--radius-md);
+        background: var(--panel);
+    }
+
+    .project-shot__bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+    }
+
+    .project-shot__bar span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--raised-hover);
+    }
+
+    .project-shot__domain {
+        margin-left: 6px;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 11px;
+        font-style: normal;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .project-shot img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto 16 / 9;
+        opacity: 0;
+        transform: scale(1.04);
+        transition:
+            opacity 260ms ease-out 60ms,
+            transform 380ms var(--reveal-ease) 50ms;
+    }
+
+    .project-card.is-revealed .project-shot.is-shot-ready img {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Entrance: the works list cascades in once, row by row. JS sets --i; without
+   JS the rows simply sit there, so nothing depends on the animation. */
+.js .project-list > li {
+    animation: row-in 640ms var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms + 80ms);
+}
+
+@keyframes row-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+        filter: blur(4px);
+    }
+}

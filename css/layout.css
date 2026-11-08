@@ -1,82 +1,54 @@
-.wrapper {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    overflow-x: hidden;
-}
-
-.grainient-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-    opacity: 0.78;
+/* Two columns: the bio stays pinned while the works scroll past it. Below the
+   breakpoint the bio becomes the top of a single column. */
+.layout {
+    display: grid;
+    grid-template-columns: var(--bio-width) minmax(0, 1fr);
     min-height: 100vh;
     min-height: 100dvh;
 }
 
-.grainient-bg canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-:root[data-theme="light"] .grainient-bg {
-    opacity: 0.64;
-}
-
-.content {
-    isolation: isolate;
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.site-header {
+.bio {
     position: sticky;
     top: 0;
-    z-index: 50;
-    padding: 20px 0;
-    transition: padding 0.3s ease;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
-body[data-scrolled="true"] .site-header {
-    padding: 10px 0;
-    background-color: rgba(var(--bg), 0.8);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+.works {
+    padding: 44px clamp(24px, 4vw, 64px) 40px;
+    min-width: 0;
 }
 
 .site-footer {
-    margin-top: 100px;
-    color: var(--muted);
-    font-size: 13px;
-    border-top: 1px solid var(--border);
-    padding: 40px 0;
-}
-
-.site-footer__inner {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 8px 24px;
+    margin-top: 96px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
 }
 
-/* Live clock in the footer. Tabular figures so the minute ticking over
-   doesn't shift the sentence around it. */
-.footer-clock {
-    color: var(--accent);
-    font-variant-numeric: lining-nums tabular-nums;
-    font-feature-settings: 'tnum' 1;
-}
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
 
-.footer-clock__state::before {
-    content: '(';
-}
+    .bio {
+        position: static;
+        height: auto;
+        overflow: visible;
+    }
 
-.footer-clock__state::after {
-    content: ')';
+    .works {
+        padding: 36px 20px 32px;
+    }
+
+    .site-footer {
+        margin-top: 64px;
+    }
 }

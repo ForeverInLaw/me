@@ -1,53 +1,19 @@
-import { initTheme, attachThemeToggle } from './modules/theme.js';
-import { prioritizeScreenshotProjects } from './modules/projects-order.js';
-import { initConnectCodeHover } from './modules/code-bg.js';
-import { initMasonry } from './modules/masonry.js';
-import { initPageAnimations } from './modules/intro.js';
-import { initCursor } from './modules/cursor.js';
 import { initPreviewModal } from './modules/preview-modal.js';
 import { initWorksReel } from './modules/works-reel.js';
 import { initSpotify } from './modules/spotify.js';
-import { initShowMore } from './modules/show-more.js';
 import { initGithubStats } from './modules/github-stats.js';
 import { initPlaylists } from './modules/playlists.js';
-import { initSlideButton } from './slide-button.js';
 import { initLocalTime } from './modules/local-time.js';
 
-// Apply saved theme before paint to avoid flash.
-initTheme();
-
-window.addEventListener('scroll', () => {
-    document.body.style.setProperty('--scrollTop', `${window.scrollY}px`);
-}, { passive: true });
-
 document.addEventListener('DOMContentLoaded', () => {
-    // The entry screen sits above everything, so its slider goes up first.
-    initSlideButton();
+    // Row index drives the CSS cascade that brings the works list in.
+    document.querySelectorAll('.project-list > li').forEach((row, index) => {
+        row.style.setProperty('--i', String(index));
+    });
 
-    // Reordering has to finish before masonry measures the row.
-    prioritizeScreenshotProjects();
-    initConnectCodeHover();
-    attachThemeToggle();
-
-    gsap.registerPlugin(SplitText, ScrollTrigger);
-    ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load' });
-    ScrollTrigger.config({ ignoreMobileResize: true });
-
-    initMasonry();
-
-    const entryScreen = document.getElementById('entry-screen');
-    const shouldShowEntry = entryScreen && !entryScreen.classList.contains('hidden');
-    if (!shouldShowEntry) {
-        initPageAnimations();
-    } else {
-        window.addEventListener('entryCompleted', initPageAnimations, { once: true });
-    }
-
-    initCursor();
     initPreviewModal();
     initWorksReel();
     initSpotify();
-    initShowMore();
     initGithubStats();
     initPlaylists();
     initLocalTime();

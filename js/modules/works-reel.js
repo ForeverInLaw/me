@@ -66,8 +66,8 @@ function loadShot(shot) {
 }
 
 export function initWorksReel() {
-    // Bound to the same breakpoint that turns masonry off (masonry.js), so the
-    // reel never fights absolutely-positioned cards on a wide touch screen.
+    // Same query as the .project-shot styles in works.css: small touch
+    // screens only, where the hover preview never runs.
     if (!isTouchReel()) return;
 
     const cards = screenshotCards();

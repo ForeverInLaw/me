@@ -1,0 +1,313 @@
+/* The pinned bio column: who, what, where to find, what is playing. */
+.bio {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 44px 40px 36px;
+    background: var(--panel);
+}
+
+.who {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.who__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--raised);
+}
+
+.who__meta {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.who__clock {
+    color: var(--accent);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.bio__name {
+    font-size: clamp(40px, 3.6vw, 54px);
+    font-weight: 900;
+    font-stretch: 125%;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+}
+
+.bio__line {
+    max-width: 34ch;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.bio__line strong {
+    color: var(--fg);
+    font-weight: 500;
+}
+
+.socials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: var(--raised);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out);
+}
+
+.social i {
+    width: 16px;
+    text-align: center;
+}
+
+.social:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+/* ── music: now playing + playlists, pinned to the bottom of the column ── */
+
+.music {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.music__title {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.music__title.loading {
+    opacity: 0.45;
+}
+
+#spotify-now-playing {
+    min-height: 88px;
+    border-radius: var(--radius-lg);
+    background: var(--raised);
+    overflow: hidden;
+    transition: background-color 200ms var(--ease-out);
+}
+
+#spotify-now-playing:hover {
+    background: var(--raised-hover);
+}
+
+.np-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 88px;
+    padding: 12px;
+}
+
+.np-card__art {
+    /* Cross-fades covers via .t-icon-swap; a photo shrinking far reads as a
+       glitch, so this slot barely scales. */
+    --icon-swap-start-scale: 0.94;
+    position: relative;
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+    /* Concentric-ish with the 16px card: a smaller step on the scale. */
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--raised-hover);
+    outline: 1px solid oklch(1 0 0 / 0.1);
+    outline-offset: -1px;
+}
+
+.np-card__art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.np-card__badge {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    display: grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--spotify);
+}
+
+.np-card__badge svg {
+    width: 10px;
+    height: 10px;
+    fill: #000;
+}
+
+/* Only rendered while Spotify reports isPlaying, so the pulse is real. */
+.np-card__pulse {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--spotify);
+    animation: np-pulse 1.8s infinite;
+}
+
+@keyframes np-pulse {
+    0% { box-shadow: 0 0 0 0 rgb(30 215 96 / 0.6); }
+    70% { box-shadow: 0 0 0 8px rgb(30 215 96 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(30 215 96 / 0); }
+}
+
+.np-card.is-stale .np-card__pulse {
+    display: none;
+}
+
+.np-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.np-card__title,
+.np-card__artist {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.np-card__title {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.np-card__artist {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.np-card__progress {
+    height: 3px;
+    margin-top: 8px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+.np-card__bar {
+    width: 0%;
+    height: 100%;
+    background: var(--spotify);
+    /* No width transition: spotify.js drives it from a rAF loop. */
+}
+
+.np-card.is-stale .np-card__bar {
+    background: var(--muted);
+}
+
+.np-placeholder {
+    display: flex;
+    align-items: center;
+    height: 88px;
+    padding: 16px;
+}
+
+.np-placeholder > div {
+    width: 100%;
+    height: 12px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--raised) 0%, var(--raised-hover) 50%, var(--raised) 100%);
+    background-size: 200% 100%;
+    animation: np-shimmer 1.6s linear infinite;
+}
+
+@keyframes np-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+.np-message {
+    display: grid;
+    place-items: center;
+    min-height: 88px;
+    padding: 12px 16px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+.playlists {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.playlist img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--raised);
+    outline: 1px solid oklch(1 0 0 / 0.08);
+    outline-offset: -1px;
+    transition: transform 260ms var(--ease-out);
+}
+
+.playlist:hover img,
+.playlist:focus-visible img {
+    transform: translateY(-4px) rotate(-3deg);
+}
+
+.playlists__caption {
+    min-height: 1.5em;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.playlists__caption b {
+    color: var(--fg);
+    font-weight: 600;
+}
+
+.playlists__error {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .bio {
+        padding: 32px 20px 28px;
+    }
+
+    .music {
+        margin-top: 4px;
+    }
+}
+
+@media (max-width: 420px) {
+    .socials {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
