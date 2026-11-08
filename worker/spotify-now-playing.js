@@ -85,15 +85,16 @@ const COVER_LIMIT = 64;
 // Per isolate: a cover only changes with the track, so most requests skip the fetch and decode.
 const coverCache = new Map();
 
-const BORDER = { maxShare: 0.2, flat: 0.04, nearCorner: 0.06 };
+const BORDER = { maxShare: 0.2, flat: 0.04, nearCorner: 0.06, light: 0.85, dark: 0.08 };
 
 /**
- * Many covers sit on a flat border. Left in, the contrast stretch blows it into a solid glyph
- * frame on dark and a blank margin on paper, so flat lines matching the corner are trimmed first.
+ * Many covers sit on a border: a flat frame, or a pale or black strip carrying printed label text.
+ * Left in, the contrast stretch blows it into a solid glyph band on dark and stray marks on paper,
+ * so edge lines that are flat near the corner colour, or near-white or near-black on average, go.
  */
 function trimBorder(lum, width, height) {
     const corner = lum[0];
-    const flatLine = (count, at) => {
+    const isBorder = (count, at) => {
         let sum = 0;
         let sq = 0;
         for (let k = 0; k < count; k++) {
@@ -102,7 +103,8 @@ function trimBorder(lum, width, height) {
             sq += v * v;
         }
         const mean = sum / count;
-        return Math.sqrt(Math.max(0, sq / count - mean * mean)) < BORDER.flat && Math.abs(mean - corner) < BORDER.nearCorner;
+        const flat = Math.sqrt(Math.max(0, sq / count - mean * mean)) < BORDER.flat && Math.abs(mean - corner) < BORDER.nearCorner;
+        return flat || mean >= BORDER.light || mean <= BORDER.dark;
     };
     const maxX = Math.floor(width * BORDER.maxShare);
     const maxY = Math.floor(height * BORDER.maxShare);
@@ -110,12 +112,12 @@ function trimBorder(lum, width, height) {
     let bottom = height;
     let left = 0;
     let right = width;
-    while (top < maxY && flatLine(width, (x) => lum[top * width + x])) top++;
-    while (height - bottom < maxY && flatLine(width, (x) => lum[(bottom - 1) * width + x])) bottom--;
-    while (left < maxX && flatLine(height, (y) => lum[y * width + left])) left++;
-    while (width - right < maxX && flatLine(height, (y) => lum[y * width + right - 1])) right--;
-    // JPEG blurs the border into the art; a trimmed side loses a little more so no seam survives.
-    const seam = Math.max(1, Math.round(width / 32));
+    while (top < maxY && isBorder(width, (x) => lum[top * width + x])) top++;
+    while (height - bottom < maxY && isBorder(width, (x) => lum[(bottom - 1) * width + x])) bottom--;
+    while (left < maxX && isBorder(height, (y) => lum[y * width + left])) left++;
+    while (width - right < maxX && isBorder(height, (y) => lum[y * width + right - 1])) right--;
+    // JPEG blurs the border into the art; a trimmed side loses a glyph cell more so no seam survives.
+    const seam = Math.round(width / 32) + Math.ceil(width / COVER_CELLS);
     return {
         left: left ? left + seam : 0,
         top: top ? top + seam : 0,
@@ -161,8 +163,8 @@ async function coverLevels(url) {
 // Matches the profile README's slices (ForeverInLaw/ForeverInLaw, src/theme.ts): stone tones from
 // the avatar, amber only for the live state. No ground in either theme: ink sits on GitHub's page.
 const THEMES = {
-    dark: { stone: ['#4f4943', '#8c857b', '#b8b1a9', '#e6e5e4'], accent: '#ffb43a', ink: false },
-    light: { stone: ['#c9c3bb', '#6f685e', '#5d564e', '#2d2824'], accent: '#8f4a0a', ink: true },
+    dark: { stone: ['#4f4943', '#8c857b', '#b8b1a9', '#e6e5e4'], accent: '#ffb43a', ink: false, glow: 'rgb(230 229 228 / .22)' },
+    light: { stone: ['#c9c3bb', '#6f685e', '#5d564e', '#2d2824'], accent: '#8f4a0a', ink: true, glow: 'rgb(0 0 0 / 0)' },
 };
 const RAMP = ' .:-=+*#%@';
 const tierOf = (density) => (density <= 2 ? 0 : density <= 4 ? 1 : density <= 6 ? 2 : 3);
@@ -187,7 +189,9 @@ function coverGlyphs(levels, t, x0, y0, side) {
             : []));
         if (spans.length) rows.push(`<text y="${+(y0 + (r + 0.82) * cell).toFixed(2)}">${spans.join('')}</text>`);
     }
-    return `<g font-size="${+(cell / 0.6).toFixed(2)}" font-weight="700">${rows.join('')}</g>`;
+    // Same phosphor glow as the README grids; filtering also renders the glyphs with greyscale
+    // antialiasing, where plain SVG text would get coloured subpixel fringes. Light uses an invisible one.
+    return `<g font-size="${+(cell / 0.6).toFixed(2)}" font-weight="700" style="filter:drop-shadow(0 0 2.5px ${t.glow})">${rows.join('')}</g>`;
 }
 
 // Narrow is swapped in on phones, where the wide card would shrink below reading size.
