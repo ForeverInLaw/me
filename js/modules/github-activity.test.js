@@ -10,12 +10,13 @@ test('compactNumber keeps small values and shortens thousands', () => {
     assert.equal(compactNumber(12400), '12k');
 });
 
-test('levels come from quartiles of active days, so one spike does not flatten the year', () => {
+test('levels come from percentiles of active days, so one spike does not flatten the year', () => {
     const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 500];
     const thresholds = levelThresholds(counts);
     assert.equal(levelFor(0, thresholds), 0);
     assert.equal(levelFor(1, thresholds), 1);
-    assert.equal(levelFor(6, thresholds), 3);
+    assert.equal(levelFor(6, thresholds), 2);
+    assert.equal(levelFor(8, thresholds), 3);
     assert.equal(levelFor(500, thresholds), 4);
     assert.deepEqual(levelThresholds([0, 0]), []);
 });

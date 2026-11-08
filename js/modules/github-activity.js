@@ -19,15 +19,16 @@ export function compactNumber(value) {
 }
 
 /**
- * Upper bounds for levels 1..3, taken from the quartiles of the active days.
- * Quartiles rather than a linear scale, so one 500-commit day does not flatten
- * the rest of the year into the lowest shade.
+ * Upper bounds for levels 1..3, taken from percentiles of the active days.
+ * Percentiles rather than a linear scale, so one 500-commit day does not
+ * flatten the rest of the year; skewed high so the brightest shade marks only
+ * the busiest ~15% of days instead of every fourth one.
  */
 export function levelThresholds(counts) {
     const active = counts.filter((count) => count > 0).sort((a, b) => a - b);
     if (!active.length) return [];
     const at = (q) => active[Math.min(active.length - 1, Math.floor(q * active.length))];
-    return [at(0.25), at(0.5), at(0.75)];
+    return [at(0.3), at(0.6), at(0.85)];
 }
 
 /** 0 for an empty day, otherwise 1..4 against the thresholds. */
