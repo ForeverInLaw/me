@@ -43,11 +43,24 @@ jobs:
           fetch "https://ghchart.rshah.org/0b6d0f/ForeverInLaw" assets/chart-dark.svg
           fetch "https://ghchart.rshah.org/d04ec5/ForeverInLaw" assets/chart-light.svg
 
-      - name: Commit refreshed SVGs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Feeds the page's own "The grind" block. STATS_TOKEN (a personal token)
+      # lets private contributions count; without it the Actions token sees
+      # public activity only.
+      - name: Fetch GitHub activity JSON
+        env:
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/github-stats.mjs
+
+      - name: Commit refreshed stats
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/*.svg
+          git add assets/*.svg assets/github.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
