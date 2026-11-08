@@ -342,14 +342,13 @@ a.project-card:hover h3 {
         gap: 10px 20px;
     }
 
-
-
+    /* Full width here, and the copy is kept short enough to read whole. */
     .project-card__desc {
         grid-column: 1 / -1;
         grid-row: 2;
         max-width: 60ch;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
+        -webkit-line-clamp: none;
+        line-clamp: none;
     }
 }
 
