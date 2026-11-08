@@ -104,45 +104,163 @@ a.project-card:hover h3 {
 .status--oss { color: var(--status-oss); }
 .status--archived { color: var(--status-archived); }
 
-/* ── the grind: GitHub stats ── */
+/* ── the grind: GitHub activity rendered from assets/github.json ── */
 
 .grind {
     margin-top: 80px;
 }
 
-.grind__stats,
-.graph-card {
-    margin-top: 18px;
+.grind__sentence {
+    align-self: center;
+    max-width: 24ch;
+    color: var(--muted);
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 700;
+    font-stretch: 112%;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+}
+
+.grind__sentence strong {
+    color: var(--fg);
+    font-weight: 800;
+}
+
+/* Sentence and latest pushes share a row; the year of activity runs full
+   width underneath. */
+.grind__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+    gap: 20px 32px;
+    margin-top: 28px;
+}
+
+.heatmap {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+.heatmap,
+.pushes {
     border-radius: var(--radius-lg);
     background: var(--panel);
-    overflow: hidden;
+    padding: 20px;
 }
 
-.grind__stats {
-    padding: 8px 12px;
-}
-
-/* The stats SVG is drawn for 467px; wider only spreads it thin. */
-.stats-img {
-    width: 100%;
-    max-width: 467px;
-}
-
-.graph-card .card-content {
-    padding: 18px;
+.heatmap__scroll {
     overflow-x: auto;
     scrollbar-width: none;
 }
 
-.graph-img {
-    min-width: 720px;
-    width: 100%;
+.heatmap__months,
+.heatmap__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--weeks, 53), minmax(9px, 1fr));
+    column-gap: 3px;
+    min-width: 560px;
 }
 
-.stats-error {
-    padding: 24px;
+.heatmap__months {
+    margin-bottom: 8px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 12px;
+}
+
+.heatmap__grid {
+    grid-template-rows: repeat(7, auto);
+    grid-auto-flow: column;
+    row-gap: 3px;
+}
+
+.heatmap__cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: var(--raised);
+    transition: outline-color 120ms ease-out;
+    outline: 1px solid transparent;
+    outline-offset: 1px;
+}
+
+.heatmap__cell.is-pad {
+    visibility: hidden;
+}
+
+.heatmap__cell[data-level="1"] { background: #3a3150; }
+.heatmap__cell[data-level="2"] { background: #5e4e86; }
+.heatmap__cell[data-level="3"] { background: #8f76c4; }
+.heatmap__cell[data-level="4"] { background: var(--accent); }
+
+.heatmap__cell:not(.is-pad):hover {
+    outline-color: var(--fg);
+}
+
+.heatmap__caption {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.pushes__title {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.pushes__list {
+    display: grid;
+    margin-top: 6px;
+}
+
+.push {
+    display: grid;
+    gap: 2px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.pushes__list li:last-child .push {
+    border-bottom: 0;
+}
+
+.push__name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 15px;
+}
+
+.push__owner {
+    color: var(--muted);
+}
+
+.push strong {
+    font-weight: 600;
+    transition: color 200ms var(--ease-out);
+}
+
+.push:hover strong {
+    color: var(--accent);
+}
+
+.push__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.push__lang {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lang, var(--muted));
+}
+
+.grind.is-error .grind__body {
+    display: none;
 }
 
 /* ── narrow: rows stack; touch screens get the inline screenshot reel ── */
@@ -151,6 +269,15 @@ a.project-card:hover h3 {
     .project-card {
         grid-template-columns: minmax(0, 1fr) 96px;
         gap: 10px 20px;
+    }
+
+    .grind__body {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stacked, the year reads before the list of pushes. */
+    .pushes {
+        order: 1;
     }
 
     .project-card__desc {
