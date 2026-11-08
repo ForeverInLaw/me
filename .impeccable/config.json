@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-08T22:57:42.908Z",
+        "reason": "agent: spotify.js renders .np-card__pulse only while the API reports isPlaying, so it marks live data"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-08T22:57:43.274Z",
+        "reason": "agent: preview-loader sweep runs only while a preview screenshot decodes (.is-loading)"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-08T22:57:43.640Z",
+        "reason": "agent: .preview-image-wrapper is a full-bleed screenshot slot; its only text is centred"
+      }
+    ]
+  }
+}
