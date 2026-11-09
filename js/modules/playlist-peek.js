@@ -18,7 +18,6 @@ const COVER = WIDTH - INSET * 2;
 const CARD_RADIUS = 16;   // --radius-lg
 const GAP = 12;           // between the card and the row
 const EDGE = 12;          // keep-out from the viewport edges
-const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
 const SLIDE = { duration: 0.45, ease: 'expo.out' };
 const TEXT_BLUR = 'blur(4px)'; // the text passes through this as it changes
 
@@ -28,12 +27,21 @@ const el = (tag, className) => Object.assign(document.createElement(tag), { clas
 // reads them without running anything, and textContent keeps only the words.
 const plainText = (html) => new DOMParser().parseFromString(html, 'text/html').documentElement.textContent.trim();
 
+/** The card's clip as the --clip-* lengths css/playlist-peek.css reads. */
+const clip = (top, side, bottom, radius) => ({
+    '--clip-top': `${top}px`,
+    '--clip-side': `${side}px`,
+    '--clip-bottom': `${bottom}px`,
+    '--clip-radius': `${radius}px`
+});
+
+const FULL_CLIP = clip(0, 0, 0, CARD_RADIUS);
+
 /**
  * Clips the card down to its cover. Corners are given in screen pixels and
  * divided by `scale`, so at the tile's size they match the tile's own.
  */
-const coverClip = (height, scale, radius) =>
-    `inset(${INSET}px ${INSET}px ${height - INSET - COVER}px ${INSET}px round ${radius / scale}px)`;
+const coverClip = (height, scale, radius) => clip(INSET, INSET, height - INSET - COVER, radius / scale);
 
 // The outer element moves and carries the shadow; the inner card is clipped,
 // since a clip on the shadow's own element would cut the shadow off with it.
@@ -79,7 +87,7 @@ function createCalmMotion({ peek, card, body }) {
         grow(tile, rest) {
             stop();
             gsap.set(peek, { ...rest, scale: 1 });
-            gsap.set(card, { clipPath: FULL_CLIP });
+            gsap.set(card, FULL_CLIP);
             gsap.set(body, { autoAlpha: 1, y: 0 });
             gsap.to(peek, { autoAlpha: 1, duration: 0.15 });
         },
@@ -112,7 +120,7 @@ function createMotion({ peek, card, body }) {
             // lazy: false, so the first frame already sits over the tile
             // rather than wherever the card was last.
             gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN, lazy: false });
-            gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN, lazy: false });
+            gsap.fromTo(card, coverClip(card.offsetHeight, from.scale, radius), { ...FULL_CLIP, ...OPEN, lazy: false });
             gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out', lazy: false });
         },
         slide(x, apply) {
@@ -123,7 +131,7 @@ function createMotion({ peek, card, body }) {
             const folding = gsap.getProperty(peek, 'scale') < 0.999;
             gsap.set(peek, { autoAlpha: 1 });
             gsap.to(peek, { x, scale: 1, ...SLIDE });
-            gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
+            gsap.to(card, { ...FULL_CLIP, duration: 0.3, ease: 'power2.out' });
 
             // Runs once the old text has blurred out: the new text goes in,
             // the card's top and height ease together on one curve (so its
@@ -153,7 +161,7 @@ function createMotion({ peek, card, body }) {
             stop();
             const to = overTile(tile);
             gsap.to(body, { autoAlpha: 0, duration: 0.12 });
-            gsap.to(card, { clipPath: coverClip(card.offsetHeight, to.scale, radius), ...FOLD });
+            gsap.to(card, { ...coverClip(card.offsetHeight, to.scale, radius), ...FOLD });
             gsap.to(peek, {
                 ...to,
                 ...FOLD,

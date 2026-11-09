@@ -13,10 +13,18 @@
     will-change: transform, opacity;
 }
 
+/* playlist-peek.js tweens the four --clip-* lengths rather than clip-path
+   itself: the browser shortens an inset() whose sides match, and a tween
+   between two differently shaped strings pairs up the wrong numbers. */
 .playlist-peek__card {
+    --clip-top: 0px;
+    --clip-side: 0px;
+    --clip-bottom: 0px;
+    --clip-radius: var(--radius-lg);
     padding: 8px 8px 12px;
     border-radius: var(--radius-lg);
     background: var(--raised);
+    clip-path: inset(var(--clip-top) var(--clip-side) var(--clip-bottom) round var(--clip-radius));
 }
 
 .playlist-peek__body {
