@@ -9,8 +9,8 @@ const PLAYLISTS_API = apiEndpoint(
 
 /**
  * Renders the playlists as a row of covers in the bio column. The covers are
- * too small to carry their names; hovering or focusing one opens a window
- * with its name and description (playlist-peek.js).
+ * too small to carry their names; hovering, focusing or tapping one opens a
+ * window with its name and description (playlist-peek.js).
  *
  * The row is built off-screen and swaps in for the ghost tiles once every
  * cover has decoded.

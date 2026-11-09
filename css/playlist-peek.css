@@ -1,4 +1,4 @@
-/* Hover window over the playlist row (playlist-peek.js). It lives on <body>,
+/* The window over the playlist row (playlist-peek.js). It lives on <body>,
    outside the bio column, whose own scrolling would clip it. The outer box
    moves and casts the shadow, drawn around whatever the card's clip leaves
    while it opens out of the tile. */
@@ -13,6 +13,12 @@
     will-change: transform, opacity;
 }
 
+/* Opened by a tap, the card is the link through to the playlist; under a
+   mouse it stays out of the pointer's way, and the tile is the link. */
+.playlist-peek.is-tappable {
+    pointer-events: auto;
+}
+
 /* playlist-peek.js tweens the four --clip-* lengths rather than clip-path
    itself: the browser shortens an inset() whose sides match, and a tween
    between two differently shaped strings pairs up the wrong numbers. */
@@ -21,6 +27,7 @@
     --clip-side: 0px;
     --clip-bottom: 0px;
     --clip-radius: var(--radius-lg);
+    display: block;
     padding: 8px 8px 12px;
     border-radius: var(--radius-lg);
     background: var(--raised);
@@ -73,11 +80,19 @@
 }
 
 .playlist-peek__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
     margin-top: 8px;
     color: var(--spotify);
     font-size: 12px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+}
+
+/* Said only where the card is the way through. */
+.playlist-peek:not(.is-tappable) .playlist-peek__open {
+    display: none;
 }
 
 /* With the window open, the row steps back so the hovered tile leads; the
@@ -92,7 +107,9 @@
     transition: opacity 200ms var(--ease-out);
 }
 
-.playlists.has-peek:hover .playlist img {
+/* While the window is open, not while the row is hovered: a tap leaves its
+   hover behind on a touch screen. */
+.playlists.is-peeking .playlist img {
     opacity: 0.5;
 }
 

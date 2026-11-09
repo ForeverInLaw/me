@@ -1,14 +1,17 @@
 /* global gsap -- loaded as a classic script before the modules (index.html). */
-// Hover window for the playlist row. The hovered cover lifts out of its tile
+// The window over the playlist row. The hovered cover lifts out of its tile
 // and opens into a card above the row: the first frame is the tile itself,
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
 // from the side the pointer came from (shot-stack.js), the old text blurs out,
-// the new one comes into focus and the card eases to its new height. Pointer and keyboard only; on touch the tiles
-// stay plain links.
+// the new one comes into focus and the card eases to its new height.
+//
+// A finger has no hover, so its first tap on a tile opens the card instead of
+// the playlist. The card then takes taps itself and is the way through, as is
+// a second tap on the same tile; a tap anywhere else folds it away.
 
-import { canHoverPreview, prefersReducedMotion } from './viewport.js';
+import { prefersReducedMotion } from './viewport.js';
 import { safeUrl } from './remote.js';
 import { createShotStack } from './shot-stack.js';
 
@@ -45,20 +48,26 @@ const coverClip = (height, scale, radius) => clip(INSET, INSET, height - INSET -
 
 // The outer element moves and carries the shadow; the inner card is clipped,
 // since a clip on the shadow's own element would cut the shadow off with it.
+// The card is a link to the playlist, but only a finger can reach it
+// (css/playlist-peek.css): the tiles stay the links for everything else, so
+// it is kept out of the tab order and away from assistive tech.
 function createPeek() {
     const peek = el('div', 'playlist-peek');
     peek.setAttribute('aria-hidden', 'true');
-    const card = el('div', 'playlist-peek__card');
+    const card = Object.assign(el('a', 'playlist-peek__card'), { target: '_blank', rel: 'noopener noreferrer', tabIndex: -1 });
     const cover = el('div', 'playlist-peek__cover');
     const body = el('div', 'playlist-peek__body');
     const name = el('p', 'playlist-peek__name');
     const desc = el('p', 'playlist-peek__desc');
     const meta = el('p', 'playlist-peek__meta');
+    const tracks = el('span', '');
+    const open = Object.assign(el('span', 'playlist-peek__open'), { textContent: 'Open in Spotify ↗' });
+    meta.append(tracks, open);
     body.append(name, desc, meta);
     card.append(cover, body);
     peek.append(card);
     document.body.append(peek);
-    return { peek, card, body, cover, name, desc, meta };
+    return { peek, card, body, cover, name, desc, tracks };
 }
 
 /**
@@ -197,10 +206,56 @@ function createSockets(container, links) {
     };
 }
 
+/**
+ * Opens and folds the window as the tiles are hovered, focused or tapped.
+ * `show(index, byTouch)` opens it for a tile, `hide()` folds it, and
+ * `isShowing(index)` tells whether it is open for that tile already.
+ */
+function watchTiles({ container, links, peek }, { show, hide, isShowing }) {
+    // The press in progress: whether a finger or pen made it, and whether it
+    // landed on the tile whose card was already open.
+    let byTouch = false;
+    let onOpenTile = false;
+    const outside = (node) => !container.contains(node) && !peek.contains(node);
+
+    links.forEach((link, index) => {
+        link.addEventListener('pointerenter', (event) => {
+            if (event.pointerType === 'mouse') show(index, false);
+        });
+        link.addEventListener('pointerdown', (event) => {
+            byTouch = event.pointerType !== 'mouse';
+            onOpenTile = isShowing(index);
+        });
+        link.addEventListener('focus', () => show(index, byTouch));
+        // A tap focuses the tile on some browsers and not on others, so the
+        // click opens the card as well; it follows the link only for a mouse,
+        // the keyboard, or a tap on the tile that is already open.
+        link.addEventListener('click', (event) => {
+            const firstTap = byTouch && !onOpenTile;
+            byTouch = false;
+            if (!firstTap) return;
+            event.preventDefault();
+            show(index, true);
+        });
+    });
+
+    // A finger leaves the row the moment it lifts; only a mouse leaving folds the card.
+    container.addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse') hide();
+    });
+    container.addEventListener('focusout', (event) => {
+        if (outside(event.relatedTarget)) hide();
+    });
+    document.addEventListener('pointerdown', (event) => {
+        if (outside(event.target)) hide();
+    });
+    // The card is pinned to the viewport; any scroll would leave it behind.
+    window.addEventListener('scroll', hide, { capture: true, passive: true });
+    window.addEventListener('blur', hide);
+}
+
 /** Wires the window to the `.playlist` links rendered from `playlists`. */
 export function attachPlaylistPeek(container, playlists) {
-    if (!canHoverPreview()) return;
-
     const calm = prefersReducedMotion();
     const parts = createPeek();
     const motion = calm ? createCalmMotion(parts) : createMotion(parts);
@@ -219,12 +274,16 @@ export function attachPlaylistPeek(container, playlists) {
     gsap.set(parts.peek, { transformOrigin: '0 0', autoAlpha: 0 });
 
     const fill = (playlist) => {
+        parts.card.href = safeUrl(playlist.url);
         parts.name.textContent = playlist.name.trim();
         parts.desc.textContent = plainText(playlist.description || '');
-        parts.meta.textContent = `${playlist.tracks} tracks`;
+        parts.tracks.textContent = `${playlist.tracks} tracks`;
     };
 
-    const show = (index) => {
+    const show = (index, byTouch) => {
+        // Opened by a finger, the card takes taps; under a mouse it must not,
+        // or it would catch the pointer on its way off the row.
+        parts.peek.classList.toggle('is-tappable', byTouch);
         if (index === current) return;
         // Still on screen, even halfway folded, counts as open: slide, don't regrow.
         const open = gsap.getProperty(parts.peek, 'opacity') > 0;
@@ -247,30 +306,20 @@ export function attachPlaylistPeek(container, playlists) {
             shots.reveal(safeUrl(playlist.image), '');
         }
         if (!calm) sockets.lift(index, !open);
+        container.classList.add('is-peeking');
     };
 
     const hide = () => {
         if (current === null) return;
         const index = current;
         current = null;
+        container.classList.remove('is-peeking');
         motion.shrink(tileRect(index), radius, () => {
             sockets.lift(null, true);
             shots.reset();
         });
     };
 
-    links.forEach((link, index) => {
-        link.addEventListener('pointerenter', (event) => {
-            if (event.pointerType === 'mouse') show(index);
-        });
-        link.addEventListener('focus', () => show(index));
-    });
-    container.addEventListener('pointerleave', hide);
-    container.addEventListener('focusout', (event) => {
-        if (!container.contains(event.relatedTarget)) hide();
-    });
-    // The card is pinned to the viewport; any scroll would leave it behind.
-    window.addEventListener('scroll', hide, { capture: true, passive: true });
-    window.addEventListener('blur', hide);
+    watchTiles({ container, links, peek: parts.peek }, { show, hide, isShowing: (index) => index === current });
     container.classList.add('has-peek');
 }
