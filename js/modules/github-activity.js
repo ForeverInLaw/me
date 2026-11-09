@@ -1,7 +1,7 @@
 // "The grind": renders assets/github.json (written daily by scripts/github-stats.mjs)
 // as a sentence of totals, a contribution heatmap in the site palette, the
-// year's records (grind-records.js), the latest public pushes and the commits
-// by hour of the day (day-dial.js).
+// year's records (grind-records.js), the latest public pushes and commits, and
+// the commits by hour of the day (day-dial.js).
 
 import { renderDayDial } from './day-dial.js';
 import { renderRecords } from './grind-records.js';
@@ -167,6 +167,28 @@ function renderRecent(list, recent) {
     }));
 }
 
+/** The latest public commits, one line each: what it says, where, how long ago. */
+function renderCommits(block, commits) {
+    if (!commits?.length) return;
+    block.querySelector('#latest-commits').replaceChildren(...commits.map((commit) => {
+        const link = el('a', 'commit');
+        link.href = commit.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        const [owner, name] = commit.repo.split('/');
+        const when = el('time', 'commit__when', timeAgo(commit.at));
+        when.dateTime = commit.at;
+        // Own repos go by name alone here too.
+        link.append(el('span', 'commit__message', commit.message), el('span', 'commit__repo', owner === OWN_LOGIN ? name : commit.repo), when);
+
+        const item = el('li');
+        item.append(link);
+        return item;
+    }));
+    block.hidden = false;
+}
+
 export async function initGithubActivity() {
     const section = document.querySelector('.grind');
     if (!section) return;
@@ -191,6 +213,7 @@ export async function initGithubActivity() {
     const heatmap = renderHeatmap(section, counts, dayAt, data.totals.contributions);
     renderRecords(section.querySelector('#grind-records'), heatmap, counts, dayAt);
     if (data.hours) renderDayDial(section.querySelector('#day-dial'), data.hours);
+    renderCommits(section.querySelector('#commit-log'), data.commits);
     renderRecent(section.querySelector('#recent-pushes'), data.recent);
     section.classList.add('is-ready');
 }

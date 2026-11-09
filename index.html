@@ -312,7 +312,14 @@
 						<h3 class="grind__label">Latest pushes</h3>
 						<ol class="pushes__list" id="recent-pushes"></ol>
 					</div>
-					<p class="grind__records" id="grind-records"></p>
+					<div class="grind__notes">
+						<p class="grind__records" id="grind-records"></p>
+						<!-- The latest public commits; shown once there are any. -->
+						<div class="commits" id="commit-log" hidden>
+							<h3 class="grind__label">Latest commits</h3>
+							<ol class="commits__list" id="latest-commits"></ol>
+						</div>
+					</div>
 					<!-- Commits by hour of the day (day-dial.js); shown once there are any. -->
 					<div class="dial" id="day-dial" hidden>
 						<h3 class="grind__label">Around the clock</h3>

@@ -129,7 +129,9 @@ a.project-card:hover h3 {
 
 /* The sentence runs full width above; the year and the latest pushes sit
    side by side underneath. The list keeps a fixed width and the heatmap takes
-   the rest, which sizes its cells so both panels end at about the same height. */
+   the rest, which sizes its cells so both panels end at about the same height.
+   A second row follows in the same columns: the records and the latest
+   commits under the year, the dial (day-dial.css) under the pushes. */
 .grind__body {
     display: grid;
     /* Past ~1100px the cells would swell; extra width goes to the list. */
@@ -315,10 +317,53 @@ a.project-card:hover h3 {
     background: var(--lang, var(--muted));
 }
 
-/* The year's records: the opening sentence's voice, a size down. */
+/* Under the heatmap, beside the dial: the year's records at the top and the
+   latest commits along the bottom, so the two columns end level. */
+.grind__notes {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+    min-width: 0;
+    padding: 12px 4px 0;
+}
+
+/* One line per commit, ruled like the pushes. */
+.commits__list {
+    margin-top: 6px;
+}
+
+.commit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 20px;
+    height: 36px;
+    border-bottom: 1px solid var(--line);
+}
+
+.commit__message {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    transition: color 200ms var(--ease-out);
+}
+
+.commit:hover .commit__message {
+    color: var(--accent);
+}
+
+.commit__repo,
+.commit__when {
+    color: var(--muted);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* The opening sentence's voice, a size down. */
 .grind__records {
     max-width: 44ch;
-    padding: 12px 4px 0;
     color: var(--muted);
     font-size: clamp(20px, 2.2cqi, 28px);
     font-weight: 700;
@@ -382,6 +427,15 @@ a.project-card:hover h3 {
 @container (max-width: 700px) {
     .grind__body {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* No room for where a commit went; what it says and when stay. */
+    .commit {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .commit__repo {
+        display: none;
     }
 }
 

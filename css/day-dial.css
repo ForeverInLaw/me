@@ -26,7 +26,6 @@
     display: block;
     width: 100%;
     height: auto;
-    touch-action: none;
 }
 
 .dial__rim {

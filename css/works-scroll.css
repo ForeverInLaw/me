@@ -107,12 +107,12 @@
     opacity: 0;
 }
 
-/* Whatever steps in whole: a push, the records. */
-.grind.is-staged :is(.pushes__list li, .grind__records) {
+/* Whatever steps in whole: a push, the records, a commit. */
+.grind.is-staged :is(.pushes__list li, .grind__records, .commits__list li) {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
 }
 
-.grind.is-staged :is(.pushes__list li, .grind__records):not(.is-lit) {
+.grind.is-staged :is(.pushes__list li, .grind__records, .commits__list li):not(.is-lit) {
     opacity: 0;
     transform: translateY(10px);
 }
