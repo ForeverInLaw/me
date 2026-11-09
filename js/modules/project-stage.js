@@ -4,10 +4,11 @@
 // fixed frame, fitted whole, with a blurred glow of itself filling the margins;
 // a project without a screenshot shows its name there instead.
 //
-// A pointer running down the list is only passing through, so the stage skims
-// instead of following: the frame wears each passing row's name over a wash of
-// its glow, the text below goes out of focus, and nothing loads or wipes. Once
-// the pointer stays on a row, that project comes into focus.
+// A pointer running down the list is only passing through, so the stage does
+// not follow it row by row: it holds the project it has and drifts out of
+// focus the longer the run lasts, then wipes to the row the pointer rests on
+// as it sharpens again. A quick hop to a nearby row is over before the drift
+// shows.
 //
 // The list stays the content - the stage only repeats it - so it is hidden
 // from assistive tech and left out of the tab order. Touch screens never get
@@ -20,7 +21,9 @@ import { watchRowIntent } from './row-intent.js';
 
 const SWAP_IN = { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', overwrite: true, lazy: false };
 const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
-const SKIM_BLUR = { autoAlpha: 0.3, filter: 'blur(3px)', duration: 0.2, ease: 'sine.out', overwrite: true };
+// The text's share of the drift out of focus; the frame's is in
+// project-stage.css, on the same clock.
+const SKIM_BLUR = { autoAlpha: 0.45, filter: 'blur(3px)', duration: 0.52, delay: 0.08, ease: 'sine.inOut', overwrite: true };
 
 const glows = new Map();
 
@@ -42,19 +45,6 @@ function glowFor(src) {
         }).catch(() => ''));
     }
     return glows.get(src);
-}
-
-/**
- * Puts the glow for `src` behind `el`, or clears it for no `src`. A glow that
- * arrives after `el` was dressed for another image is dropped.
- */
-function setGlow(el, src) {
-    el.dataset.glow = src;
-    el.style.backgroundImage = '';
-    if (!src) return;
-    glowFor(src).then((url) => {
-        if (url && el.dataset.glow === src) el.style.backgroundImage = `url(${url})`;
-    });
 }
 
 /**
@@ -95,8 +85,8 @@ function writeInfo(stage, info, project) {
 
 /**
  * The stage for `cards`: `show(index)` puts a project on it, `skim(index)`
- * runs the frame ahead to a row without putting it on, and `rest()` drops a
- * skim, back to the project on show.
+ * marks a row the pointer is running over while the stage drifts out of
+ * focus, and `rest()` drops a skim, back to the project on show.
  */
 function createStage(stage, cards, calm) {
     const poster = stage.querySelector('.project-stage__poster');
@@ -108,7 +98,6 @@ function createStage(stage, cards, calm) {
     let current = -1; // the project on the stage
     let aimed = -1; // the row under the pointer or focus, which a skim runs ahead with
     let showingShot = false;
-    let skimming = false;
 
     const shots = createShotStack(stage.querySelector('.project-stage__shots'), {
         calm,
@@ -121,7 +110,12 @@ function createStage(stage, cards, calm) {
         },
         // Each layer carries its own glow, so a wipe never shows the previous
         // shot through the margins of the next.
-        onPaint: setGlow
+        onPaint: (img, src) => {
+            img.style.backgroundImage = '';
+            glowFor(src).then((url) => {
+                if (url && img.getAttribute('src') === src) img.style.backgroundImage = `url(${url})`;
+            });
+        }
     });
 
     const aim = (index) => {
@@ -130,39 +124,28 @@ function createStage(stage, cards, calm) {
         aimed = index;
     };
 
-    const dressPoster = ({ title, screenshot }) => {
-        fitPosterName(poster, posterName, title);
-        setGlow(poster, screenshot);
-    };
-
-    /** Puts project `index` on the stage, ending any skim. */
+    /** Puts project `index` on the stage, back in focus after any skim. */
     const show = (index) => {
-        const fromSkim = skimming;
-        skimming = false;
+        const fromSkim = stage.classList.contains('is-skimming');
         stage.classList.remove('is-skimming');
         aim(index);
-        const project = projects[index];
 
         if (index === current) {
             // A skim that came back to where it started: nothing to swap.
-            if (fromSkim) {
-                dressPoster(project);
-                gsap.to(info, SWAP_IN);
-            }
+            if (fromSkim) gsap.to(info, SWAP_IN);
             return;
         }
         const direction = index > current ? 1 : -1;
         current = index;
+        const project = projects[index];
 
         if (project.screenshot) {
-            // Out of a skim the frame already wears this project's glow, so
-            // the shot comes into focus under it rather than wiping across.
-            if (showingShot && !fromSkim) shots.wipeTo(project.screenshot, '', direction);
+            if (showingShot) shots.wipeTo(project.screenshot, '', direction);
             else shots.reveal(project.screenshot, '');
-        } else if (!fromSkim) {
+        } else {
             // Only a poster project renames the poster: leaving one, it fades
             // out as it was rather than flashing the next name over its shot.
-            dressPoster(project);
+            fitPosterName(poster, posterName, project.title);
             if (!calm) gsap.fromTo(posterName, SWAP_FROM, SWAP_IN);
         }
         showingShot = Boolean(project.screenshot);
@@ -174,12 +157,10 @@ function createStage(stage, cards, calm) {
         else gsap.fromTo(info, SWAP_FROM, SWAP_IN);
     };
 
-    /** Runs the frame ahead to row `index` without putting it on the stage yet. */
+    /** Marks row `index` as a run crosses it; the stage keeps what it has. */
     const skim = (index) => {
         aim(index);
-        dressPoster(projects[index]);
-        if (skimming) return;
-        skimming = true;
+        if (stage.classList.contains('is-skimming')) return;
         stage.classList.add('is-skimming');
         gsap.to(info, SKIM_BLUR);
     };
