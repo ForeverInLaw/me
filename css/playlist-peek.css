@@ -21,11 +21,7 @@
     background: var(--raised);
 }
 
-/* playlist-peek.js gives this the height of the wordiest playlist; the
-   track count keeps to the bottom of it, so it never moves between cards. */
 .playlist-peek__body {
-    display: flex;
-    flex-direction: column;
     padding: 0 6px;
 }
 
@@ -65,8 +61,7 @@
 }
 
 .playlist-peek__meta {
-    margin-top: auto;
-    padding-top: 8px;
+    margin-top: 8px;
     color: var(--spotify);
     font-size: 12px;
     font-weight: 600;
