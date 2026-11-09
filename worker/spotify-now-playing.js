@@ -204,6 +204,12 @@ const face = (weight, base64) => `@font-face{font-family:jbm;font-weight:${weigh
 const FONT_STYLE = `<style>${face(400, REGULAR)}${face(700, BOLD)}</style>`;
 const ADVANCE = 0.6;
 const GAP = 28;
+// Text rows by baseline: the prompt line on top, the progress bar last.
+const HEAD_Y = 34;
+const BAR_Y = 116;
+// The cover spans the text block, from the prompt's cap height down to the bar's baseline.
+const COVER_TOP = Math.round(HEAD_Y - SIZE * 0.73);
+const COVER_SIDE = BAR_Y - COVER_TOP;
 
 const clip = (text, chars) => (text.length > chars ? `${text.slice(0, chars - 1)}…` : text);
 const mmss = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
@@ -244,13 +250,13 @@ function progressBar(payload, t, x, y, cells, id) {
 // Set in the profile's JetBrains Mono, carried inline; glyphs outside its subset (track names in
 // other scripts) fall back per character through the rest of the font-family stack.
 // A miniature of the profile's first screen: text on the README's left edge, the cover as a
-// full-height glyph plate flush with the right edge, like the portrait on the profile cover.
+// glyph plate flush with the right edge and level with the text block.
 export function renderCard(payload, theme, layout, cover, now = Date.now()) {
     const t = THEMES[theme === 'light' ? 'light' : 'dark'];
     const { width, margin, height, barCells } = LAYOUTS[layout === 'narrow' ? 'narrow' : 'wide'];
     const track = payload.track;
-    const art = track && cover ? coverGlyphs(cover, t, width - height, 0, height) : '';
-    const right = art ? width - height - GAP : width - margin;
+    const art = track && cover ? coverGlyphs(cover, t, width - COVER_SIDE, COVER_TOP, COVER_SIDE) : '';
+    const right = art ? width - COVER_SIDE - GAP : width - margin;
     const chars = (size) => Math.floor((right - margin) / (size * ADVANCE));
     const text = (y, content, fill, { size = SIZE, bold = false, anchor = 'start', x = margin } = {}) =>
         `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" text-anchor="${anchor}"${bold ? ' font-weight="700"' : ''}>${escapeXml(content)}</text>`;
@@ -263,7 +269,7 @@ export function renderCard(payload, theme, layout, cover, now = Date.now()) {
         ? text(66, clip(track.name, chars(20)), t.stone[3], { size: 20, bold: true })
             + text(90, clip(track.artists, chars(SIZE)), t.stone[2])
             + (payload.isPlaying
-                ? progressBar(payload, t, barX, 116, barCells, `np-${theme === 'light' ? 'l' : 'd'}${layout === 'narrow' ? 'n' : 'w'}`) + text(116, timing, t.stone[2], { x: barX + barCells * SIZE * ADVANCE + 12 })
+                ? progressBar(payload, t, barX, BAR_Y, barCells, `np-${theme === 'light' ? 'l' : 'd'}${layout === 'narrow' ? 'n' : 'w'}`) + text(BAR_Y, timing, t.stone[2], { x: barX + barCells * SIZE * ADVANCE + 12 })
                 : '')
         : text(66, 'Nothing playing', t.stone[2], { size: 20, bold: true });
 
@@ -272,8 +278,8 @@ export function renderCard(payload, theme, layout, cover, now = Date.now()) {
         + FONT_STYLE
         + `<g font-family="jbm,JetBrains Mono,ui-monospace,Consolas,Menlo,monospace" font-size="${SIZE}">`
         + art
-        + text(34, '~ $ now-playing', t.stone[3], { bold: true })
-        + (status ? text(34, status, payload.isPlaying ? t.accent : t.stone[2], { bold: payload.isPlaying, anchor: 'end', x: right }) : '')
+        + text(HEAD_Y, '~ $ now-playing', t.stone[3], { bold: true })
+        + (status ? text(HEAD_Y, status, payload.isPlaying ? t.accent : t.stone[2], { bold: payload.isPlaying, anchor: 'end', x: right }) : '')
         + body
         + `</g></svg>`;
 }
