@@ -620,18 +620,15 @@
     }
 }
 
-/* Entrance: the works list cascades in once, row by row, each by its --i
-   (set in index.html ahead of the first paint). Without JS the rows simply
-   sit there, so nothing depends on the animation. */
-.js .project-list > li {
-    animation: row-in var(--stagger-dur) var(--stagger-ease) both;
-    animation-delay: calc(var(--i, 0) * var(--stagger-stagger) + 80ms);
+/* Entrance: the heading comes in with the bio column beside it (bio.css), then
+   the works list cascades in once, row by row, each by its --i (set in
+   index.html ahead of the first paint). Without JS it all simply sits there,
+   so nothing depends on the animation. */
+.js .projects .works__head {
+    animation: rise-in var(--stagger-dur) var(--stagger-ease) backwards;
 }
 
-@keyframes row-in {
-    from {
-        opacity: 0;
-        transform: translateY(var(--stagger-distance));
-        filter: blur(var(--stagger-blur));
-    }
+.js .project-list > li {
+    animation: rise-in var(--stagger-dur) var(--stagger-ease) both;
+    animation-delay: calc(var(--i, 0) * var(--stagger-stagger) + 80ms);
 }

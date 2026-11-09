@@ -132,6 +132,17 @@ ol {
     transform: scale(var(--icon-swap-start-scale));
 }
 
+/* How the page's parts first come in, one after another: the bio column's
+   blocks, the works list's rows, the stage. Only where they start from, so
+   each ends as it is styled. */
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(var(--stagger-distance));
+        filter: blur(var(--stagger-blur));
+    }
+}
+
 /* Delays go with the durations: a cascade left with only its delays would
    hold each row back unseen and then snap it in, one after another. */
 @media (prefers-reduced-motion: reduce) {

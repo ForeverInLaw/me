@@ -7,6 +7,20 @@
     background: var(--panel);
 }
 
+/* Entrance: the column's blocks rise in from the top down, as the works list
+   does beside them (works.css). Gone once played, so a block is left with no
+   transform of its own. */
+.js .bio > * {
+    animation: rise-in var(--stagger-dur) var(--stagger-ease) backwards;
+    animation-delay: calc(var(--i) * var(--stagger-stagger));
+}
+
+.bio > :nth-child(1) { --i: 0; }
+.bio > :nth-child(2) { --i: 1; }
+.bio > :nth-child(3) { --i: 2; }
+.bio > :nth-child(4) { --i: 3; }
+.bio > :nth-child(5) { --i: 4; }
+
 .who {
     display: flex;
     align-items: center;
