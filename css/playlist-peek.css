@@ -33,6 +33,12 @@
     background: var(--raised-hover);
 }
 
+/* Cropped like the tile's own cover (centred), not like a project screenshot
+   (top), so a non-square cover lands in its tile without a jump. */
+.playlist-peek__cover .preview-shot {
+    object-position: center;
+}
+
 .playlist-peek__name {
     margin-top: 12px;
     font-size: 15px;
