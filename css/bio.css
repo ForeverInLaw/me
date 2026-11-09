@@ -79,9 +79,9 @@
     background: var(--raised);
     font-size: clamp(16px, 5.5cqi, 20px);
     transition:
-        background-color 200ms var(--ease-out),
-        color 200ms var(--ease-out),
-        transform 160ms var(--ease-out);
+        background-color 200ms var(--ease-smooth-out),
+        color 200ms var(--ease-smooth-out),
+        transform 160ms var(--ease-smooth-out);
 }
 
 .social:active {
@@ -132,7 +132,7 @@
     border-radius: var(--radius-lg);
     background: var(--raised);
     overflow: hidden;
-    transition: background-color 200ms var(--ease-out);
+    transition: background-color 200ms var(--ease-smooth-out);
 }
 
 #spotify-now-playing:hover {
@@ -140,7 +140,7 @@
 }
 
 .np-card {
-    animation: np-in 260ms var(--ease-out);
+    animation: fade-in var(--reveal-dur) var(--reveal-ease);
     display: flex;
     align-items: center;
     gap: 14px;
@@ -148,7 +148,7 @@
     padding: 12px;
 }
 
-@keyframes np-in {
+@keyframes fade-in {
     from { opacity: 0; }
 }
 
@@ -323,11 +323,11 @@
    the row never dips to the column background between the two. */
 .playlists.is-ready > li {
     border-radius: var(--radius-sm);
-    animation: playlist-ghost 320ms calc(var(--i) * 45ms) backwards;
+    animation: playlist-ghost var(--reveal-dur) calc(var(--i) * var(--stagger-stagger)) backwards;
 }
 
 .playlists.is-ready img {
-    animation: np-in 320ms var(--ease-out) calc(var(--i) * 45ms) backwards;
+    animation: fade-in var(--reveal-dur) var(--reveal-ease) calc(var(--i) * var(--stagger-stagger)) backwards;
 }
 
 @keyframes playlist-ghost {
@@ -342,7 +342,7 @@
     background: var(--raised);
     outline: 1px solid oklch(1 0 0 / 0.08);
     outline-offset: -1px;
-    transition: transform 260ms var(--ease-out);
+    transition: transform 260ms var(--ease-smooth-out);
 }
 
 .playlist:hover img,

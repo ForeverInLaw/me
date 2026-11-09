@@ -16,10 +16,6 @@
 
     --font: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    /* Kept for playlists/now-playing code that reads the token name. */
-    --transition-smooth: var(--ease-out);
-
     /* Corner scale. A box nested in another uses calc(outer - gap) so the two
        curves stay concentric. */
     --radius-xs: 6px;
@@ -30,16 +26,46 @@
 
     --bio-width: clamp(340px, 30vw, 440px);
 
-    /* transitions.dev tokens - only the patterns this site uses. */
+    /* Motion: the transitions.dev scale, as far as this site uses it. A value
+       is picked by what the motion is (a text swap, a reveal), never by which
+       number happens to be close. */
+    --duration-stagger: 40ms;
+    --duration-quick: 150ms;
+    --duration-fast: 250ms;
+    --duration-slow: 400ms;
+    --duration-very-slow: 500ms;
+    --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: ease-in-out;
+    --ease-out: ease-out;
+    --distance-micro: 4px;
+    --distance-medium: 12px;
+    --blur-small: 2px;
+    --blur-medium: 3px;
+
+    /* The patterns built on that scale. */
     --resize-dur: 300ms;
-    --text-swap-dur: 200ms;
-    --text-swap-translate-y: 8px;
-    --text-swap-blur: 2px;
-    --text-swap-ease: ease-out;
-    --icon-swap-dur: 200ms;
-    --icon-swap-blur: 2px;
+    --resize-ease: var(--ease-smooth-out);
+    --text-swap-dur: var(--duration-quick);
+    --text-swap-translate-y: var(--distance-micro);
+    --text-swap-blur: var(--blur-small);
+    --text-swap-ease: var(--ease-in-out);
+    --icon-swap-dur: var(--duration-fast);
+    --icon-swap-blur: var(--blur-small);
     --icon-swap-start-scale: 0.25;
-    --icon-swap-ease: ease-in-out;
+    --icon-swap-ease: var(--ease-in-out);
+    /* Lines rising in one after another: the works list, the grind's rows. */
+    --stagger-dur: var(--duration-very-slow);
+    --stagger-distance: var(--distance-medium);
+    --stagger-stagger: var(--duration-stagger);
+    --stagger-blur: var(--blur-medium);
+    --stagger-ease: var(--ease-smooth-out);
+    /* Loaded content taking a placeholder's place. */
+    --reveal-dur: var(--duration-slow);
+    --reveal-ease: var(--ease-in-out);
+    /* Tooltips come in quickly and leave at once. */
+    --tt-in-dur: var(--duration-quick);
+    --tt-out-dur: 50ms;
+    --tt-ease: var(--ease-out);
 
     --status-active: #4ade80;
     --status-wip: #facc15;

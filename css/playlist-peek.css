@@ -100,11 +100,11 @@
 .playlists.has-peek .playlist {
     display: block;
     border-radius: var(--radius-sm);
-    transition: background-color 200ms var(--ease-out);
+    transition: background-color 200ms var(--ease-smooth-out);
 }
 
 .playlists.has-peek .playlist img {
-    transition: opacity 200ms var(--ease-out);
+    transition: opacity 200ms var(--ease-smooth-out);
 }
 
 /* While the window is open, not while the row is hovered: a tap leaves its

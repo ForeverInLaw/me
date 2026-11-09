@@ -88,7 +88,7 @@
    whole section going dark, off screen, while the page is still coming in. */
 
 .grind.is-arriving .grind__sentence strong {
-    transition: color 500ms var(--ease-out);
+    transition: color 500ms var(--ease-smooth-out);
 }
 
 .grind.is-staged .grind__sentence strong:not(.is-lit) {
@@ -98,7 +98,7 @@
 /* A week lights top to bottom (--row), so the year sweeps in on a slant. */
 .grind.is-arriving .heatmap__cell {
     transition:
-        background-color 600ms var(--ease-out) calc(var(--row, 0) * 30ms),
+        background-color 600ms var(--ease-smooth-out) calc(var(--row, 0) * 30ms),
         opacity 200ms ease,
         box-shadow 120ms ease-out;
 }
@@ -109,7 +109,7 @@
 
 /* The hours come up one after another, clockwise from midnight. */
 .grind.is-arriving .dial__bar {
-    transition: stroke 200ms var(--ease-out), opacity 400ms var(--ease-out);
+    transition: stroke 200ms var(--ease-smooth-out), opacity 400ms var(--ease-smooth-out);
 }
 
 .grind.is-staged .dial__bar:not(.is-lit) {
@@ -118,10 +118,10 @@
 
 /* Whatever steps in whole: a push, the records, a commit. */
 .grind.is-arriving :is(.pushes__list li, .grind__records, .commits__list li) {
-    transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
+    transition: opacity var(--stagger-dur) var(--stagger-ease), transform var(--stagger-dur) var(--stagger-ease);
 }
 
 .grind.is-staged :is(.pushes__list li, .grind__records, .commits__list li):not(.is-lit) {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(var(--stagger-distance));
 }

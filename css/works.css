@@ -26,7 +26,7 @@
     gap: 28px;
     padding: 24px 0;
     border-bottom: 1px solid var(--line);
-    transition: padding-left 280ms var(--ease-out);
+    transition: padding-left 280ms var(--ease-smooth-out);
 }
 
 .project-card h3 {
@@ -36,7 +36,7 @@
     line-height: 1;
     letter-spacing: -0.025em;
     text-wrap: balance;
-    transition: color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out);
 }
 
 /* Only where the pointer hovers: on a touch screen a tap would leave the row
@@ -249,11 +249,12 @@
     pointer-events: none;
     opacity: 0;
     transform: translate(-50%, calc(-100% - 6px));
-    transition: opacity 120ms ease-out;
+    transition: opacity var(--tt-out-dur) var(--tt-ease);
 }
 
 .heatmap__tip.is-visible {
     opacity: 1;
+    transition-duration: var(--tt-in-dur);
 }
 
 /* What a panel of the grind is, in a line above its contents. */
@@ -306,7 +307,7 @@
 
 .push strong {
     font-weight: 600;
-    transition: color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out);
 }
 
 @media (hover: hover) {
@@ -363,7 +364,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 15px;
-    transition: color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out);
 }
 
 .commit__repo,
@@ -396,7 +397,7 @@
     cursor: default;
     text-decoration: underline 2px color-mix(in srgb, var(--accent) 40%, transparent);
     text-underline-offset: 0.2em;
-    transition: color 200ms var(--ease-out), text-decoration-color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out), text-decoration-color 200ms var(--ease-smooth-out);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -552,14 +553,13 @@
    shot, opening once as it scrolls into view (see works-reel.js). */
 @media (max-width: 768px) and (hover: none) {
     .project-shot {
-        --reveal-ease: cubic-bezier(0.33, 1, 0.68, 1);
         grid-column: 1 / -1;
         display: grid;
         grid-template-rows: 0fr;
         overflow: hidden;
         opacity: 0;
         transition:
-            grid-template-rows var(--resize-dur) var(--reveal-ease),
+            grid-template-rows var(--resize-dur) var(--resize-ease),
             opacity 180ms ease-out;
     }
 
@@ -605,8 +605,8 @@
         opacity: 0;
         transform: scale(1.04);
         transition:
-            opacity 260ms ease-out 60ms,
-            transform 380ms var(--reveal-ease) 50ms;
+            opacity var(--reveal-dur) var(--reveal-ease) 60ms,
+            transform var(--reveal-dur) var(--reveal-ease) 60ms;
     }
 
     .project-card.is-revealed .project-shot.is-shot-ready img {
@@ -619,14 +619,14 @@
    (set in index.html ahead of the first paint). Without JS the rows simply
    sit there, so nothing depends on the animation. */
 .js .project-list > li {
-    animation: row-in 640ms var(--ease-out) both;
-    animation-delay: calc(var(--i, 0) * 45ms + 80ms);
+    animation: row-in var(--stagger-dur) var(--stagger-ease) both;
+    animation-delay: calc(var(--i, 0) * var(--stagger-stagger) + 80ms);
 }
 
 @keyframes row-in {
     from {
         opacity: 0;
-        transform: translateY(16px);
-        filter: blur(4px);
+        transform: translateY(var(--stagger-distance));
+        filter: blur(var(--stagger-blur));
     }
 }

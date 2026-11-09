@@ -50,7 +50,7 @@
         content: counter(project, decimal-leading-zero);
         font-size: 12px;
         font-variant-numeric: tabular-nums;
-        transition: color 200ms var(--ease-out);
+        transition: color 200ms var(--ease-smooth-out);
     }
 
     .has-stage .project-card h3 {
@@ -60,7 +60,7 @@
         letter-spacing: -0.015em;
         white-space: nowrap;
         text-overflow: ellipsis;
-        transition: color 200ms var(--ease-out), transform 280ms var(--ease-out);
+        transition: color 200ms var(--ease-smooth-out), transform 280ms var(--ease-smooth-out);
     }
 
     /* The stage carries these for the current row. */
@@ -105,7 +105,7 @@
         display: flex;
         flex-direction: column;
         align-self: stretch;
-        animation: row-in 640ms var(--ease-out) 160ms both;
+        animation: row-in var(--stagger-dur) var(--stagger-ease) 160ms both;
     }
 }
 
@@ -133,7 +133,7 @@
 /* What fills the frame, a shot or the poster, sharpens quickly after a skim. */
 .project-stage__shots,
 .project-stage__poster {
-    transition: opacity 250ms var(--ease-out), filter 380ms var(--ease-out);
+    transition: opacity 250ms var(--ease-smooth-out), filter 380ms var(--ease-smooth-out);
 }
 
 /* Skimming (project-stage.js): the pointer is running down the index, and the
@@ -142,7 +142,7 @@
    only a real run blurs the stage. */
 .project-stage.is-skimming :is(.project-stage__shots, .project-stage__poster) {
     filter: blur(12px) brightness(0.7);
-    transition: opacity 250ms var(--ease-out), filter 520ms ease-in-out 80ms;
+    transition: opacity 250ms var(--ease-smooth-out), filter 520ms ease-in-out 80ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -223,7 +223,7 @@
     font-stretch: 112%;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    transition: color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out);
 }
 
 .project-stage[href]:hover :is(.project-stage__title, .project-stage__domain) {
@@ -274,7 +274,7 @@
     color: var(--fg);
     font-size: 15px;
     font-weight: 600;
-    transition: color 200ms var(--ease-out);
+    transition: color 200ms var(--ease-smooth-out);
 }
 
 .project-stage:not([href]) .project-stage__domain {
