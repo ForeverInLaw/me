@@ -4,8 +4,8 @@
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
-// from the side the pointer came from (shot-stack.js), the text swaps and the
-// card eases to its new height. Pointer and keyboard only; on touch the tiles
+// from the side the pointer came from (shot-stack.js), the new text comes into
+// focus and the card eases to its new height. Pointer and keyboard only; on touch the tiles
 // stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
@@ -129,8 +129,10 @@ function createMotion({ peek, card, body }) {
             gsap.to(peek, { y, ...RESIZE });
             gsap.fromTo(card, { height: before }, { height: after, ...RESIZE, clearProps: 'height' });
             gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
-            // The fold faded the text out; anywhere else it is simply shown.
-            gsap.to(body, { autoAlpha: 1, y: 0, duration: folding ? 0.2 : 0 });
+            // The new text comes into focus where it stands, as the clock and
+            // the now-playing card swap theirs.
+            gsap.fromTo(body, { autoAlpha: 0, filter: 'blur(3px)', y: 0 },
+                { autoAlpha: 1, filter: 'blur(0px)', duration: 0.25, ease: 'power2.out', clearProps: 'filter' });
         },
         shrink(tile, radius, done) {
             stop();
