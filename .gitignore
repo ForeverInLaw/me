@@ -7,3 +7,4 @@ dist/
 .continuum/
 .serena/
 .probe-run.mjs
+.wrangler/

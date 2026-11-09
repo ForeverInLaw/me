@@ -48,7 +48,7 @@ async function getNowPlaying(env) {
     if (nowRes.status === 200) {
         const data = await nowRes.json();
         if (data && data.item) {
-            return buildPayload(data.item, !!data.is_playing, null, data.progress_ms);
+            return buildPayload(data.item, !!data.is_playing, null, livePosition(data));
         }
     }
 
@@ -67,6 +67,16 @@ async function getNowPlaying(env) {
     }
 
     return buildPayload(entry.track, false, entry.played_at, null);
+}
+
+/**
+ * Spotify reports progress_ms as of `timestamp`, the last playback change (play, skip, seek), and
+ * many clients never refresh it mid-track; while playing, add the time elapsed since then.
+ */
+function livePosition({ is_playing, progress_ms, timestamp, item }) {
+    if (progress_ms == null || !is_playing || !timestamp) return progress_ms;
+    const position = progress_ms + Math.max(0, Date.now() - timestamp);
+    return item.duration_ms ? Math.min(position, item.duration_ms) : position;
 }
 
 // Failures render a quiet card: a broken image on the GitHub profile is worse than no track.
