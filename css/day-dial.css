@@ -39,6 +39,10 @@
     stroke: color-mix(in srgb, var(--accent) calc(var(--share) * 100%), #3a3150);
     stroke-width: 7;
     stroke-linecap: round;
+    /* One dash as long as the bar (pathLength, day-dial.js): offset by its
+       whole length the bar is undrawn, and it grows from the rim as the
+       offset runs out (works-scroll.css). */
+    stroke-dasharray: 1;
     transition: stroke 200ms var(--ease-smooth-out);
 }
 

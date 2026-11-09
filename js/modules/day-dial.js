@@ -45,6 +45,9 @@ function drawBars(plot, counts) {
             x1: CENTER, y1: CENTER - BASE,
             x2: CENTER, y2: CENTER - BASE - STUB - share * (REACH - STUB),
             transform: turned((hour + 0.5) * 360 / HOURS),
+            // Its length counts as 1 whatever it is, so the stylesheet can
+            // draw any bar from its foot by one dash (day-dial.css).
+            pathLength: 1,
         });
         bar.style.setProperty('--share', share.toFixed(3));
         plot.append(bar);

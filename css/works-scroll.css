@@ -107,13 +107,18 @@
     background-color: var(--raised);
 }
 
-/* The hours come up one after another, clockwise from midnight. */
+/* The hours come up one after another, clockwise from midnight, each growing
+   out of the rim to its height. */
 .grind.is-arriving .dial__bar {
-    transition: stroke 200ms var(--ease-smooth-out), opacity 400ms var(--ease-smooth-out);
+    transition:
+        stroke 200ms var(--ease-smooth-out),
+        opacity 400ms var(--ease-smooth-out),
+        stroke-dashoffset var(--duration-very-slow) var(--ease-smooth-out);
 }
 
 .grind.is-staged .dial__bar:not(.is-lit) {
     opacity: 0;
+    stroke-dashoffset: 1;
 }
 
 /* Whatever steps in whole: a push, the records, a commit. */
