@@ -4,8 +4,8 @@
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
-// from the side the pointer came from (shot-stack.js), the new text comes into
-// focus and the card eases to its new height. Pointer and keyboard only; on touch the tiles
+// from the side the pointer came from (shot-stack.js), the old text blurs out,
+// the new one comes into focus and the card eases to its new height. Pointer and keyboard only; on touch the tiles
 // stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
@@ -20,6 +20,7 @@ const GAP = 12;           // between the card and the row
 const EDGE = 12;          // keep-out from the viewport edges
 const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
 const SLIDE = { duration: 0.45, ease: 'expo.out' };
+const TEXT_BLUR = 'blur(4px)'; // the text passes through this as it changes
 
 const el = (tag, className) => Object.assign(document.createElement(tag), { className });
 
@@ -82,7 +83,7 @@ function createCalmMotion({ peek, card, body }) {
             gsap.set(body, { autoAlpha: 1, y: 0 });
             gsap.to(peek, { autoAlpha: 1, duration: 0.15 });
         },
-        slide(apply) {
+        slide(x, apply) {
             stop();
             gsap.set(peek, { ...apply(), autoAlpha: 1 });
         },
@@ -95,8 +96,9 @@ function createCalmMotion({ peek, card, body }) {
 
 /**
  * The three moves: open out of a tile, slide to another, fold back into one.
- * `slide` gets an `apply` callback that swaps the content in and returns where
- * the card now rests, so the heights before and after can both be measured.
+ * `slide` gets the card's new left edge, which the content does not change,
+ * and an `apply` callback that swaps the content in and returns where the card
+ * now rests, so the heights before and after the text change can be measured.
  */
 function createMotion({ peek, card, body }) {
     const OPEN = { duration: 0.6, ease: 'expo.out' };
@@ -111,28 +113,34 @@ function createMotion({ peek, card, body }) {
             gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN });
             gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
         },
-        slide(apply) {
+        slide(x, apply) {
             stop();
-            const before = card.offsetHeight;
-            gsap.set(card, { clearProps: 'height' });
-            const { x, y } = apply();
-            const after = card.offsetHeight;
-            // The top and the height share one curve, so the bottom edge stays
-            // put over the row while the new text settles. Caught halfway into
-            // its fold, the card is still small and low over the tile: it rises
-            // as it grows back, on the slide's curve, or it would swell down
-            // over the row first.
+            // Caught halfway into its fold, the card is still small and low
+            // over the tile: it rises as it grows back, on the slide's curve,
+            // or it would swell down over the row first.
             const folding = gsap.getProperty(peek, 'scale') < 0.999;
-            const RESIZE = folding ? SLIDE : { duration: 0.3, ease: 'power2.inOut' };
             gsap.set(peek, { autoAlpha: 1 });
             gsap.to(peek, { x, scale: 1, ...SLIDE });
-            gsap.to(peek, { y, ...RESIZE });
-            gsap.fromTo(card, { height: before }, { height: after, ...RESIZE, clearProps: 'height' });
             gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
-            // The new text comes into focus where it stands, as the clock and
-            // the now-playing card swap theirs.
-            gsap.fromTo(body, { autoAlpha: 0, filter: 'blur(3px)', y: 0 },
-                { autoAlpha: 1, filter: 'blur(0px)', duration: 0.25, ease: 'power2.out', clearProps: 'filter' });
+
+            // Runs once the old text has blurred out: the new text goes in,
+            // the card's top and height ease together on one curve (so its
+            // bottom edge stays put over the row), and the text comes into
+            // focus where it stands.
+            const swap = () => {
+                const before = card.offsetHeight;
+                gsap.set(card, { clearProps: 'height' });
+                const { y } = apply();
+                const after = card.offsetHeight;
+                const RESIZE = folding ? SLIDE : { duration: 0.3, ease: 'power2.inOut' };
+                gsap.to(peek, { y, ...RESIZE });
+                gsap.fromTo(card, { height: before }, { height: after, ...RESIZE, clearProps: 'height' });
+                gsap.fromTo(body, { autoAlpha: 0, filter: TEXT_BLUR, y: 0 },
+                    { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter' });
+            };
+            // The fold has already faded the text; otherwise it leaves first.
+            if (folding) swap();
+            else gsap.to(body, { autoAlpha: 0, filter: TEXT_BLUR, duration: 0.15, ease: 'power1.in', onComplete: swap });
         },
         shrink(tile, radius, done) {
             stop();
@@ -212,7 +220,7 @@ export function attachPlaylistPeek(container, playlists) {
         const place = () => restFor(tile, container.getBoundingClientRect(), parts.peek);
 
         if (open) {
-            motion.slide(() => {
+            motion.slide(place().x, () => {
                 fill(playlist);
                 return place();
             });
