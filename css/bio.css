@@ -263,6 +263,14 @@
     margin-top: 6px;
 }
 
+/* Hold the row's height until the covers arrive: the music block is pinned to
+   the bottom of the column, so a row landing late would shove it upward. */
+.playlists__ghost {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    background: var(--raised);
+}
+
 .playlist img {
     width: 100%;
     aspect-ratio: 1;
