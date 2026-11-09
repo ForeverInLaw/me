@@ -27,22 +27,35 @@ const SKIM_BLUR = { autoAlpha: 0.45, filter: 'blur(3px)', duration: 0.52, delay:
 
 const glows = new Map();
 
+// The glow's canvas, and the shot as drawn into it: past the canvas edges, so
+// the blur does not fade out there.
+const GLOW = { width: 64, height: 36 };
+const GLOW_SHOT = { x: -8, y: -6, width: 80, height: 48 };
+
 /**
  * The ambient glow for a screenshot, as a data URL: drawn once into a tiny
  * canvas, blurred and dimmed, and stretched under the shot to fill its margins.
- * It is drawn past the canvas edges so the blur does not fade out there.
+ *
+ * The shot is decoded straight to the size it is drawn at, off the main
+ * thread. Drawing the full picture into the canvas instead decodes it there
+ * and then, which for every shot at once stalls the page as it comes in.
  */
 function glowFor(src) {
     if (!glows.has(src)) {
-        const img = new Image();
-        img.src = src;
-        glows.set(src, img.decode().then(() => {
-            const canvas = Object.assign(document.createElement('canvas'), { width: 64, height: 36 });
-            const ctx = canvas.getContext('2d');
-            ctx.filter = 'blur(3px) saturate(1.4) brightness(0.55)';
-            ctx.drawImage(img, -8, -6, 80, 48);
-            return canvas.toDataURL();
-        }).catch(() => ''));
+        glows.set(src, fetch(src)
+            .then((res) => res.blob())
+            .then((blob) => createImageBitmap(blob, {
+                resizeWidth: GLOW_SHOT.width, resizeHeight: GLOW_SHOT.height, resizeQuality: 'low',
+            }))
+            .then((shot) => {
+                const canvas = Object.assign(document.createElement('canvas'), GLOW);
+                const ctx = canvas.getContext('2d');
+                ctx.filter = 'blur(3px) saturate(1.4) brightness(0.55)';
+                ctx.drawImage(shot, GLOW_SHOT.x, GLOW_SHOT.y);
+                shot.close();
+                return canvas.toDataURL();
+            })
+            .catch(() => ''));
     }
     return glows.get(src);
 }
