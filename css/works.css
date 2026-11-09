@@ -26,7 +26,12 @@
     gap: 28px;
     padding: 24px 0;
     border-bottom: 1px solid var(--line);
-    transition: padding-left 280ms var(--ease-smooth-out);
+}
+
+/* The name and its tags step aside under the pointer. Moved, not padded: a
+   narrowing column would re-wrap the name halfway through. */
+.project-card__main {
+    transition: transform 280ms var(--ease-smooth-out);
 }
 
 .project-card h3 {
@@ -42,8 +47,8 @@
 /* Only where the pointer hovers: on a touch screen a tap would leave the row
    shifted and lit until the next tap elsewhere. */
 @media (hover: hover) {
-    a.project-card:hover {
-        padding-left: 14px;
+    a.project-card:hover .project-card__main {
+        transform: translateX(14px);
     }
 
     a.project-card:hover h3 {
@@ -503,8 +508,8 @@
         padding: 20px 0;
     }
 
-    a.project-card:hover {
-        padding-left: 0;
+    a.project-card:hover .project-card__main {
+        transform: none;
     }
 }
 

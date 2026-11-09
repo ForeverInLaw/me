@@ -83,8 +83,8 @@
         font-size: 0;
     }
 
-    .has-stage a.project-card:hover {
-        padding-left: 0;
+    .has-stage a.project-card:hover .project-card__main {
+        transform: none;
     }
 
     .has-stage .project-card.is-current h3 {

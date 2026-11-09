@@ -135,8 +135,10 @@
     transition: background-color 200ms var(--ease-smooth-out);
 }
 
-#spotify-now-playing:hover {
-    background: var(--raised-hover);
+@media (hover: hover) {
+    #spotify-now-playing:hover {
+        background: var(--raised-hover);
+    }
 }
 
 .np-card {
@@ -345,9 +347,15 @@
     transition: transform 260ms var(--ease-smooth-out);
 }
 
-.playlist:hover img,
 .playlist:focus-visible img {
     transform: translateY(-4px) rotate(-3deg);
+}
+
+/* Only where the pointer hovers; a tap would leave the cover tipped. */
+@media (hover: hover) {
+    .playlist:hover img {
+        transform: translateY(-4px) rotate(-3deg);
+    }
 }
 
 .socials__caption,
