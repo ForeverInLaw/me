@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-08T23:05:11.987Z",
+  "generatedAt": "2026-11-09T20:23:12.343Z",
   "totals": {
-    "contributions": 7648,
-    "commits": 6483,
-    "pullRequests": 513,
+    "contributions": 7649,
+    "commits": 6484,
+    "pullRequests": 514,
     "issues": 397,
     "repos": 85
   },
@@ -229,7 +229,7 @@
       5,
       22,
       8,
-      4,
+      3,
       90,
       3,
       7,
@@ -375,23 +375,30 @@
       180,
       195,
       60,
-      0
+      2
     ]
   },
   "recent": [
     {
-      "name": "ForeverInLaw/me",
-      "url": "https://github.com/ForeverInLaw/me",
-      "pushedAt": "2026-11-08T22:23:45Z",
+      "name": "ForeverInLaw/ForeverInLaw",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw",
+      "pushedAt": "2026-11-09T16:17:42Z",
+      "language": "TypeScript",
+      "color": "#3178c6"
+    },
+    {
+      "name": "ForeverInLaw/foreverinlaw.github.io",
+      "url": "https://github.com/ForeverInLaw/foreverinlaw.github.io",
+      "pushedAt": "2026-11-09T12:27:00Z",
       "language": "JavaScript",
       "color": "#f1e05a"
     },
     {
-      "name": "ForeverInLaw/ForeverInLaw",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw",
-      "pushedAt": "2026-11-08T22:23:33Z",
-      "language": "TypeScript",
-      "color": "#3178c6"
+      "name": "ForeverInLaw/me",
+      "url": "https://github.com/ForeverInLaw/me",
+      "pushedAt": "2026-11-09T12:20:21Z",
+      "language": "JavaScript",
+      "color": "#f1e05a"
     },
     {
       "name": "redstone-md/mosh-flutter",
@@ -406,13 +413,73 @@
       "pushedAt": "2026-11-08T12:13:29Z",
       "language": "Dart",
       "color": "#00B4AB"
+    }
+  ],
+  "hours": {
+    "timeZone": "CET",
+    "counts": [
+      414,
+      377,
+      378,
+      331,
+      373,
+      290,
+      233,
+      214,
+      142,
+      94,
+      84,
+      56,
+      50,
+      77,
+      123,
+      185,
+      236,
+      295,
+      277,
+      333,
+      383,
+      344,
+      351,
+      440
+    ]
+  },
+  "commits": [
+    {
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "fix: match the gap above now-playing to the gap between log blocks",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/9c07367c9deb08a5ec26c951798d97fd652b552e",
+      "at": "2026-11-09T16:16:46Z"
     },
     {
-      "name": "ForeverInLaw/foreverinlaw.github.io",
-      "url": "https://github.com/ForeverInLaw/foreverinlaw.github.io",
-      "pushedAt": "2026-11-08T11:00:11Z",
-      "language": "JavaScript",
-      "color": "#f1e05a"
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "chore(impeccable): skip the font check on rejected direction mocks",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/8753d33abbb9f2b65ffd061fb8cfee9004fe581e",
+      "at": "2026-11-08T22:22:01Z"
+    },
+    {
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "docs(design): record the phosphor design system",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/baa80ceadeb3ae088d88dd15d8d3e1b707167839",
+      "at": "2026-11-08T22:21:17Z"
+    },
+    {
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "fix: keep the current-year label clear of its bar on phones",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/d47fe3c94a9ce7e63a37438ad6b5a83adab8863d",
+      "at": "2026-11-08T22:21:17Z"
+    },
+    {
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "feat: redesign the profile as a phosphor character grid",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/ee70e9c6c77ef2f1706d7e47c66614e9958b727d",
+      "at": "2026-11-08T22:18:47Z"
+    },
+    {
+      "repo": "ForeverInLaw/ForeverInLaw",
+      "message": "docs(product): record product context and the redesign direction",
+      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/c0484ef067420f43ed89ba1b772994e0eadffbd9",
+      "at": "2026-11-08T22:18:40Z"
     }
   ]
 }

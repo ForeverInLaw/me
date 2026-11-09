@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { compactNumber, levelFor, levelThresholds, timeAgo } from './github-activity.js';
-import { toStats } from '../../scripts/github-stats.mjs';
+import { hourCounts, toStats } from '../../scripts/github-stats.mjs';
 
 test('compactNumber keeps small values and shortens thousands', () => {
     assert.equal(compactNumber(513), '513');
@@ -42,8 +42,27 @@ test('toStats flattens the calendar and keeps only what the page reads', () => {
         },
         repositories: { nodes: [{ nameWithOwner: 'a/b', url: 'u', pushedAt: 't', primaryLanguage: null }] },
     };
-    const stats = toStats(user, 'now');
+    const commits = [
+        { repo: 'a/b', isPrivate: false, authoredDate: '2026-01-01T10:00:00Z', messageHeadline: 'older', url: 'c1' },
+        { repo: 'a/secret', isPrivate: true, authoredDate: '2026-01-03T10:00:00Z', messageHeadline: 'hidden', url: 'c2' },
+        { repo: 'a/b', isPrivate: false, authoredDate: '2026-01-02T10:00:00Z', messageHeadline: 'newer', url: 'c3' },
+    ];
+    const stats = toStats(user, commits, 'now');
     assert.deepEqual(stats.calendar, { start: '2026-01-01', counts: [4, 0, 9] });
     assert.deepEqual(stats.recent, [{ name: 'a/b', url: 'u', pushedAt: 't', language: null, color: null }]);
     assert.equal(stats.totals.commits, 10);
+    // Private commits count toward the hours and appear nowhere else.
+    assert.equal(stats.hours.counts.reduce((sum, count) => sum + count, 0), 3);
+    assert.deepEqual(stats.commits, [
+        { repo: 'a/b', message: 'newer', url: 'c3', at: '2026-01-02T10:00:00Z' },
+        { repo: 'a/b', message: 'older', url: 'c1', at: '2026-01-01T10:00:00Z' },
+    ]);
+    assert.ok(!JSON.stringify(stats).includes('secret'));
+});
+
+test('hourCounts tells the hour in the given zone, daylight saving included', () => {
+    const counts = hourCounts(['2026-01-15T23:30:00Z', '2026-07-15T23:30:00Z', '2026-07-15T23:59:00Z'], 'Europe/Warsaw');
+    assert.equal(counts.length, 24);
+    assert.equal(counts[0], 1); // winter: UTC+1
+    assert.equal(counts[1], 2); // summer: UTC+2
 });
