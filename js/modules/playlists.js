@@ -1,5 +1,6 @@
 import { apiEndpoint, escapeHtml, fetchJson, safeUrl } from './remote.js';
 import { swapText } from './text-swap.js';
+import { attachPlaylistPeek } from './playlist-peek.js';
 
 const PLAYLISTS_API = apiEndpoint(
     '/api/playlists',
@@ -8,8 +9,8 @@ const PLAYLISTS_API = apiEndpoint(
 
 /**
  * Renders the playlists as a row of covers in the bio column. The covers are
- * too small to carry their names, so the caption under the row names whichever
- * cover is hovered or focused and falls back to the total.
+ * too small to carry their names; hovering or focusing one opens a window
+ * with its name and description (playlist-peek.js).
  *
  * The row is built off-screen and swaps in for the ghost tiles once every
  * cover has decoded.
@@ -34,7 +35,7 @@ export async function initPlaylists() {
         return `
         <li style="--i: ${index}">
             <a class="playlist" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer"
-                data-index="${index}" aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
+                aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
                 <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" decoding="async">
             </a>
         </li>`;
@@ -46,23 +47,6 @@ export async function initPlaylists() {
     container.classList.add('is-ready');
     container.replaceChildren(...row.children);
 
-    if (!caption) return;
-
-    const restingText = `${playlists.length} playlists on Spotify`;
-    const describe = (playlist) => `${playlist.name.trim()} · ${playlist.tracks} tracks`;
-    swapText(caption, restingText);
-
-    const show = (text) => {
-        if (caption.textContent !== text) swapText(caption, text);
-    };
-
-    container.querySelectorAll('.playlist').forEach((link) => {
-        const text = describe(playlists[Number(link.dataset.index)]);
-        link.addEventListener('pointerenter', () => show(text));
-        link.addEventListener('focus', () => show(text));
-    });
-    container.addEventListener('pointerleave', () => show(restingText));
-    container.addEventListener('focusout', (event) => {
-        if (!container.contains(event.relatedTarget)) show(restingText);
-    });
+    attachPlaylistPeek(container, playlists);
+    swapText(caption, `${playlists.length} playlists on Spotify`);
 }

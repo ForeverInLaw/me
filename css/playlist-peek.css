@@ -1,0 +1,73 @@
+/* Hover window over the playlist row (playlist-peek.js). It lives on <body>,
+   outside the bio column, whose own scrolling would clip it. */
+.playlist-peek {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    width: 248px; /* WIDTH in playlist-peek.js */
+    padding: 8px 8px 12px;
+    border-radius: var(--radius-lg);
+    background: var(--raised);
+    pointer-events: none;
+    filter: drop-shadow(0 22px 28px rgb(0 0 0 / 0.5)) drop-shadow(0 4px 8px rgb(0 0 0 / 0.35));
+    will-change: transform, opacity;
+}
+
+.playlist-peek__cover {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    /* Concentric with the card: its radius less the 8px inset. */
+    border-radius: calc(var(--radius-lg) - 8px);
+    background: var(--raised-hover);
+}
+
+.playlist-peek__name {
+    margin: 12px 6px 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-wrap: balance;
+}
+
+.playlist-peek__desc {
+    display: -webkit-box;
+    margin: 4px 6px 0;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+    text-wrap: pretty;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+}
+
+.playlist-peek__desc:empty {
+    display: none;
+}
+
+.playlist-peek__meta {
+    margin: 8px 6px 0;
+    color: var(--spotify);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* With the window open, the row steps back so the hovered tile leads; the
+   tile no longer tips, since the card growing out of it is the response. */
+.playlists.has-peek .playlist img {
+    transition: opacity 200ms var(--ease-out);
+}
+
+.playlists.has-peek:hover .playlist img {
+    opacity: 0.5;
+}
+
+.playlists.has-peek .playlist:hover img,
+.playlists.has-peek .playlist:focus-visible img {
+    opacity: 1;
+    transform: none;
+}
