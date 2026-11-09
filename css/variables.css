@@ -30,6 +30,7 @@
        is picked by what the motion is (a text swap, a reveal), never by which
        number happens to be close. */
     --duration-stagger: 40ms;
+    --duration-micro: 80ms;
     --duration-quick: 150ms;
     --duration-fast: 250ms;
     --duration-slow: 400ms;
@@ -71,10 +72,15 @@
     --badge-blur: var(--blur-small);
     --badge-pop-ease: var(--ease-bounce);
     --badge-close-ease: cubic-bezier(0.4, 0, 0.2, 1);
-    /* Tooltips come in quickly and leave at once. */
+    /* Tooltips come in quickly, after a beat, and leave at once; one already
+       showing travels to the next thing it is asked about. */
     --tt-in-dur: var(--duration-quick);
     --tt-out-dur: 50ms;
+    --tt-delay: var(--duration-micro);
+    --tt-scale: 0.98;
     --tt-ease: var(--ease-out);
+    --tt-move-dur: 160ms;
+    --tt-move-ease: var(--ease-smooth-out);
 
     --status-active: #4ade80;
     --status-wip: #facc15;

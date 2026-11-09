@@ -125,8 +125,16 @@ function renderHeatmap(section, counts, dayAt, total) {
         tip.textContent = `${count || 'No'} contribution${count === 1 ? '' : 's'} · ${dateFormat.format(dayAt(Number(i)))}`;
         const cell = event.target.getBoundingClientRect();
         const box = panel.getBoundingClientRect();
+        // Showing, it travels to the cell (works.css). Hidden, it is put there
+        // unseen first, so it comes up over the cell rather than flying in.
+        const hidden = !tip.classList.contains('is-visible');
+        if (hidden) tip.style.transition = 'none';
         tip.style.setProperty('--x', `${cell.left - box.left + cell.width / 2}px`);
         tip.style.setProperty('--y', `${cell.top - box.top}px`);
+        if (hidden) {
+            void tip.offsetWidth; // the move lands before the transition is back
+            tip.style.transition = '';
+        }
         tip.classList.add('is-visible');
     });
     grid.addEventListener('pointerleave', () => tip.classList.remove('is-visible'));

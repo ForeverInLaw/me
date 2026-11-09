@@ -239,10 +239,13 @@
     box-shadow: inset 0 0 0 1.5px var(--fg);
 }
 
+/* --x and --y (github-activity.js) are the top middle of the cell it reads.
+   Placed by translate and grown by scale, so each keeps its own clock: once
+   shown it glides from cell to cell, and only its coming and going fade. */
 .heatmap__tip {
     position: absolute;
-    left: var(--x, 0);
-    top: var(--y, 0);
+    left: 0;
+    top: 0;
     z-index: 2;
     padding: 5px 10px;
     border-radius: var(--radius-xs);
@@ -253,13 +256,23 @@
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
-    transform: translate(-50%, calc(-100% - 6px));
-    transition: opacity var(--tt-out-dur) var(--tt-ease);
+    translate: calc(var(--x, 0px) - 50%) calc(var(--y, 0px) - 100% - 6px);
+    scale: var(--tt-scale);
+    transform-origin: 50% 100%;
+    transition:
+        opacity var(--tt-out-dur) var(--tt-ease),
+        scale var(--tt-out-dur) var(--tt-ease),
+        translate var(--tt-move-dur) var(--tt-move-ease);
 }
 
+/* The wait before it shows belongs to showing alone: leaving hides it at once. */
 .heatmap__tip.is-visible {
     opacity: 1;
-    transition-duration: var(--tt-in-dur);
+    scale: 1;
+    transition:
+        opacity var(--tt-in-dur) var(--tt-ease) var(--tt-delay),
+        scale var(--tt-in-dur) var(--tt-ease) var(--tt-delay),
+        translate var(--tt-move-dur) var(--tt-move-ease);
 }
 
 /* What a panel of the grind is, in a line above its contents. */
