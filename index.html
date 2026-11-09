@@ -89,12 +89,15 @@
 			<p class="bio__line">I build things that move: <strong>Telegram bots, P2P messengers, animated web</strong>. Mostly after dark.</p>
 
 			<nav class="socials" aria-label="Find me">
-				<a class="social" href="https://t.me/nevermorelove" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram" aria-hidden="true"></i>Telegram</a>
-				<a class="social" href="https://github.com/ForeverInLaw" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i>GitHub</a>
-				<a class="social social--email" href="#" data-user="x" data-host="c0" data-tld="md"><i class="fas fa-envelope" aria-hidden="true"></i>Email</a>
-				<a class="social" href="https://www.youtube.com/channel/UCPwNfqoxDW0wELPkgm1v9og" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube" aria-hidden="true"></i>YouTube</a>
-				<a class="social" href="https://instagram.com/sxwxrslxt/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram" aria-hidden="true"></i>Instagram</a>
-				<a class="social" href="https://open.spotify.com/user/aj9lqav0oqw73nb9ra85orfil?si=e17b7de344de4724" target="_blank" rel="noopener noreferrer"><i class="fab fa-spotify" aria-hidden="true"></i>Spotify</a>
+				<div class="socials__row">
+					<a class="social" href="https://t.me/nevermorelove" target="_blank" rel="noopener noreferrer" aria-label="Telegram" data-handle="@nevermorelove"><i class="fab fa-telegram" aria-hidden="true"></i></a>
+					<a class="social" href="https://github.com/ForeverInLaw" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-handle="ForeverInLaw"><i class="fab fa-github" aria-hidden="true"></i></a>
+					<a class="social social--email" href="#" aria-label="Email" data-user="x" data-host="c0" data-tld="md"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+					<a class="social" href="https://www.youtube.com/channel/UCPwNfqoxDW0wELPkgm1v9og" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+					<a class="social" href="https://instagram.com/sxwxrslxt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-handle="@sxwxrslxt"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+					<a class="social" href="https://open.spotify.com/user/aj9lqav0oqw73nb9ra85orfil?si=e17b7de344de4724" target="_blank" rel="noopener noreferrer" aria-label="Spotify"><i class="fab fa-spotify" aria-hidden="true"></i></a>
+				</div>
+				<p class="socials__caption" id="socials-caption" aria-hidden="true"></p>
 			</nav>
 
 			<section class="music" aria-label="Music">
@@ -349,18 +352,6 @@
 
 	<script>
 		document.getElementById('year').textContent = new Date().getFullYear();
-
-		const obfuscatedEmailLink = document.querySelector('.social--email[data-user][data-host][data-tld]');
-		if (obfuscatedEmailLink) {
-			obfuscatedEmailLink.addEventListener('click', function (event) {
-				event.preventDefault();
-				const { user, host, tld } = this.dataset;
-				if (!user || !host || !tld) return;
-				const mailto = 'mailto:' + user + '@' + host + '.' + tld;
-				this.href = mailto;
-				window.location.href = mailto;
-			});
-		}
 	</script>
 </body>
 

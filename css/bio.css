@@ -52,30 +52,40 @@
     font-weight: 500;
 }
 
+/* Icon tiles in one row, sized by the column, with a line under them that
+   names the one in hand (socials.js). The cap keeps them tiles when the column
+   is as wide as a tablet. */
 .socials {
+    container-type: inline-size;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 360px;
+}
+
+.socials__row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 8px;
 }
 
 .social {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius-md);
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
     background: var(--raised);
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out);
+    font-size: clamp(16px, 5.5cqi, 20px);
+    transition:
+        background-color 200ms var(--ease-out),
+        color 200ms var(--ease-out),
+        transform 160ms var(--ease-out);
 }
 
-.social i {
-    width: 16px;
-    text-align: center;
+.social:active {
+    transform: scale(0.96);
 }
 
-/* Only where the pointer hovers; a tap would leave the button lit. */
+/* Only where the pointer hovers; a tap would leave the tile lit. */
 @media (hover: hover) {
     .social:hover {
         background: var(--accent);
@@ -83,8 +93,10 @@
     }
 }
 
-.social:active {
-    background: var(--raised-hover);
+@media (hover: none) {
+    .social:active {
+        background: var(--raised-hover);
+    }
 }
 
 @media (pointer: coarse) {
@@ -324,12 +336,14 @@
     transform: translateY(-4px) rotate(-3deg);
 }
 
+.socials__caption,
 .playlists__caption {
     min-height: 1.5em;
     color: var(--muted);
     font-size: 13px;
 }
 
+.socials__caption b,
 .playlists__caption b {
     color: var(--fg);
     font-weight: 600;
@@ -351,11 +365,5 @@
     .music {
         max-width: 480px;
         margin-top: 4px;
-    }
-}
-
-@media (max-width: 420px) {
-    .socials {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
