@@ -41,9 +41,10 @@ const createLayer = (frame) => {
  * Builds the two layers inside `frame`. `onState` hears 'loading', 'ready' or
  * 'error' for the newest request; `calm` swaps motion for plain fades. `axis`
  * picks the direction of the wipe, and `zoom` the scale a revealed shot eases
- * down from (1 for none).
+ * down from (1 for none). `onPaint(img, src)` hears each layer being pointed
+ * at a new image, to dress the layer itself (a backdrop that wipes with it).
  */
-export function createShotStack(frame, { calm, onState, axis = 'y', zoom = 1.18 }) {
+export function createShotStack(frame, { calm, onState, axis = 'y', zoom = 1.18, onPaint }) {
     const { enter, shift } = AXES[axis];
     let front = createLayer(frame);
     let back = createLayer(frame);
@@ -61,6 +62,7 @@ export function createShotStack(frame, { calm, onState, axis = 'y', zoom = 1.18 
     const load = (img, src, alt) => {
         const mine = ++ticket;
         img.alt = alt;
+        onPaint?.(img, src);
         const loading = paint(img, src);
         const cached = isPainted(img);
         if (!cached) onState('loading');
