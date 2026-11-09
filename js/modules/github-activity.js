@@ -1,7 +1,9 @@
 // "The grind": renders assets/github.json (written daily by scripts/github-stats.mjs)
 // as a sentence of totals, a contribution heatmap in the site palette, the
-// year's records (grind-records.js) and the latest public pushes.
+// year's records (grind-records.js), the latest public pushes and the commits
+// by hour of the day (day-dial.js).
 
+import { renderDayDial } from './day-dial.js';
 import { renderRecords } from './grind-records.js';
 
 const DATA_URL = 'assets/github.json';
@@ -188,6 +190,7 @@ export async function initGithubActivity() {
     renderSentence(sentence, data.totals);
     const heatmap = renderHeatmap(section, counts, dayAt, data.totals.contributions);
     renderRecords(section.querySelector('#grind-records'), heatmap, counts, dayAt);
+    if (data.hours) renderDayDial(section.querySelector('#day-dial'), data.hours);
     renderRecent(section.querySelector('#recent-pushes'), data.recent);
     section.classList.add('is-ready');
 }

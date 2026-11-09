@@ -98,6 +98,15 @@
     background-color: var(--raised);
 }
 
+/* The hours come up one after another, clockwise from midnight. */
+.grind.is-staged .dial__bar {
+    transition: stroke 200ms var(--ease-out), opacity 400ms var(--ease-out);
+}
+
+.grind.is-staged .dial__bar:not(.is-lit) {
+    opacity: 0;
+}
+
 /* Whatever steps in whole: a push, the records. */
 .grind.is-staged :is(.pushes__list li, .grind__records) {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);

@@ -64,6 +64,7 @@
 	<link rel="stylesheet" href="css/works.css">
 	<link rel="stylesheet" href="css/preview.css">
 	<link rel="stylesheet" href="css/project-stage.css">
+	<link rel="stylesheet" href="css/day-dial.css">
 	<link rel="stylesheet" href="css/works-scroll.css">
 	<link rel="stylesheet" href="css/playlist-peek.css">
 	<script src="libs/gsap/gsap-bundle.min.js" defer></script>
@@ -308,10 +309,23 @@
 						<p class="heatmap__tip" id="heatmap-tip" aria-hidden="true"></p>
 					</div>
 					<div class="pushes">
-						<h3 class="pushes__title">Latest pushes</h3>
+						<h3 class="grind__label">Latest pushes</h3>
 						<ol class="pushes__list" id="recent-pushes"></ol>
 					</div>
 					<p class="grind__records" id="grind-records"></p>
+					<!-- Commits by hour of the day (day-dial.js); shown once there are any. -->
+					<div class="dial" id="day-dial" hidden>
+						<h3 class="grind__label">Around the clock</h3>
+						<div class="dial__face">
+							<svg class="dial__plot" viewBox="0 0 280 280" role="img" aria-label="Commits by hour of the day"></svg>
+							<p class="dial__readout" aria-hidden="true">
+								<span class="dial__hour"></span>
+								<strong class="dial__count"></strong>
+								<span>commits</span>
+							</p>
+						</div>
+						<p class="dial__note"></p>
+					</div>
 				</div>
 			</section>
 

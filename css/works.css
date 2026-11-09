@@ -241,7 +241,8 @@ a.project-card:hover h3 {
     opacity: 1;
 }
 
-.pushes__title {
+/* What a panel of the grind is, in a line above its contents. */
+.grind__label {
     color: var(--muted);
     font-size: 13px;
     font-weight: 500;
@@ -357,8 +358,14 @@ a.project-card:hover h3 {
    under it. Measured on the section, not the viewport, because the pinned
    bio column eats a different share at every width. */
 @container (max-width: 1100px) {
+    /* The records and the dial keep their two columns underneath. */
     .grind__body {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
+
+    .heatmap,
+    .pushes {
+        grid-column: 1 / -1;
     }
 
     /* Stacked, the list has its own row again and shows every push. */
@@ -369,6 +376,12 @@ a.project-card:hover h3 {
     .pushes__list {
         grid-template-rows: none;
         grid-auto-rows: 36px;
+    }
+}
+
+@container (max-width: 700px) {
+    .grind__body {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

@@ -1,0 +1,95 @@
+/* "Around the clock" (day-dial.js): commits by hour of the day on a 24-hour
+   dial, midnight at the top, with the hour being read spelled out in the
+   middle. A panel of the grind, beside the year's records. */
+
+.dial {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: 12px;
+    min-width: 0;
+    border-radius: var(--radius-lg);
+    background: var(--panel);
+    padding: 20px;
+}
+
+.dial .grind__label {
+    justify-self: start;
+}
+
+.dial__face {
+    position: relative;
+    width: min(100%, 280px);
+}
+
+.dial__plot {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+}
+
+.dial__rim {
+    fill: none;
+    stroke: var(--line);
+}
+
+/* --share (from JS) is the hour's commits against the busiest hour's: it sets
+   the bar's length there and its place on the heatmap's ramp here. */
+.dial__bar {
+    stroke: color-mix(in srgb, var(--accent) calc(var(--share) * 100%), #3a3150);
+    stroke-width: 7;
+    stroke-linecap: round;
+    transition: stroke 200ms var(--ease-out);
+}
+
+.dial__bar.is-read {
+    stroke: var(--fg);
+}
+
+.dial__numeral {
+    fill: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.dial__now {
+    fill: var(--fg);
+}
+
+.dial__readout {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 2px;
+    color: var(--muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.dial__count {
+    color: var(--fg);
+    font-size: 26px;
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.dial__note {
+    justify-self: start;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.dial__note strong {
+    color: var(--fg);
+    font-weight: 600;
+}
