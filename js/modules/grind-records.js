@@ -1,9 +1,9 @@
 // The year's records (year-records.js) as a second sentence under the heatmap.
-// With a hovering pointer each record points at its days: the rest of the
-// year dims while the pointer is on it.
+// Each record points at its days: hovered or tapped, it leaves them lit and
+// dims the rest of the year.
 
 import { yearRecords } from './year-records.js';
-import { canHoverPreview } from './viewport.js';
+import { prefersReducedMotion } from './viewport.js';
 
 const dayMonth = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 const weekdayName = new Intl.DateTimeFormat('en-GB', { weekday: 'long', timeZone: 'UTC' });
@@ -45,15 +45,62 @@ function recordParts({ streak, peak, weekday }, dayAt) {
 export function renderRecords(target, grid, counts, dayAt) {
     const records = yearRecords(counts, dayAt(0).getUTCDay());
     if (!records) return;
-    const pointing = canHoverPreview();
 
+    const pointers = new Map(); // each record's element -> its `covers`
     target.replaceChildren(...recordParts(records, dayAt).map(([text, covers]) => {
         if (!covers) return text;
         const record = Object.assign(document.createElement('strong'), { textContent: text });
-        if (pointing) {
-            record.addEventListener('pointerenter', () => markDays(grid, covers));
-            record.addEventListener('pointerleave', () => markDays(grid));
-        }
+        pointers.set(record, covers);
         return record;
     }));
+    watchRecords(target, grid, pointers);
+}
+
+/**
+ * Lets each record in `pointers` point at its days. A mouse points by
+ * hovering. A finger points by tapping: the heatmap, which scrolls sideways
+ * on a phone, comes round to the days, and a tap on the record again or on
+ * anything but the heatmap lets go.
+ */
+function watchRecords(target, grid, pointers) {
+    let pointed = null;
+    let byTouch = false; // the press in progress came from a finger or pen
+
+    const point = (record) => {
+        pointed?.classList.remove('is-pointed');
+        pointed = record;
+        record?.classList.add('is-pointed');
+        markDays(grid, pointers.get(record));
+    };
+
+    /** Brings the latest of the marked days into view, sideways and on the page. */
+    const reveal = () => {
+        const marked = grid.querySelectorAll('.is-marked');
+        marked[marked.length - 1]?.scrollIntoView({
+            block: 'nearest', inline: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        });
+    };
+
+    pointers.forEach((covers, record) => {
+        record.addEventListener('pointerenter', (event) => {
+            if (event.pointerType === 'mouse') point(record);
+        });
+        record.addEventListener('pointerleave', (event) => {
+            if (event.pointerType === 'mouse') point(null);
+        });
+        record.addEventListener('pointerdown', (event) => {
+            byTouch = event.pointerType !== 'mouse';
+        });
+        record.addEventListener('click', () => {
+            if (!byTouch) return;
+            point(pointed === record ? null : record);
+            if (pointed) reveal();
+        });
+    });
+
+    // A click, not a press: scrolling the page to look at the year keeps the mark.
+    const keeps = (node) => target.contains(node) || grid.closest('.heatmap').contains(node);
+    document.addEventListener('click', (event) => {
+        if (pointed && !keeps(event.target)) point(null);
+    });
 }
