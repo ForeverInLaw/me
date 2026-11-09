@@ -330,6 +330,7 @@
 }
 
 .np-message {
+    animation: fade-in var(--reveal-dur) var(--reveal-ease);
     display: grid;
     place-items: center;
     min-height: 88px;

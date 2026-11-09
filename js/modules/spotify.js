@@ -103,8 +103,10 @@ export function initSpotify() {
         return swapAlbumArt(card.querySelector('.np-card__art'), safeUrl(t.albumArt));
     }
 
+    /** Puts `text` in the card's place. Asked again for what it shows, it leaves it be. */
     function showMessage(text) {
         if (!spotifyWidget) return;
+        if (spotifyWidget.querySelector('.np-message')?.textContent === text) return;
         const el = document.createElement('div');
         el.className = 'np-message';
         el.textContent = text;
