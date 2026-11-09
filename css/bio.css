@@ -201,13 +201,22 @@
     height: 8px;
     border-radius: 50%;
     background: var(--spotify);
+}
+
+/* The ring is a copy of the dot that grows and fades: transform and opacity
+   only, so a loop that runs as long as the music does never repaints. */
+.np-card__pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
     animation: np-pulse 1.8s infinite;
 }
 
 @keyframes np-pulse {
-    0% { box-shadow: 0 0 0 0 rgb(30 215 96 / 0.6); }
-    70% { box-shadow: 0 0 0 8px rgb(30 215 96 / 0); }
-    100% { box-shadow: 0 0 0 0 rgb(30 215 96 / 0); }
+    from { opacity: 0.6; transform: scale(1); }
+    70%, to { opacity: 0; transform: scale(3); }
 }
 
 .np-card.is-stale .np-card__pulse {
@@ -250,11 +259,13 @@
     overflow: hidden;
 }
 
+/* Full width, scaled to how far the track is (spotify.js): the run to the end
+   of the track is one animation of the transform, with no layout in it. */
 .np-card__bar {
-    width: 0%;
     height: 100%;
     background: var(--spotify);
-    /* No width transition: spotify.js drives it from a rAF loop. */
+    transform: scaleX(0);
+    transform-origin: left;
 }
 
 .np-card.is-stale .np-card__bar {

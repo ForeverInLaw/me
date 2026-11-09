@@ -34,14 +34,7 @@ export function initSpotify() {
         spotifyWidget.innerHTML = '<div class="np-placeholder" aria-hidden="true"><div></div></div>';
     }
 
-    const npState = {
-        trackId: null,
-        isPlaying: false,
-        progressMs: 0,
-        durationMs: 0,
-        lastSyncAt: 0,
-        rafId: 0,
-    };
+    let progress = null; // the bar's run to the end of the track, while one plays
     let npFetching = false;
     let npFailCount = 0;
 
@@ -55,10 +48,10 @@ export function initSpotify() {
         }
     }
 
-    function progressPercent(data) {
-        if (!data.durationMs || data.progressMs == null) return 0;
-        const pct = (data.progressMs / data.durationMs) * 100;
-        return Math.max(0, Math.min(100, pct));
+    /** How far through its track `data` is, as the bar's scale: 0 to 1. */
+    function barScale(data) {
+        if (!data.durationMs || data.progressMs == null) return 'scaleX(0)';
+        return `scaleX(${Math.max(0, Math.min(1, data.progressMs / data.durationMs))})`;
     }
 
     // Built and filled off-screen, and put in place of the placeholder only once
@@ -108,7 +101,7 @@ export function initSpotify() {
         swapText(card.querySelector('.np-card__title .t-text-swap'), t.name);
         swapText(card.querySelector('.np-card__artist .t-text-swap'), t.artists);
         const art = card.querySelector('.np-card__art');
-        card.querySelector('.np-card__bar').style.width = `${progressPercent(data)}%`;
+        card.querySelector('.np-card__bar').style.transform = barScale(data);
 
         const pulse = art.querySelector('.np-card__pulse');
         if (data.isPlaying && !pulse) {
@@ -130,33 +123,26 @@ export function initSpotify() {
         spotifyWidget.replaceChildren(el);
     }
 
-    function stopProgressLoop() {
-        if (npState.rafId) {
-            cancelAnimationFrame(npState.rafId);
-            npState.rafId = 0;
-        }
+    /** Leaves the bar where the card last put it. */
+    function stopProgress() {
+        progress?.cancel();
+        progress = null;
     }
 
-    function startProgressLoop() {
-        stopProgressLoop();
-        if (!npState.isPlaying || !npState.durationMs) return;
-        const tick = () => {
-            const bar = spotifyWidget && spotifyWidget.querySelector('.np-card__bar');
-            if (!bar) {
-                npState.rafId = 0;
-                return;
-            }
-            const elapsed = Date.now() - npState.lastSyncAt;
-            const cur = Math.min(npState.durationMs, npState.progressMs + elapsed);
-            const pct = (cur / npState.durationMs) * 100;
-            bar.style.width = `${pct}%`;
-            if (cur >= npState.durationMs) {
-                npState.rafId = 0;
-                return;
-            }
-            npState.rafId = requestAnimationFrame(tick);
-        };
-        npState.rafId = requestAnimationFrame(tick);
+    /**
+     * Sets the bar running from where `data` has the track to its end. One
+     * animation of the transform: nothing to do per frame, and it keeps time
+     * while the tab is hidden. The next poll starts it again from wherever
+     * Spotify says the track is by then.
+     */
+    function runProgress(data) {
+        stopProgress();
+        const bar = spotifyWidget.querySelector('.np-card__bar');
+        if (!bar || !data.isPlaying || !data.durationMs) return;
+        progress = bar.animate(
+            { transform: [barScale(data), 'scaleX(1)'] },
+            { duration: Math.max(0, data.durationMs - (data.progressMs || 0)), easing: 'linear', fill: 'forwards' }
+        );
     }
 
     async function fetchNowPlaying() {
@@ -167,9 +153,7 @@ export function initSpotify() {
             npFailCount = 0;
 
             if (!data || !data.track) {
-                npState.trackId = null;
-                npState.isPlaying = false;
-                stopProgressLoop();
+                stopProgress();
                 setTitleText('Not playing');
                 showMessage('Nothing playing right now.');
                 return;
@@ -177,23 +161,17 @@ export function initSpotify() {
 
             setTitleText(data.isPlaying ? 'Now Playing' : 'Last Played');
 
-            npState.trackId = data.track.id;
-            npState.isPlaying = !!data.isPlaying;
-            npState.progressMs = data.progressMs || 0;
-            npState.durationMs = data.durationMs || 0;
-            npState.lastSyncAt = Date.now();
-
             const card = spotifyWidget.querySelector('.np-card');
             if (card) updateCard(card, data);
             else await mountCard(data);
 
-            startProgressLoop();
+            runProgress(data);
         } catch (err) {
             console.error('now-playing fetch failed:', err);
             npFailCount++;
             // Keep the last view on a single blip; only show an error once it's clearly down
             if (npFailCount >= 2) {
-                stopProgressLoop();
+                stopProgress();
                 setTitleText('Unavailable');
                 showMessage("Can't reach Spotify right now.");
             }
@@ -206,11 +184,8 @@ export function initSpotify() {
 
     fetchNowPlaying();
     setInterval(fetchNowPlaying, POLL_INTERVAL_MS);
+    // Back in view: catch up with whatever played meanwhile.
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            stopProgressLoop();
-        } else {
-            fetchNowPlaying();
-        }
+        if (!document.hidden) fetchNowPlaying();
     });
 }
