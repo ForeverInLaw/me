@@ -4,8 +4,8 @@
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
-// from the side the pointer came from (shot-stack.js), the text trades places
-// and the card eases to its new height. Pointer and keyboard only; on touch
+// from the side the pointer came from (shot-stack.js), the text cross-fades in
+// place and the card eases to its new height. Pointer and keyboard only; on touch
 // the tiles stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
@@ -18,7 +18,7 @@ const COVER = WIDTH - INSET * 2;
 const CARD_RADIUS = 16;   // --radius-lg
 const GAP = 12;           // between the card and the row
 const EDGE = 12;          // keep-out from the viewport edges
-const TEXT_SHIFT = 12;    // px the text travels as it trades places
+const TEXT_BLUR = 'blur(3px)'; // the text swap softens through this
 const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
 const SLIDE = { duration: 0.45, ease: 'expo.out' };
 
@@ -72,8 +72,11 @@ function overTile(tile) {
     return { x: tile.left - INSET * scale, y: tile.top - INSET * scale, scale };
 }
 
-/** Leaves a copy of the outgoing text in place and lets it drift off. */
-function leaveGhost(card, body, direction) {
+/**
+ * Leaves a copy of the outgoing text where it stood and fades it out, so the
+ * new text can fade in over it rather than replace it in one frame.
+ */
+function leaveGhost(card, body) {
     const ghost = body.cloneNode(true);
     Object.assign(ghost.style, {
         position: 'absolute',
@@ -84,8 +87,8 @@ function leaveGhost(card, body, direction) {
     card.append(ghost);
     gsap.to(ghost, {
         autoAlpha: 0,
-        x: -TEXT_SHIFT * direction,
-        duration: 0.14,
+        filter: TEXT_BLUR,
+        duration: 0.12,
         ease: 'power2.in',
         onComplete: () => ghost.remove()
     });
@@ -99,10 +102,10 @@ function createCalmMotion({ peek, card, body }) {
             stop();
             gsap.set(peek, { ...rest, scale: 1 });
             gsap.set(card, { clipPath: FULL_CLIP });
-            gsap.set(body, { autoAlpha: 1, x: 0, y: 0 });
+            gsap.set(body, { autoAlpha: 1, y: 0 });
             gsap.to(peek, { autoAlpha: 1, duration: 0.15 });
         },
-        slide(direction, apply) {
+        slide(apply) {
             stop();
             gsap.set(peek, { ...apply(), autoAlpha: 1 });
         },
@@ -129,11 +132,11 @@ function createMotion({ peek, card, body }) {
             gsap.set(peek, { autoAlpha: 1 });
             gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN });
             gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN });
-            gsap.fromTo(body, { autoAlpha: 0, x: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
+            gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
         },
-        slide(direction, apply) {
+        slide(apply) {
             stop();
-            leaveGhost(card, body, direction);
+            leaveGhost(card, body);
             const before = card.offsetHeight;
             gsap.set(card, { clearProps: 'height' });
             const rest = apply();
@@ -143,8 +146,8 @@ function createMotion({ peek, card, body }) {
             gsap.set(peek, { autoAlpha: 1 });
             gsap.to(peek, { ...rest, scale: 1, ...SLIDE });
             gsap.fromTo(card, { height: before }, { height: after, clipPath: FULL_CLIP, ...SLIDE, clearProps: 'height' });
-            gsap.fromTo(body, { autoAlpha: 0, x: TEXT_SHIFT * direction, y: 0 },
-                { autoAlpha: 1, x: 0, duration: 0.3, delay: 0.12, ease: 'power2.out' });
+            gsap.fromTo(body, { autoAlpha: 0, filter: TEXT_BLUR, y: 0 },
+                { autoAlpha: 1, filter: 'blur(0px)', duration: 0.26, delay: 0.08, ease: 'power2.out', clearProps: 'filter' });
         },
         shrink(tile, radius, done) {
             stop();
@@ -224,7 +227,7 @@ export function attachPlaylistPeek(container, playlists) {
         const place = () => restFor(tile, container.getBoundingClientRect(), parts.peek);
 
         if (open) {
-            motion.slide(direction, () => {
+            motion.slide(() => {
                 fill(playlist);
                 return place();
             });
