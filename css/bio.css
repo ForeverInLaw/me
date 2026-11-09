@@ -128,8 +128,10 @@
 }
 
 #spotify-now-playing {
+    /* Named, since the cover's corner is worked out from it. */
+    --np-radius: var(--radius-xl);
     min-height: 88px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--np-radius);
     background: var(--raised);
     overflow: hidden;
     transition: background-color 200ms var(--ease-smooth-out);
@@ -146,8 +148,9 @@
     display: flex;
     align-items: center;
     gap: 14px;
+    --np-pad: 12px;
     min-height: 88px;
-    padding: 12px;
+    padding: var(--np-pad);
 }
 
 @keyframes fade-in {
@@ -162,8 +165,9 @@
     flex: 0 0 64px;
     width: 64px;
     height: 64px;
-    /* Concentric-ish with the 16px card: a smaller step on the scale. */
-    border-radius: var(--radius-sm);
+    /* Concentric with the card around it: its corner, less the gap between.
+       That comes to the playlist covers' corner below. */
+    border-radius: calc(var(--np-radius) - var(--np-pad));
     overflow: hidden;
     background: var(--raised-hover);
     outline: 1px solid oklch(1 0 0 / 0.1);
