@@ -10,6 +10,9 @@ const PLAYLISTS_API = apiEndpoint(
  * Renders the playlists as a row of covers in the bio column. The covers are
  * too small to carry their names, so the caption under the row names whichever
  * cover is hovered or focused and falls back to the total.
+ *
+ * The row is built off-screen and swaps in for the ghost tiles once every
+ * cover has decoded.
  */
 export async function initPlaylists() {
     const container = document.getElementById('playlists-container');
@@ -25,22 +28,29 @@ export async function initPlaylists() {
         return;
     }
 
-    container.innerHTML = playlists.map((playlist, index) => {
+    const row = document.createElement('ul');
+    row.innerHTML = playlists.map((playlist, index) => {
         const name = escapeHtml(playlist.name.trim());
         return `
-        <li>
+        <li style="--i: ${index}">
             <a class="playlist" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer"
                 data-index="${index}" aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
-                <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" loading="lazy" decoding="async">
+                <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" decoding="async">
             </a>
         </li>`;
     }).join('');
+
+    // Detached images still load (no lazy loading here, or they never would);
+    // a broken cover just shows its tile colour instead of holding up the row.
+    await Promise.allSettled(Array.from(row.querySelectorAll('img'), (img) => img.decode()));
+    container.classList.add('is-ready');
+    container.replaceChildren(...row.children);
 
     if (!caption) return;
 
     const restingText = `${playlists.length} playlists on Spotify`;
     const describe = (playlist) => `${playlist.name.trim()} · ${playlist.tracks} tracks`;
-    caption.textContent = restingText;
+    swapText(caption, restingText);
 
     const show = (text) => {
         if (caption.textContent !== text) swapText(caption, text);

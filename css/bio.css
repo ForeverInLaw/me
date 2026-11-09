@@ -279,6 +279,22 @@
     background: var(--raised);
 }
 
+/* Covers land together once decoded, each a beat after the one before. The
+   tile keeps the ghost's colour until its cover is in, then lets it go, so
+   the row never dips to the column background between the two. */
+.playlists.is-ready > li {
+    border-radius: var(--radius-sm);
+    animation: playlist-ghost 320ms calc(var(--i) * 45ms) backwards;
+}
+
+.playlists.is-ready img {
+    animation: np-in 320ms var(--ease-out) calc(var(--i) * 45ms) backwards;
+}
+
+@keyframes playlist-ghost {
+    from, to { background: var(--raised); }
+}
+
 .playlist img {
     width: 100%;
     aspect-ratio: 1;
