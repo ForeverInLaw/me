@@ -362,7 +362,7 @@ a.project-card:hover h3 {
     }
 }
 
-/* Touch screens never get the hover preview, so each card carries its own
+/* Touch screens never get the desktop stage, so each card carries its own
    shot, opening once as it scrolls into view (see works-reel.js). */
 @media (max-width: 768px) and (hover: none) {
     .project-shot {

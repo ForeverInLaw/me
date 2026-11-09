@@ -63,6 +63,7 @@
 	<link rel="stylesheet" href="css/bio.css">
 	<link rel="stylesheet" href="css/works.css">
 	<link rel="stylesheet" href="css/preview.css">
+	<link rel="stylesheet" href="css/project-stage.css">
 	<link rel="stylesheet" href="css/playlist-peek.css">
 	<script src="libs/gsap/gsap-bundle.min.js" defer></script>
 	<script type="module" src="js/app.js"></script>
@@ -115,6 +116,7 @@
 					<p class="works__count">15 projects</p>
 				</header>
 
+				<div class="projects__body">
 				<ul class="project-list">
 					<li>
 						<a class="project-card" href="https://redstone.md" target="_blank" rel="noopener noreferrer" data-screenshot="screenshots/redstone.webp">
@@ -123,7 +125,7 @@
 								<div class="project-tags"><span class="project-tag">Design</span><span class="project-tag">Motion</span><span class="project-tag">Docker</span></div>
 							</div>
 							<p class="project-card__desc">Multilingual portfolio for an R&amp;D collective. Full-cycle product engineering from concept to production.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2026 · Client</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2026<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -133,7 +135,7 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">Three.js</span><span class="project-tag">GSAP</span></div>
 							</div>
 							<p class="project-card__desc">Cinematic tattoo studio landing with WebGL dither shader, GSAP scroll animations, and horizontal gallery. Vintage burgundy/mauve aesthetic.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2026 · Client</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2026<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -143,17 +145,7 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">TypeScript</span><span class="project-tag">i18n</span><span class="project-tag">Playwright</span><span class="project-tag">Docker</span></div>
 							</div>
 							<p class="project-card__desc">Bilingual Next.js 16 site with route-based i18n, structured SEO data and scroll-driven interactions, covered by Playwright smoke tests and shipped in Docker.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2026 · Client</span></div>
-						</a>
-					</li>
-					<li>
-						<a class="project-card" href="https://github.com/redstone-md/moss" target="_blank" rel="noopener noreferrer">
-							<div class="project-card__main">
-								<h3>Moss</h3>
-								<div class="project-tags"><span class="project-tag">Go</span><span class="project-tag">CGO</span><span class="project-tag">P2P</span><span class="project-tag">Noise</span></div>
-							</div>
-							<p class="project-card__desc">Embeddable P2P mesh core in Go that ships as a C library, with Noise-encrypted transport, tracker bootstrapping, scored pubsub and FFI examples for five languages.</p>
-							<div class="project-meta"><span class="status status--wip">WIP</span><span>2026 · Team</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2026<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -163,7 +155,7 @@
 								<div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Rust</span><span class="project-tag">OpenMLS</span></div>
 							</div>
 							<p class="project-card__desc">Desktop-first decentralized messenger on the Moss runtime, with private 1:1 chats built around OpenMLS, tracker-based discovery and fingerprints confirmed out of band.</p>
-							<div class="project-meta"><span class="status status--wip">WIP</span><span>2026 · Team</span></div>
+							<div class="project-meta"><span class="status status--wip">WIP</span><span>2026<span class="project-role"> · Team</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -173,7 +165,7 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">AI</span></div>
 							</div>
 							<p class="project-card__desc">AI chat platform with Google Gemini integration. Next.js &amp; Telegram Web App. Crypto payments.</p>
-							<div class="project-meta"><span class="status status--archived">Archived</span><span>2026 · Client</span></div>
+							<div class="project-meta"><span class="status status--archived">Archived</span><span>2026<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -183,7 +175,7 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">GameDev</span></div>
 							</div>
 							<p class="project-card__desc">Minecraft project ecosystem. Web portal, launcher integration, skin management system.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2025 · Team</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2025<span class="project-role"> · Team</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -193,7 +185,7 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">TypeScript</span><span class="project-tag">Docker</span></div>
 							</div>
 							<p class="project-card__desc">Personal website for a German children's book author. SSR/SSG with SEO optimization, scroll-reveal animations, and Docker deployment via Cloudflare Tunnel.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2025 · Client</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2025<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -203,7 +195,17 @@
 								<div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">GSAP</span><span class="project-tag">i18n</span><span class="project-tag">Motion</span></div>
 							</div>
 							<p class="project-card__desc">Multilingual (DE/RU) cosmetics &amp; wellness landing page featuring smooth scroll navigation, parallax hero, before/after comparisons, and animated service showcases.</p>
-							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025 · Client</span></div>
+							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025<span class="project-role"> · Client</span></span></div>
+						</a>
+					</li>
+					<li>
+						<a class="project-card" href="https://github.com/redstone-md/moss" target="_blank" rel="noopener noreferrer">
+							<div class="project-card__main">
+								<h3>Moss</h3>
+								<div class="project-tags"><span class="project-tag">Go</span><span class="project-tag">CGO</span><span class="project-tag">P2P</span><span class="project-tag">Noise</span></div>
+							</div>
+							<p class="project-card__desc">Embeddable P2P mesh core in Go that ships as a C library, with Noise-encrypted transport, tracker bootstrapping, scored pubsub and FFI examples for five languages.</p>
+							<div class="project-meta"><span class="status status--wip">WIP</span><span>2026<span class="project-role"> · Team</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -213,7 +215,7 @@
 								<div class="project-tags"><span class="project-tag">Node.js</span><span class="project-tag">MySQL</span></div>
 							</div>
 							<p class="project-card__desc">Secure P2P transaction bot. Multi-payment gateway integration (Stars, Crypto, Bitpapa).</p>
-							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025 · Client</span></div>
+							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025<span class="project-role"> · Client</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -223,7 +225,7 @@
 								<div class="project-tags"><span class="project-tag">TypeScript</span><span class="project-tag">Discord.js</span><span class="project-tag">Prisma</span></div>
 							</div>
 							<p class="project-card__desc">Discord music bot for YouTube and Spotify playback. Interactive button controls, permission system, and EN/RU localization.</p>
-							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025 · Solo</span></div>
+							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025<span class="project-role"> · Solo</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -233,7 +235,7 @@
 								<div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">Automation</span><span class="project-tag">Speech Recognition</span><span class="project-tag">ML/AI</span></div>
 							</div>
 							<p class="project-card__desc">Cross-platform push-to-talk tool that uses speech-to-text ML model. The text is automatically typed into any focused input. Supports different languages.</p>
-							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025 · Solo</span></div>
+							<div class="project-meta"><span class="status status--oss">OSS</span><span>2025<span class="project-role"> · Solo</span></span></div>
 						</a>
 					</li>
 					<li>
@@ -243,7 +245,7 @@
 								<div class="project-tags"><span class="project-tag">Python</span></div>
 							</div>
 							<p class="project-card__desc">Advanced Telegram moderation bot. Robust automated administration tools.</p>
-							<div class="project-meta"><span class="status status--active">Active</span><span>2025 · Client</span></div>
+							<div class="project-meta"><span class="status status--active">Active</span><span>2025<span class="project-role"> · Client</span></span></div>
 						</article>
 					</li>
 					<li>
@@ -253,7 +255,7 @@
 								<div class="project-tags"><span class="project-tag">Go</span><span class="project-tag">PostgreSQL</span></div>
 							</div>
 							<p class="project-card__desc">High-performance OSINT tool written in Go. Big Data processing with PostgreSQL.</p>
-							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025 · Team</span></div>
+							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025<span class="project-role"> · Team</span></span></div>
 						</article>
 					</li>
 					<li>
@@ -263,10 +265,25 @@
 								<div class="project-tags"><span class="project-tag">Django</span><span class="project-tag">RustDesk</span></div>
 							</div>
 							<p class="project-card__desc">Enhanced Django helpdesk with WhatsApp ticketing and RustDesk remote support integration.</p>
-							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025 · Client</span></div>
+							<div class="project-meta"><span class="status status--archived">Archived</span><span>2025<span class="project-role"> · Client</span></span></div>
 						</article>
 					</li>
 				</ul>
+				<!-- Desktop stage beside the list (project-stage.js). It repeats the
+				     hovered row for sighted pointer users; the list stays the content. -->
+				<a class="project-stage" id="project-stage" aria-hidden="true" tabindex="-1" target="_blank" rel="noopener noreferrer" hidden>
+					<div class="project-stage__frame">
+						<div class="project-stage__shots"></div>
+						<p class="project-stage__poster"><span></span></p>
+					</div>
+					<div class="project-stage__info">
+						<p class="project-stage__title"></p>
+						<p class="project-stage__desc"></p>
+						<div class="project-tags"></div>
+						<p class="project-stage__meta"></p>
+					</div>
+				</a>
+				</div>
 			</section>
 
 			<section class="grind" aria-labelledby="grind-title">
@@ -295,18 +312,6 @@
 				<p>Hand-built after dark with Archivo &amp; GSAP</p>
 			</footer>
 		</main>
-	</div>
-
-	<div class="project-preview" id="project-preview" aria-hidden="true">
-		<div class="preview-card">
-			<div class="preview-media">
-				<p class="preview-empty">Preview unavailable</p>
-			</div>
-			<p class="preview-caption">
-				<span class="preview-domain" id="preview-domain"></span>
-				<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-			</p>
-		</div>
 	</div>
 
 	<script>

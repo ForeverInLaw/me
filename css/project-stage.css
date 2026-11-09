@@ -1,0 +1,222 @@
+/* Desktop works layout (project-stage.js): with a hovering pointer and room
+   for both, the list turns into a compact index and a stage beside it shows
+   the current project. Narrower, or on touch, the list keeps its full rows. */
+
+.projects {
+    container: projects / inline-size;
+}
+
+.project-stage {
+    display: none;
+}
+
+@container projects (min-width: 640px) {
+    .has-stage .projects__body {
+        display: grid;
+        grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.25fr);
+        gap: clamp(28px, 5cqi, 48px);
+        align-items: start;
+        padding-top: 28px;
+    }
+
+    /* ── the index: number, name, status dot, year ── */
+
+    .has-stage .project-list {
+        counter-reset: project;
+    }
+
+    .has-stage .project-card {
+        grid-template-columns: 28px minmax(0, 1fr) auto;
+        align-items: baseline;
+        gap: 12px;
+        padding: 9px 0;
+        color: var(--muted);
+    }
+
+    .has-stage .project-card::before {
+        counter-increment: project;
+        content: counter(project, decimal-leading-zero);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+        transition: color 200ms var(--ease-out);
+    }
+
+    .has-stage .project-card h3 {
+        overflow: hidden;
+        color: inherit;
+        font-size: clamp(16px, 2.3cqi, 20px);
+        letter-spacing: -0.015em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        transition: color 200ms var(--ease-out), transform 280ms var(--ease-out);
+    }
+
+    /* The stage carries these for the current row. */
+    .has-stage .project-card .project-tags,
+    .has-stage .project-card__desc,
+    .has-stage .project-role {
+        display: none;
+    }
+
+    .has-stage .project-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+    }
+
+    /* The dot alone; its label is still read out. */
+    .has-stage .project-meta .status {
+        gap: 0;
+        font-size: 0;
+    }
+
+    .has-stage a.project-card:hover {
+        padding-left: 0;
+    }
+
+    .has-stage .project-card.is-current h3 {
+        color: var(--fg);
+        transform: translateX(6px);
+    }
+
+    .has-stage .project-card.is-current::before {
+        color: var(--accent);
+    }
+
+    /* ── the stage ── */
+
+    .has-stage .project-stage {
+        position: sticky;
+        top: 32px;
+        display: block;
+    }
+
+    .js .has-stage .project-stage {
+        animation: row-in 640ms var(--ease-out) 160ms both;
+    }
+}
+
+.project-stage:not([href]) {
+    cursor: default;
+}
+
+/* One fixed shape for every project, so nothing resizes between them. */
+.project-stage__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--panel);
+    outline: 1px solid var(--line);
+    outline-offset: -1px;
+    container-type: inline-size;
+}
+
+.project-stage__shots {
+    position: absolute;
+    inset: 0;
+    transition: opacity 250ms var(--ease-out);
+}
+
+/* Each shot fits whole; its layer's background is a blurred glow of the
+   same shot (set from JS), which fills the margins and wipes with it. */
+.project-stage__shots .preview-shot {
+    object-fit: contain;
+    object-position: center;
+    background: var(--panel) center / cover no-repeat;
+}
+
+/* Loading sweep while a shot decodes. */
+.project-stage__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.08) 45%, transparent 65%);
+    transform: translateX(-120%);
+    opacity: 0;
+}
+
+.project-stage[data-state="loading"] .project-stage__frame::after {
+    opacity: 1;
+    animation: stage-sweep 1.2s linear infinite;
+}
+
+@keyframes stage-sweep {
+    to { transform: translateX(130%); }
+}
+
+/* No screenshot, or one that would not load: the name fills the frame. */
+.project-stage__poster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: end start;
+    padding: 28px;
+    color: var(--raised-hover);
+    font-size: 13cqi;
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    opacity: 0;
+    transition: opacity 250ms var(--ease-out);
+}
+
+.project-stage__poster span {
+    display: inline-block;
+}
+
+.project-stage:not(.has-shot) .project-stage__shots,
+.project-stage[data-state="error"] .project-stage__shots {
+    opacity: 0;
+}
+
+.project-stage:not(.has-shot) .project-stage__poster,
+.project-stage[data-state="error"] .project-stage__poster {
+    opacity: 1;
+}
+
+.project-stage__info {
+    display: grid;
+    gap: 10px;
+    padding: 22px 4px 0;
+}
+
+.project-stage__title {
+    font-size: 30px;
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    transition: color 200ms var(--ease-out);
+}
+
+.project-stage[href]:hover .project-stage__title {
+    color: var(--accent);
+}
+
+.project-stage__desc {
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.project-stage .project-tags {
+    margin-top: 0;
+}
+
+.project-stage__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.project-stage__domain {
+    margin-left: auto;
+    color: var(--fg);
+}

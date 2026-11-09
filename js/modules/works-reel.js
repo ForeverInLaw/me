@@ -1,7 +1,7 @@
 import { readProjectCard, screenshotCards } from './project-card.js';
 import { isTouchReel } from './viewport.js';
 
-// The desktop hover preview (preview-modal.js) is inert on touch, so the project
+// The desktop stage (project-stage.js) is inert on touch, so the project
 // screenshots never reached mobile at all. Here every card that has one carries
 // it inline in a browser frame that opens as the card scrolls into view. Scroll
 // is the only input, so the card can stay a plain <a> and tapping still just
@@ -67,7 +67,7 @@ function loadShot(shot) {
 
 export function initWorksReel() {
     // Same query as the .project-shot styles in works.css: small touch
-    // screens only, where the hover preview never runs.
+    // screens only, where the desktop stage never runs.
     if (!isTouchReel()) return;
 
     const cards = screenshotCards();

@@ -1,4 +1,4 @@
-import { initPreviewModal } from './modules/preview-modal.js';
+import { initProjectStage } from './modules/project-stage.js';
 import { initWorksReel } from './modules/works-reel.js';
 import { initSpotify } from './modules/spotify.js';
 import { initGithubActivity } from './modules/github-activity.js';
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         row.style.setProperty('--i', String(index));
     });
 
-    initPreviewModal();
+    initProjectStage();
     initWorksReel();
     initSpotify();
     initGithubActivity();
