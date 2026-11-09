@@ -72,6 +72,9 @@
     display: grid;
     place-items: center;
     aspect-ratio: 1;
+    /* Held to its column: a box with a ratio would otherwise take its width
+       from the finger-sized min-height below and close the gaps. */
+    justify-self: stretch;
     border-radius: var(--radius-sm);
     background: var(--raised);
     font-size: clamp(16px, 5.5cqi, 20px);
