@@ -39,12 +39,16 @@
     transition: color 200ms var(--ease-out);
 }
 
-a.project-card:hover {
-    padding-left: 14px;
-}
+/* Only where the pointer hovers: on a touch screen a tap would leave the row
+   shifted and lit until the next tap elsewhere. */
+@media (hover: hover) {
+    a.project-card:hover {
+        padding-left: 14px;
+    }
 
-a.project-card:hover h3 {
-    color: var(--accent);
+    a.project-card:hover h3 {
+        color: var(--accent);
+    }
 }
 
 .project-tags {
@@ -107,7 +111,16 @@ a.project-card:hover h3 {
 /* ── the grind: GitHub activity rendered from assets/github.json ── */
 
 .grind {
+    /* One line of a list: a push, a commit. */
+    --row-h: 36px;
     container-type: inline-size;
+}
+
+/* Under a finger the lines grow into proper touch targets. */
+@media (pointer: coarse) {
+    .grind {
+        --row-h: 44px;
+    }
 }
 
 .grind__sentence {
@@ -256,7 +269,7 @@ a.project-card:hover h3 {
     display: grid;
     flex: 1;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: repeat(auto-fill, 36px);
+    grid-template-rows: repeat(auto-fill, var(--row-h));
     grid-auto-rows: 0;
     overflow: hidden;
     margin-top: 6px;
@@ -273,7 +286,7 @@ a.project-card:hover h3 {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    height: 36px;
+    height: var(--row-h);
     border-bottom: 1px solid var(--line);
 }
 
@@ -296,8 +309,11 @@ a.project-card:hover h3 {
     transition: color 200ms var(--ease-out);
 }
 
-.push:hover strong {
-    color: var(--accent);
+@media (hover: hover) {
+    .push:hover strong,
+    .commit:hover .commit__message {
+        color: var(--accent);
+    }
 }
 
 .push__meta {
@@ -338,7 +354,7 @@ a.project-card:hover h3 {
     grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
     gap: 20px;
-    height: 36px;
+    min-height: var(--row-h);
     border-bottom: 1px solid var(--line);
 }
 
@@ -348,10 +364,6 @@ a.project-card:hover h3 {
     text-overflow: ellipsis;
     font-size: 15px;
     transition: color 200ms var(--ease-out);
-}
-
-.commit:hover .commit__message {
-    color: var(--accent);
 }
 
 .commit__repo,
@@ -420,7 +432,7 @@ a.project-card:hover h3 {
 
     .pushes__list {
         grid-template-rows: none;
-        grid-auto-rows: 36px;
+        grid-auto-rows: var(--row-h);
     }
 }
 
@@ -429,13 +441,36 @@ a.project-card:hover h3 {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    /* No room for where a commit went; what it says and when stay. */
+    /* Flush with the headings above: the inset only made sense beside panels. */
+    .grind__notes {
+        padding-inline: 0;
+    }
+
+    /* No room for where a commit went; what it says and when stay, and the
+       message takes a second line rather than losing its end. */
     .commit {
         grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        padding: 9px 0;
     }
 
     .commit__repo {
         display: none;
+    }
+
+    .commit__message {
+        display: -webkit-box;
+        white-space: normal;
+        line-height: 1.35;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+
+    /* The year scrolls sideways here and opens on its latest weeks; the fade
+       says there is more to the left. */
+    .heatmap__scroll {
+        mask-image: linear-gradient(to right, transparent, #000 28px);
     }
 }
 

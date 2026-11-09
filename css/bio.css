@@ -75,9 +75,22 @@
     text-align: center;
 }
 
-.social:hover {
-    background: var(--accent);
-    color: var(--on-accent);
+/* Only where the pointer hovers; a tap would leave the button lit. */
+@media (hover: hover) {
+    .social:hover {
+        background: var(--accent);
+        color: var(--on-accent);
+    }
+}
+
+.social:active {
+    background: var(--raised-hover);
+}
+
+@media (pointer: coarse) {
+    .social {
+        min-height: 44px;
+    }
 }
 
 /* ── music: now playing + playlists, pinned to the bottom of the column ── */
@@ -333,7 +346,10 @@
         padding: 32px 20px 28px;
     }
 
+    /* Stacked, the column can be tablet-wide; the music block keeps the
+       width it was drawn for instead of swelling its covers across it. */
     .music {
+        max-width: 480px;
         margin-top: 4px;
     }
 }
