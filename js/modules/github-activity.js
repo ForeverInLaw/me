@@ -1,6 +1,8 @@
 // "The grind": renders assets/github.json (written daily by scripts/github-stats.mjs)
-// as a sentence of totals, a contribution heatmap in the site palette and the
-// latest public pushes.
+// as a sentence of totals, a contribution heatmap in the site palette, the
+// year's records (grind-records.js) and the latest public pushes.
+
+import { renderRecords } from './grind-records.js';
 
 const DATA_URL = 'assets/github.json';
 const OWN_LOGIN = 'ForeverInLaw';
@@ -66,11 +68,19 @@ function renderSentence(target, { commits, pullRequests, issues, repos }) {
     target.replaceChildren(...parts.map((text, i) => (i % 2 === 0 ? el('strong', '', text) : text)));
 }
 
-function renderHeatmap(grid, months, tip, totalLabel, { start, counts }, total) {
+/** `dayAt(index)` for a calendar starting on `start` ("2026-01-31"): the date of its day `index`. */
+function calendarDays(start) {
     const startMs = Date.parse(`${start}T00:00:00Z`);
-    const offset = new Date(startMs).getUTCDay(); // weeks run Sunday..Saturday, like GitHub
+    return (i) => new Date(startMs + i * DAY_MS);
+}
+
+/** Draws the year of `counts` into the section's heatmap and returns its grid. */
+function renderHeatmap(section, counts, dayAt, total) {
+    const grid = section.querySelector('#heatmap');
+    const months = section.querySelector('#heatmap-months');
+    const tip = section.querySelector('#heatmap-tip');
+    const offset = dayAt(0).getUTCDay(); // weeks run Sunday..Saturday, like GitHub
     const thresholds = levelThresholds(counts);
-    const dayAt = (i) => new Date(startMs + i * DAY_MS);
 
     const cells = [];
     for (let i = 0; i < offset; i++) cells.push(el('span', 'heatmap__cell is-pad'));
@@ -101,7 +111,7 @@ function renderHeatmap(grid, months, tip, totalLabel, { start, counts }, total) 
 
     const summary = `${total.toLocaleString('en')} contributions`;
     grid.setAttribute('aria-label', `${summary} in the last year`);
-    totalLabel.textContent = summary;
+    section.querySelector('#grind-total').textContent = summary;
 
     // Day details float over the hovered cell, like GitHub's tooltip, instead
     // of a caption line that would pad the panel's bottom.
@@ -122,6 +132,7 @@ function renderHeatmap(grid, months, tip, totalLabel, { start, counts }, total) 
     // On narrow screens the year scrolls sideways; open on the latest weeks.
     const scroller = grid.closest('.heatmap__scroll');
     if (scroller) scroller.scrollLeft = scroller.scrollWidth;
+    return grid;
 }
 
 function renderRecent(list, recent) {
@@ -171,10 +182,12 @@ export async function initGithubActivity() {
         return;
     }
 
+    const { counts } = data.calendar;
+    const dayAt = calendarDays(data.calendar.start);
+
     renderSentence(sentence, data.totals);
-    renderHeatmap(section.querySelector('#heatmap'), section.querySelector('#heatmap-months'),
-        section.querySelector('#heatmap-tip'), section.querySelector('#grind-total'),
-        data.calendar, data.totals.contributions);
+    const heatmap = renderHeatmap(section, counts, dayAt, data.totals.contributions);
+    renderRecords(section.querySelector('#grind-records'), heatmap, counts, dayAt);
     renderRecent(section.querySelector('#recent-pushes'), data.recent);
     section.classList.add('is-ready');
 }

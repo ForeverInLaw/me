@@ -90,6 +90,7 @@
 .grind.is-staged .heatmap__cell {
     transition:
         background-color 600ms var(--ease-out) calc(var(--row, 0) * 30ms),
+        opacity 200ms ease,
         box-shadow 120ms ease-out;
 }
 
@@ -97,11 +98,12 @@
     background-color: var(--raised);
 }
 
-.grind.is-staged .pushes__list li {
+/* Whatever steps in whole: a push, the records. */
+.grind.is-staged :is(.pushes__list li, .grind__records) {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
 }
 
-.grind.is-staged .pushes__list li:not(.is-lit) {
+.grind.is-staged :is(.pushes__list li, .grind__records):not(.is-lit) {
     opacity: 0;
     transform: translateY(10px);
 }

@@ -1,13 +1,16 @@
 // How "The grind" arrives: its figures brighten one by one, the heatmap plays
-// the year week by week, then the latest pushes step in. Each of the three is
-// "the first N of these are lit", so one progress value drives them all and
-// running it backwards undoes them. The easing is CSS (works-scroll.css).
+// the year week by week, then the latest pushes and the year's records step
+// in. Each part is "the first N of these are lit", so one progress value
+// drives them all and running it backwards undoes them. The easing is CSS
+// (works-scroll.css).
 
 // Each part's share of the arrival, as [from, to] of the overall progress.
-// They overlap so the eye is handed down the section: sentence, year, pushes.
+// They overlap so the eye is handed down the section: sentence, year, pushes,
+// records.
 const FIGURES = [0.12, 0.5];
 const WEEKS = [0.3, 0.95];
 const PUSHES = [0.7, 0.95];
+const RECORDS = [0.8, 0.9];
 
 const DAYS_PER_WEEK = 7;
 
@@ -47,6 +50,7 @@ export function stageGrind(section) {
         [createLighter(singly('.grind__sentence strong')), FIGURES],
         [createLighter(weeks), WEEKS],
         [createLighter(singly('.pushes__list li')), PUSHES],
+        [createLighter(singly('.grind__records')), RECORDS],
     ];
     section.classList.add('is-staged');
 
