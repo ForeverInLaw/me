@@ -1,7 +1,7 @@
 /* global gsap -- loaded as a classic script before the modules (index.html). */
 // Desktop stage beside the works list. Hovering or focusing a row puts that
 // project on the stage: its screenshot wipes in (shot-stack.js) inside one
-// fixed frame, fitted whole, with a blurred glow of itself filling the margins;
+// fixed frame, fitted whole, its edges drawn out over whatever margin is left;
 // a project without a screenshot shows its name there instead.
 //
 // A pointer running down the list is only passing through, so the stage does
@@ -25,39 +25,44 @@ const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
 // project-stage.css, on the same clock.
 const SKIM_BLUR = { autoAlpha: 0.45, filter: 'blur(3px)', duration: 0.52, delay: 0.08, ease: 'sine.inOut', overwrite: true };
 
-const glows = new Map();
+// The frame's shape (project-stage.css): a shot wider than it is left with
+// margins above and below, a narrower one with margins at its sides.
+const FRAME_RATIO = 16 / 9;
 
-// The glow's canvas, and the shot as drawn into it: past the canvas edges, so
-// the blur does not fade out there.
-const GLOW = { width: 64, height: 36 };
-const GLOW_SHOT = { x: -8, y: -6, width: 80, height: 48 };
+const fills = new Map();
+
+/** A strip of `shot`, one pixel deep, as a CSS image. */
+function edgeStrip(shot, x, y, width, height) {
+    const canvas = Object.assign(document.createElement('canvas'), { width, height });
+    canvas.getContext('2d').drawImage(shot, x, y, width, height, 0, 0, width, height);
+    return `url(${canvas.toDataURL()})`;
+}
 
 /**
- * The ambient glow for a screenshot, as a data URL: drawn once into a tiny
- * canvas, blurred and dimmed, and stretched under the shot to fill its margins.
+ * What fills a screenshot's margins in the frame: its two outer rows of
+ * pixels, or columns, which the layer draws out to the frame's edges
+ * (project-stage.css), so the picture carries on past its own.
  *
- * The shot is decoded straight to the size it is drawn at, off the main
- * thread. Drawing the full picture into the canvas instead decodes it there
- * and then, which for every shot at once stalls the page as it comes in.
+ * The shot is decoded off the main thread and only the two strips are ever
+ * drawn; decoding it into a canvas instead stalls the page as it comes in.
  */
-function glowFor(src) {
-    if (!glows.has(src)) {
-        glows.set(src, fetch(src)
+function fillFor(src) {
+    if (!fills.has(src)) {
+        fills.set(src, fetch(src)
             .then((res) => res.blob())
-            .then((blob) => createImageBitmap(blob, {
-                resizeWidth: GLOW_SHOT.width, resizeHeight: GLOW_SHOT.height, resizeQuality: 'low',
-            }))
+            .then((blob) => createImageBitmap(blob))
             .then((shot) => {
-                const canvas = Object.assign(document.createElement('canvas'), GLOW);
-                const ctx = canvas.getContext('2d');
-                ctx.filter = 'blur(3px) saturate(1.4) brightness(0.55)';
-                ctx.drawImage(shot, GLOW_SHOT.x, GLOW_SHOT.y);
+                const { width, height } = shot;
+                const rows = width / height > FRAME_RATIO;
+                const strips = rows
+                    ? [edgeStrip(shot, 0, 0, width, 1), edgeStrip(shot, 0, height - 1, width, 1)]
+                    : [edgeStrip(shot, 0, 0, 1, height), edgeStrip(shot, width - 1, 0, 1, height)];
                 shot.close();
-                return canvas.toDataURL();
+                return { axis: rows ? 'rows' : 'columns', image: strips.join(', ') };
             })
-            .catch(() => ''));
+            .catch(() => null));
     }
-    return glows.get(src);
+    return fills.get(src);
 }
 
 /**
@@ -109,7 +114,7 @@ function createStage(stage, cards, calm) {
     const text = stage.querySelectorAll('.project-stage__info, .project-stage__meta');
     const projects = cards.map((card) => readProjectCard(card));
 
-    projects.forEach((p) => p.screenshot && glowFor(p.screenshot));
+    projects.forEach((p) => p.screenshot && fillFor(p.screenshot));
     let current = -1; // the project on the stage
     let aimed = -1; // the row under the pointer or focus, which a skim runs ahead with
     let showingShot = false;
@@ -123,12 +128,14 @@ function createStage(stage, cards, calm) {
             // A shot that will not load leaves the name in its place.
             if (state === 'error') fitPosterName(poster, posterName, projects[current].title);
         },
-        // Each layer carries its own glow, so a wipe never shows the previous
+        // Each layer carries its own fill, so a wipe never shows the previous
         // shot through the margins of the next.
         onPaint: (img, src) => {
             img.style.backgroundImage = '';
-            glowFor(src).then((url) => {
-                if (url && img.getAttribute('src') === src) img.style.backgroundImage = `url(${url})`;
+            fillFor(src).then((fill) => {
+                if (!fill || img.getAttribute('src') !== src) return;
+                img.dataset.fill = fill.axis;
+                img.style.backgroundImage = fill.image;
             });
         }
     });

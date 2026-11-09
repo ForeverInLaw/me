@@ -151,12 +151,23 @@
     }
 }
 
-/* Each shot fits whole; its layer's background is a blurred glow of the
-   same shot (set from JS), which fills the margins and wipes with it. */
+/* Each shot fits whole, and what margin is left carries on from its edges:
+   the layer's background is the shot's two outer rows of pixels, or columns
+   (set from JS), each drawn out over its half of the frame. */
 .project-stage__shots .preview-shot {
     object-fit: contain;
     object-position: center;
-    background: var(--panel) center / cover no-repeat;
+    background: var(--panel) no-repeat;
+}
+
+.project-stage__shots .preview-shot[data-fill="rows"] {
+    background-position: top, bottom;
+    background-size: 100% 50%;
+}
+
+.project-stage__shots .preview-shot[data-fill="columns"] {
+    background-position: left, right;
+    background-size: 50% 100%;
 }
 
 /* Loading sweep while a shot decodes. */
