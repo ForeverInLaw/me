@@ -13,7 +13,9 @@
     will-change: transform, opacity;
 }
 
+/* Positioned for the outgoing text, which lingers over it while switching. */
 .playlist-peek__card {
+    position: relative;
     padding: 8px 8px 12px;
     border-radius: var(--radius-lg);
     background: var(--raised);
@@ -23,10 +25,11 @@
     padding: 0 6px;
 }
 
+/* Holds the two .preview-shot layers that wipe between covers. */
 .playlist-peek__cover {
-    width: 100%;
+    position: relative;
     aspect-ratio: 1;
-    object-fit: cover;
+    overflow: hidden;
     /* Concentric with the card: its radius less the 8px inset. */
     border-radius: calc(var(--radius-lg) - 8px);
     background: var(--raised-hover);
@@ -70,19 +73,11 @@
 .playlists.has-peek .playlist {
     display: block;
     border-radius: var(--radius-sm);
+    transition: background-color 200ms var(--ease-out);
 }
 
 .playlists.has-peek .playlist img {
     transition: opacity 200ms var(--ease-out);
-}
-
-/* Its cover is out in the card: the tile is left as an empty socket. */
-.playlists.has-peek .playlist.is-lifted {
-    background: var(--raised);
-}
-
-.playlists.has-peek .playlist.is-lifted img {
-    visibility: hidden;
 }
 
 .playlists.has-peek:hover .playlist img {
@@ -93,4 +88,20 @@
 .playlists.has-peek .playlist:focus-visible img {
     opacity: 1;
     transform: none;
+}
+
+/* Its cover is out in the card: the tile is left as an empty socket. Moving
+   along the row the covers cross-fade back and out; opening and folding swap
+   at once (.is-snapping), since the card itself covers the tile then. */
+.playlists.has-peek .playlist.is-lifted {
+    background: var(--raised);
+}
+
+.playlists.has-peek .playlist.is-lifted img {
+    opacity: 0;
+}
+
+.playlists.is-snapping .playlist,
+.playlists.is-snapping .playlist img {
+    transition: none;
 }

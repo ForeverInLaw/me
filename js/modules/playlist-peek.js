@@ -3,11 +3,14 @@
 // and opens into a card above the row: the first frame is the tile itself,
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
-// along the row slides the open card to the next tile. Pointer and keyboard
-// only; on touch the tiles stay plain links.
+// along the row keeps the card open: it slides over, the next cover wipes in
+// from the side the pointer came from (shot-stack.js), the text trades places
+// and the card eases to its new height. Pointer and keyboard only; on touch
+// the tiles stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 import { safeUrl } from './remote.js';
+import { createShotStack } from './shot-stack.js';
 
 const WIDTH = 248;        // css/playlist-peek.css sets the same width
 const INSET = 8;          // card padding around the cover
@@ -15,7 +18,9 @@ const COVER = WIDTH - INSET * 2;
 const CARD_RADIUS = 16;   // --radius-lg
 const GAP = 12;           // between the card and the row
 const EDGE = 12;          // keep-out from the viewport edges
+const TEXT_SHIFT = 12;    // px the text travels as it trades places
 const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
+const SLIDE = { duration: 0.45, ease: 'expo.out' };
 
 const el = (tag, className) => Object.assign(document.createElement(tag), { className });
 
@@ -36,9 +41,7 @@ function createPeek() {
     const peek = el('div', 'playlist-peek');
     peek.setAttribute('aria-hidden', 'true');
     const card = el('div', 'playlist-peek__card');
-    const cover = el('img', 'playlist-peek__cover');
-    cover.alt = '';
-    cover.decoding = 'async';
+    const cover = el('div', 'playlist-peek__cover');
     const body = el('div', 'playlist-peek__body');
     const name = el('p', 'playlist-peek__name');
     const desc = el('p', 'playlist-peek__desc');
@@ -69,6 +72,25 @@ function overTile(tile) {
     return { x: tile.left - INSET * scale, y: tile.top - INSET * scale, scale };
 }
 
+/** Leaves a copy of the outgoing text in place and lets it drift off. */
+function leaveGhost(card, body, direction) {
+    const ghost = body.cloneNode(true);
+    Object.assign(ghost.style, {
+        position: 'absolute',
+        top: `${body.offsetTop}px`,
+        left: `${body.offsetLeft}px`,
+        width: `${body.offsetWidth}px`
+    });
+    card.append(ghost);
+    gsap.to(ghost, {
+        autoAlpha: 0,
+        x: -TEXT_SHIFT * direction,
+        duration: 0.14,
+        ease: 'power2.in',
+        onComplete: () => ghost.remove()
+    });
+}
+
 /** Reduced motion: the card just fades in and out where it rests. */
 function createCalmMotion({ peek, card, body }) {
     const stop = () => gsap.killTweensOf(peek);
@@ -77,12 +99,12 @@ function createCalmMotion({ peek, card, body }) {
             stop();
             gsap.set(peek, { ...rest, scale: 1 });
             gsap.set(card, { clipPath: FULL_CLIP });
-            gsap.set(body, { autoAlpha: 1, y: 0 });
+            gsap.set(body, { autoAlpha: 1, x: 0, y: 0 });
             gsap.to(peek, { autoAlpha: 1, duration: 0.15 });
         },
-        slide(rest) {
+        slide(direction, apply) {
             stop();
-            gsap.set(peek, { ...rest, autoAlpha: 1 });
+            gsap.set(peek, { ...apply(), autoAlpha: 1 });
         },
         shrink(tile, radius, done) {
             stop();
@@ -91,7 +113,11 @@ function createCalmMotion({ peek, card, body }) {
     };
 }
 
-/** The three moves: open out of a tile, slide to another, fold back into one. */
+/**
+ * The three moves: open out of a tile, slide to another, fold back into one.
+ * `slide` gets an `apply` callback that swaps the content in and returns where
+ * the card now rests, so the heights before and after can both be measured.
+ */
 function createMotion({ peek, card, body }) {
     const OPEN = { duration: 0.6, ease: 'expo.out' };
     const FOLD = { duration: 0.34, ease: 'power3.inOut' };
@@ -103,14 +129,22 @@ function createMotion({ peek, card, body }) {
             gsap.set(peek, { autoAlpha: 1 });
             gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN });
             gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN });
-            gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
+            gsap.fromTo(body, { autoAlpha: 0, x: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
         },
-        slide(rest) {
+        slide(direction, apply) {
             stop();
+            leaveGhost(card, body, direction);
+            const before = card.offsetHeight;
+            gsap.set(card, { clearProps: 'height' });
+            const rest = apply();
+            const after = card.offsetHeight;
+            // The card's top and height ease together on one curve, so its
+            // bottom edge stays put over the row while the text reflows.
             gsap.set(peek, { autoAlpha: 1 });
-            gsap.to(peek, { ...rest, scale: 1, duration: 0.45, ease: 'expo.out' });
-            gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
-            gsap.fromTo(body, { autoAlpha: 0 }, { autoAlpha: 1, y: 0, duration: 0.25, ease: 'power2.out' });
+            gsap.to(peek, { ...rest, scale: 1, ...SLIDE });
+            gsap.fromTo(card, { height: before }, { height: after, clipPath: FULL_CLIP, ...SLIDE, clearProps: 'height' });
+            gsap.fromTo(body, { autoAlpha: 0, x: TEXT_SHIFT * direction, y: 0 },
+                { autoAlpha: 1, x: 0, duration: 0.3, delay: 0.12, ease: 'power2.out' });
         },
         shrink(tile, radius, done) {
             stop();
@@ -129,6 +163,29 @@ function createMotion({ peek, card, body }) {
     };
 }
 
+/**
+ * Marks which tile's cover is out in the card; that tile shows an empty
+ * socket. `snap` swaps instantly, for when the card itself sits over the tile
+ * (opening out of it, folding back in); otherwise the covers cross-fade.
+ */
+function createSockets(container, links) {
+    let lifted = null;
+    return {
+        get index() {
+            return lifted;
+        },
+        lift(index, snap) {
+            if (snap) container.classList.add('is-snapping');
+            links[lifted]?.classList.remove('is-lifted');
+            lifted = index;
+            links[index]?.classList.add('is-lifted');
+            if (!snap) return;
+            void container.offsetWidth; // apply the change with transitions off
+            container.classList.remove('is-snapping');
+        }
+    };
+}
+
 /** Wires the window to the `.playlist` links rendered from `playlists`. */
 export function attachPlaylistPeek(container, playlists) {
     if (!canHoverPreview()) return;
@@ -136,46 +193,59 @@ export function attachPlaylistPeek(container, playlists) {
     const calm = prefersReducedMotion();
     const parts = createPeek();
     const motion = calm ? createCalmMotion(parts) : createMotion(parts);
+    const shots = createShotStack(parts.cover, {
+        calm,
+        axis: 'x',
+        zoom: 1,
+        onState: (state) => { parts.peek.dataset.state = state; }
+    });
     const links = Array.from(container.querySelectorAll('.playlist'));
+    const sockets = createSockets(container, links);
     const tileRect = (index) => links[index].closest('li').getBoundingClientRect();
     const radius = parseFloat(getComputedStyle(links[0].querySelector('img')).borderTopLeftRadius) || 0;
     let current = null;
-    let lifted = null;
 
     gsap.set(parts.peek, { transformOrigin: '0 0', autoAlpha: 0 });
 
     const fill = (playlist) => {
-        parts.cover.src = safeUrl(playlist.image);
         parts.name.textContent = playlist.name.trim();
         parts.desc.textContent = plainText(playlist.description || '');
         parts.meta.textContent = `${playlist.tracks} tracks`;
-    };
-
-    // The tile whose cover is out in the card shows an empty socket.
-    const lift = (index) => {
-        links[lifted]?.classList.remove('is-lifted');
-        lifted = index;
-        links[index]?.classList.add('is-lifted');
     };
 
     const show = (index) => {
         if (index === current) return;
         // Still on screen, even halfway folded, counts as open: slide, don't regrow.
         const open = gsap.getProperty(parts.peek, 'opacity') > 0;
+        const direction = index >= (current ?? sockets.index ?? index) ? 1 : -1;
         current = index;
-        fill(playlists[index]);
+        const playlist = playlists[index];
         const tile = tileRect(index);
-        const rest = restFor(tile, container.getBoundingClientRect(), parts.peek);
-        if (open) motion.slide(rest);
-        else motion.grow(tile, rest, radius);
-        if (!calm) lift(index);
+        const place = () => restFor(tile, container.getBoundingClientRect(), parts.peek);
+
+        if (open) {
+            motion.slide(direction, () => {
+                fill(playlist);
+                return place();
+            });
+            shots.wipeTo(safeUrl(playlist.image), '', direction);
+        } else {
+            gsap.set(parts.card, { clearProps: 'height' });
+            fill(playlist);
+            motion.grow(tile, place(), radius);
+            shots.reveal(safeUrl(playlist.image), '');
+        }
+        if (!calm) sockets.lift(index, !open);
     };
 
     const hide = () => {
         if (current === null) return;
         const index = current;
         current = null;
-        motion.shrink(tileRect(index), radius, () => lift(null));
+        motion.shrink(tileRect(index), radius, () => {
+            sockets.lift(null, true);
+            shots.reset();
+        });
     };
 
     links.forEach((link, index) => {
