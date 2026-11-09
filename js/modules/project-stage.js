@@ -15,7 +15,7 @@
 // it; works-reel.js shows their screenshots inline instead.
 
 import { projectCards, readProjectCard } from './project-card.js';
-import { canHoverPreview, prefersReducedMotion } from './viewport.js';
+import { hasStage, prefersReducedMotion } from './viewport.js';
 import { createShotStack } from './shot-stack.js';
 import { watchRowIntent } from './row-intent.js';
 
@@ -173,7 +173,7 @@ function createStage(stage, cards, calm) {
 export function initProjectStage() {
     const stage = document.getElementById('project-stage');
     const cards = Array.from(projectCards());
-    if (!stage || !cards.length || !canHoverPreview()) return;
+    if (!stage || !cards.length || !hasStage()) return;
 
     const section = stage.closest('.projects');
     const { show, skim } = createStage(stage, cards, prefersReducedMotion());
@@ -182,6 +182,5 @@ export function initProjectStage() {
     // The stage's bottom row takes the height of one of the index's rows.
     stage.style.setProperty('--rows', String(cards.length));
     stage.hidden = false;
-    section.classList.add('has-stage');
     show(0);
 }

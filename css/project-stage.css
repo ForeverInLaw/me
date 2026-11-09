@@ -1,6 +1,8 @@
 /* Desktop works layout (project-stage.js): with a hovering pointer and room
    for both, the list turns into a compact index and a stage beside it shows
-   the current project. Narrower, or on touch, the list keeps its full rows. */
+   the current project. Narrower, or on touch, the list keeps its full rows.
+   `has-stage` is on the root from before the first paint (index.html), so the
+   list opens in this layout instead of switching to it. */
 
 .projects {
     container: projects / inline-size;
@@ -97,14 +99,12 @@
     /* ── the stage ── */
 
     /* As tall as the index beside it: the picture and the words at the top,
-       the way out along the bottom. */
-    .has-stage .project-stage {
+       the way out along the bottom. It stays hidden until its module has a
+       project to put on it, and comes in then. */
+    .has-stage .project-stage:not([hidden]) {
         display: flex;
         flex-direction: column;
         align-self: stretch;
-    }
-
-    .js .has-stage .project-stage {
         animation: row-in 640ms var(--ease-out) 160ms both;
     }
 }

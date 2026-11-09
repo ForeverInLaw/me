@@ -15,15 +15,13 @@ export function initWorksMore() {
         .map((card) => card.closest('li'));
     if (!extra.length) return;
 
-    extra.forEach((row) => row.classList.add('is-extra'));
     button.textContent = `${extra.length} more works`;
     button.hidden = false;
-    section.classList.add('is-short');
 
     button.addEventListener('click', () => {
         // The rows cascade in as the list first did, counted from the first of them.
         extra.forEach((row, order) => row.style.setProperty('--i', String(order)));
-        section.classList.remove('is-short');
+        section.classList.add('is-whole');
         button.hidden = true;
         // The button is gone: hand the keyboard to the first row it revealed.
         extra[0].querySelector('a')?.focus({ preventScroll: true });

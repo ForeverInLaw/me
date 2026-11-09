@@ -535,13 +535,15 @@
 }
 
 /* A phone opens on the projects that have a picture; the others wait behind
-   the button. Never beside the desktop stage, which lists every project. */
+   the button until it marks the list whole. All in CSS, so the list never
+   paints long and then shortens. Never beside the desktop stage, which lists
+   every project. */
 @media (max-width: 768px) {
-    .projects.is-short:not(.has-stage) .project-list > .is-extra {
+    .js:not(.has-stage) .projects:not(.is-whole) .project-list > li:has(> .project-card:not([data-screenshot])) {
         display: none;
     }
 
-    .projects.is-short:not(.has-stage) .works__more:not([hidden]) {
+    .js:not(.has-stage) .projects:not(.is-whole) .works__more:not([hidden]) {
         display: flex;
     }
 }
@@ -613,8 +615,9 @@
     }
 }
 
-/* Entrance: the works list cascades in once, row by row. JS sets --i; without
-   JS the rows simply sit there, so nothing depends on the animation. */
+/* Entrance: the works list cascades in once, row by row, each by its --i
+   (set in index.html ahead of the first paint). Without JS the rows simply
+   sit there, so nothing depends on the animation. */
 .js .project-list > li {
     animation: row-in 640ms var(--ease-out) both;
     animation-delay: calc(var(--i, 0) * 45ms + 80ms);

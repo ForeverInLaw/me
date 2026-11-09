@@ -6,8 +6,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Progressive enhancement flag: set before paint so JS-only hiding never traps no-JS users -->
-	<script>document.documentElement.classList.add('js');</script>
+	<!-- Both set before the first paint. `js`: JS-only hiding never traps no-JS
+	     users. `has-stage`: a pointer that hovers gets the works as an index
+	     beside a stage (project-stage.js), and the list has to open in that
+	     layout rather than switch to it once the modules arrive. -->
+	<script>
+		document.documentElement.classList.add('js');
+		if (matchMedia('(hover: hover) and (pointer: fine)').matches) document.documentElement.classList.add('has-stage');
+	</script>
 
 	<title>ForeverInLaw - Creative Developer</title>
 	<meta name="description" content="ForeverInLaw, creative developer. Telegram bots, Next.js sites, Go and Python backends, Tauri desktop apps, and animated UI. Selected works, GitHub activity, and now-playing Spotify card.">
@@ -352,6 +358,13 @@
 
 	<script>
 		document.getElementById('year').textContent = new Date().getFullYear();
+
+		// Each row's place in the cascade the works list comes in by (works.css).
+		// Set here, ahead of the first paint: set later, it would move the delays
+		// of rows already on their way in.
+		document.querySelectorAll('.project-list > li').forEach((row, index) => {
+			row.style.setProperty('--i', String(index));
+		});
 	</script>
 </body>
 

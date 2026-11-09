@@ -10,7 +10,6 @@ const COMPACT_QUERY = '(max-width: 768px)';
 // the desktop stage instead.
 const TOUCH_REEL_QUERY = `${COMPACT_QUERY} and (hover: none)`;
 
-const HOVER_PREVIEW_QUERY = '(hover: hover) and (pointer: fine)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
 const matches = (query) => window.matchMedia(query).matches;
@@ -18,8 +17,12 @@ const matches = (query) => window.matchMedia(query).matches;
 /** Small screen with no hover - the inline screenshot reel applies. */
 export const isTouchReel = () => matches(TOUCH_REEL_QUERY);
 
-/** A real pointer that can hover: the project stage and playlist window apply. */
-export const canHoverPreview = () => matches(HOVER_PREVIEW_QUERY);
+/**
+ * A real pointer that can hover: the project stage applies. Decided once, by
+ * the inline script in index.html that marks the root before the first paint,
+ * so the stylesheets and the modules cannot disagree about it.
+ */
+export const hasStage = () => document.documentElement.classList.contains('has-stage');
 
 export const prefersReducedMotion = () => matches(REDUCED_MOTION_QUERY);
 
