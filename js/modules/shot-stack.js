@@ -1,12 +1,19 @@
 /* global gsap -- loaded as a classic script before the modules (index.html). */
-// The preview's picture: two stacked <img> layers, the shot on show and the one
-// wiping in over it. Loads race while the pointer runs down the list, so every
-// request takes a ticket and only the newest one may paint.
+// A picture that wipes between images: two stacked <img> layers, the one on
+// show and the one wiping in over it, along either axis. Loads race while the
+// pointer runs along, so every request takes a ticket and only the newest one
+// may paint.
 
 const CLIP_FULL = 'inset(0% 0% 0% 0%)';
 const CLIP_FROM_BELOW = 'inset(100% 0% 0% 0%)';
-const CLIP_FROM_ABOVE = 'inset(0% 0% 100% 0%)';
 const WIPE = { duration: 0.55, ease: 'expo.out' };
+
+// Per axis: the clip a shot enters from when moving forward (down, right) and
+// back (up, left), and the property that nudges it along.
+const AXES = {
+    y: { enter: [CLIP_FROM_BELOW, 'inset(0% 0% 100% 0%)'], shift: 'yPercent' },
+    x: { enter: ['inset(0% 0% 0% 100%)', 'inset(0% 100% 0% 0%)'], shift: 'xPercent' }
+};
 
 /** Points `img` at `src` and resolves whether it is ready to paint. */
 async function paint(img, src) {
@@ -32,9 +39,12 @@ const createLayer = (frame) => {
 
 /**
  * Builds the two layers inside `frame`. `onState` hears 'loading', 'ready' or
- * 'error' for the newest request; `calm` swaps motion for plain fades.
+ * 'error' for the newest request; `calm` swaps motion for plain fades. `axis`
+ * picks the direction of the wipe, and `zoom` the scale a revealed shot eases
+ * down from (1 for none).
  */
-export function createShotStack(frame, { calm, onState }) {
+export function createShotStack(frame, { calm, onState, axis = 'y', zoom = 1.18 }) {
+    const { enter, shift } = AXES[axis];
     let front = createLayer(frame);
     let back = createLayer(frame);
     let ticket = 0;
@@ -42,8 +52,8 @@ export function createShotStack(frame, { calm, onState }) {
     // Ends any wipe in flight on its final frame, so the next one starts clean.
     const settle = () => {
         gsap.killTweensOf([front, back]);
-        gsap.set(front, { clipPath: CLIP_FULL, yPercent: 0, scale: 1, autoAlpha: 1, zIndex: 2 });
-        gsap.set(back, { clipPath: CLIP_FULL, yPercent: 0, scale: 1, autoAlpha: 0, zIndex: 1 });
+        gsap.set(front, { clipPath: CLIP_FULL, [shift]: 0, scale: 1, autoAlpha: 1, zIndex: 2 });
+        gsap.set(back, { clipPath: CLIP_FULL, [shift]: 0, scale: 1, autoAlpha: 0, zIndex: 1 });
     };
 
     // Starts loading into `img`; reports 'loading' only when it is not cached,
@@ -65,7 +75,7 @@ export function createShotStack(frame, { calm, onState }) {
             if (cached) onState('ready');
             else gsap.set(front, { autoAlpha: 0 });
 
-            if (!calm) gsap.fromTo(front, { scale: 1.18 }, { scale: 1, duration: 1, ease: 'expo.out' });
+            if (!calm && zoom !== 1) gsap.fromTo(front, { scale: zoom }, { scale: 1, duration: 1, ease: 'expo.out' });
             done.then((ok) => {
                 if (ok === null || cached) return;
                 onState(ok ? 'ready' : 'error');
@@ -74,9 +84,9 @@ export function createShotStack(frame, { calm, onState }) {
         },
 
         /**
-         * Wipes to `src` once it can paint. Moving down the list (direction 1)
-         * the next shot rises from below and pushes the old one up; moving up,
-         * the reverse.
+         * Wipes to `src` once it can paint. Moving forward (direction 1) the
+         * next shot enters from below, or the right, and pushes the old one
+         * on; moving back, the reverse.
          */
         async wipeTo(src, alt, direction) {
             settle();
@@ -97,9 +107,9 @@ export function createShotStack(frame, { calm, onState }) {
                 return;
             }
             gsap.fromTo(incoming,
-                { clipPath: direction > 0 ? CLIP_FROM_BELOW : CLIP_FROM_ABOVE, yPercent: 12 * direction, scale: 1.08 },
-                { clipPath: CLIP_FULL, yPercent: 0, scale: 1, ...WIPE });
-            gsap.to(outgoing, { yPercent: -20 * direction, scale: 0.96, ...WIPE, onComplete: settle });
+                { clipPath: enter[direction > 0 ? 0 : 1], [shift]: 12 * direction, scale: 1.08 },
+                { clipPath: CLIP_FULL, [shift]: 0, scale: 1, ...WIPE });
+            gsap.to(outgoing, { [shift]: -20 * direction, scale: 0.96, ...WIPE, onComplete: settle });
         },
 
         /** Drops in-flight loads and parks both layers, e.g. once hidden. */
