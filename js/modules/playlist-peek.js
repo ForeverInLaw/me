@@ -4,8 +4,9 @@
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
-// from the side the pointer came from (shot-stack.js), the text cross-fades in
-// place and the card eases to its new height. Pointer and keyboard only; on touch
+// from the side the pointer came from (shot-stack.js) and the text cross-fades
+// in place. Every playlist gets the room of the wordiest one, so the card keeps
+// one size along the row and nothing in it moves up or down. Pointer and keyboard only; on touch
 // the tiles stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
@@ -119,7 +120,7 @@ function createCalmMotion({ peek, card, body }) {
 /**
  * The three moves: open out of a tile, slide to another, fold back into one.
  * `slide` gets an `apply` callback that swaps the content in and returns where
- * the card now rests, so the heights before and after can both be measured.
+ * the card now rests, so the outgoing text is copied before it changes.
  */
 function createMotion({ peek, card, body }) {
     const OPEN = { duration: 0.6, ease: 'expo.out' };
@@ -137,15 +138,10 @@ function createMotion({ peek, card, body }) {
         slide(apply) {
             stop();
             leaveGhost(card, body);
-            const before = card.offsetHeight;
-            gsap.set(card, { clearProps: 'height' });
             const rest = apply();
-            const after = card.offsetHeight;
-            // The card's top and height ease together on one curve, so its
-            // bottom edge stays put over the row while the text reflows.
             gsap.set(peek, { autoAlpha: 1 });
             gsap.to(peek, { ...rest, scale: 1, ...SLIDE });
-            gsap.fromTo(card, { height: before }, { height: after, clipPath: FULL_CLIP, ...SLIDE, clearProps: 'height' });
+            gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
             gsap.fromTo(body, { autoAlpha: 0, filter: TEXT_BLUR, y: 0 },
                 { autoAlpha: 1, filter: 'blur(0px)', duration: 0.26, delay: 0.08, ease: 'power2.out', clearProps: 'filter' });
         },
@@ -216,6 +212,17 @@ export function attachPlaylistPeek(container, playlists) {
         parts.meta.textContent = `${playlist.tracks} tracks`;
     };
 
+    // Sizes the text block for the wordiest playlist. Measured on each opening,
+    // so a late web font or a resized window is picked up.
+    const fitTallest = () => {
+        parts.body.style.minHeight = '';
+        const tallest = Math.max(...playlists.map((playlist) => {
+            fill(playlist);
+            return parts.body.offsetHeight;
+        }));
+        parts.body.style.minHeight = `${tallest}px`;
+    };
+
     const show = (index) => {
         if (index === current) return;
         // Still on screen, even halfway folded, counts as open: slide, don't regrow.
@@ -233,7 +240,7 @@ export function attachPlaylistPeek(container, playlists) {
             });
             shots.wipeTo(safeUrl(playlist.image), '', direction);
         } else {
-            gsap.set(parts.card, { clearProps: 'height' });
+            fitTallest();
             fill(playlist);
             motion.grow(tile, place(), radius);
             shots.reveal(safeUrl(playlist.image), '');
