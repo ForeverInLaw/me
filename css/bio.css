@@ -112,11 +112,16 @@
 }
 
 .np-card {
+    animation: np-in 260ms var(--ease-out);
     display: flex;
     align-items: center;
     gap: 14px;
     min-height: 88px;
     padding: 12px;
+}
+
+@keyframes np-in {
+    from { opacity: 0; }
 }
 
 .np-card__art {

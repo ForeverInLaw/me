@@ -4,6 +4,24 @@ import { swapText } from './text-swap.js';
 const NP_API = apiEndpoint('/api/now-playing', 'https://spotify-now-playing.foreverinlaw.workers.dev/');
 const POLL_INTERVAL_MS = 15000;
 
+const BADGE = '<span class="np-card__badge" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm3.67 11.54a.5.5 0 0 1-.69.17c-1.88-1.15-4.25-1.41-7.04-.77a.5.5 0 1 1-.22-.97c3.05-.7 5.67-.4 7.78.88a.5.5 0 0 1 .17.69Zm.98-2.18a.62.62 0 0 1-.86.21c-2.16-1.32-5.45-1.7-8-.93a.62.62 0 1 1-.36-1.2c2.93-.88 6.55-.46 9 1.06a.62.62 0 0 1 .22.86Zm.08-2.27c-2.59-1.54-6.86-1.68-9.34-.93a.75.75 0 0 1-.43-1.44c2.84-.85 7.55-.69 10.53 1.08a.75.75 0 0 1-.76 1.29Z"/></svg></span>';
+
+// The art slot holds two stacked <img> so a new cover can cross-fade over the
+// old one; title and artist carry .t-text-swap so their changes animate.
+const CARD_HTML = `
+    <a class="np-card" target="_blank" rel="noopener noreferrer">
+        <div class="np-card__art t-icon-swap" data-state="a">
+            <img class="t-icon" data-icon="a" alt="" decoding="async">
+            <img class="t-icon" data-icon="b" alt="" decoding="async">
+            ${BADGE}
+        </div>
+        <div class="np-card__info">
+            <div class="np-card__title"><span class="t-text-swap"></span></div>
+            <div class="np-card__artist"><span class="t-text-swap"></span></div>
+            <div class="np-card__progress"><div class="np-card__bar"></div></div>
+        </div>
+    </a>`.trim();
+
 export function initSpotify() {
     const spotifyWidget = document.getElementById('spotify-now-playing');
     const spotifyTitle = document.querySelector('.spotify-title');
@@ -43,27 +61,19 @@ export function initSpotify() {
         return Math.max(0, Math.min(100, pct));
     }
 
-    const BADGE = '<span class="np-card__badge" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm3.67 11.54a.5.5 0 0 1-.69.17c-1.88-1.15-4.25-1.41-7.04-.77a.5.5 0 1 1-.22-.97c3.05-.7 5.67-.4 7.78.88a.5.5 0 0 1 .17.69Zm.98-2.18a.62.62 0 0 1-.86.21c-2.16-1.32-5.45-1.7-8-.93a.62.62 0 1 1-.36-1.2c2.93-.88 6.55-.46 9 1.06a.62.62 0 0 1 .22.86Zm.08-2.27c-2.59-1.54-6.86-1.68-9.34-.93a.75.75 0 0 1-.43-1.44c2.84-.85 7.55-.69 10.53 1.08a.75.75 0 0 1-.76 1.29Z"/></svg></span>';
-
-    // Built once and then updated in place - see updateCard. The art slot holds
-    // two stacked <img> so a new cover can cross-fade over the old one, and the
-    // title and artist carry .t-text-swap so their content changes animate.
-    function renderCard() {
-        if (!spotifyWidget) return;
-        spotifyWidget.innerHTML = `
-            <a class="np-card" target="_blank" rel="noopener noreferrer">
-                <div class="np-card__art t-icon-swap" data-state="a">
-                    <img class="t-icon" data-icon="a" alt="" decoding="async">
-                    <img class="t-icon" data-icon="b" alt="" decoding="async">
-                    ${BADGE}
-                </div>
-                <div class="np-card__info">
-                    <div class="np-card__title"><span class="t-text-swap"></span></div>
-                    <div class="np-card__artist"><span class="t-text-swap"></span></div>
-                    <div class="np-card__progress"><div class="np-card__bar"></div></div>
-                </div>
-            </a>
-        `;
+    // Built and filled off-screen, and put in place of the placeholder only once
+    // its cover has decoded, so the slot never shows a half-empty card. Later
+    // tracks update it in place (updateCard) so title, artist and cover animate.
+    async function mountCard(data) {
+        // A plain <div>, not a <template>: images inside template content
+        // belong to an inert document and never load, so the decode would fail.
+        const holder = document.createElement('div');
+        holder.innerHTML = CARD_HTML;
+        const card = holder.firstElementChild;
+        card.querySelector('.np-card__title .t-text-swap').textContent = data.track.name;
+        card.querySelector('.np-card__artist .t-text-swap').textContent = data.track.artists;
+        await updateCard(card, data);
+        spotifyWidget.replaceChildren(card);
     }
 
     /**
@@ -88,10 +98,8 @@ export function initSpotify() {
         slot.dataset.state = nextIcon;
     }
 
-    function updateCard(data) {
-        const card = spotifyWidget.querySelector('.np-card');
-        if (!card) return;
-
+    /** Fills `card` from `data`; resolves once the cover has settled. */
+    function updateCard(card, data) {
         const t = data.track;
         card.href = safeUrl(t.url);
         card.setAttribute('aria-label', `${t.name} by ${t.artists}`);
@@ -99,11 +107,9 @@ export function initSpotify() {
 
         swapText(card.querySelector('.np-card__title .t-text-swap'), t.name);
         swapText(card.querySelector('.np-card__artist .t-text-swap'), t.artists);
-        swapAlbumArt(card.querySelector('.np-card__art'), safeUrl(t.albumArt));
-
+        const art = card.querySelector('.np-card__art');
         card.querySelector('.np-card__bar').style.width = `${progressPercent(data)}%`;
 
-        const art = card.querySelector('.np-card__art');
         const pulse = art.querySelector('.np-card__pulse');
         if (data.isPlaying && !pulse) {
             const dot = document.createElement('span');
@@ -113,6 +119,7 @@ export function initSpotify() {
         } else if (!data.isPlaying && pulse) {
             pulse.remove();
         }
+        return swapAlbumArt(art, safeUrl(t.albumArt));
     }
 
     function showMessage(text) {
@@ -176,10 +183,9 @@ export function initSpotify() {
             npState.durationMs = data.durationMs || 0;
             npState.lastSyncAt = Date.now();
 
-            // The card is only built once; a track change updates it in place
-            // so the title, artist and cover can animate rather than blink.
-            if (!spotifyWidget.querySelector('.np-card')) renderCard();
-            updateCard(data);
+            const card = spotifyWidget.querySelector('.np-card');
+            if (card) updateCard(card, data);
+            else await mountCard(data);
 
             startProgressLoop();
         } catch (err) {
