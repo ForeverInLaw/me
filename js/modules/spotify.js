@@ -38,14 +38,11 @@ export function initSpotify() {
     let npFetching = false;
     let npFailCount = 0;
 
+    /** What the heading over the card says, now that there is something to say. */
     function setTitleText(text) {
-        if (!spotifyTitle || spotifyTitle.textContent === text) return;
-        spotifyTitle.textContent = text;
-        if (text === 'Loading...') {
-            spotifyTitle.classList.add('loading');
-        } else {
-            spotifyTitle.classList.remove('loading');
-        }
+        if (!spotifyTitle) return;
+        spotifyTitle.classList.remove('loading');
+        swapText(spotifyTitle.querySelector('.t-text-swap'), text);
     }
 
     /** How far through its track `data` is, as the bar's scale: 0 to 1. */
