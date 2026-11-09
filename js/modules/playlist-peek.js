@@ -109,9 +109,11 @@ function createMotion({ peek, card, body }) {
             stop();
             const from = overTile(tile);
             gsap.set(peek, { autoAlpha: 1 });
-            gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN });
-            gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN });
-            gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
+            // lazy: false, so the first frame already sits over the tile
+            // rather than wherever the card was last.
+            gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN, lazy: false });
+            gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN, lazy: false });
+            gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out', lazy: false });
         },
         slide(x, apply) {
             stop();
@@ -133,10 +135,15 @@ function createMotion({ peek, card, body }) {
                 const { y } = apply();
                 const after = card.offsetHeight;
                 const RESIZE = folding ? SLIDE : { duration: 0.3, ease: 'power2.inOut' };
+                // Set outright, not as a tween's starting value: GSAP writes
+                // those lazily, and started from inside another tween's
+                // callback the write slips a frame, which flashes the card
+                // at its new height before the resize begins.
+                gsap.set(card, { height: before });
                 gsap.to(peek, { y, ...RESIZE });
-                gsap.fromTo(card, { height: before }, { height: after, ...RESIZE, clearProps: 'height' });
+                gsap.to(card, { height: after, ...RESIZE, clearProps: 'height' });
                 gsap.fromTo(body, { autoAlpha: 0, filter: TEXT_BLUR, y: 0 },
-                    { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter' });
+                    { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', lazy: false });
             };
             // The fold has already faded the text; otherwise it leaves first.
             if (folding) swap();
