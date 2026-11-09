@@ -132,8 +132,16 @@ function renderHeatmap(section, counts, dayAt, total) {
     grid.addEventListener('pointerleave', () => tip.classList.remove('is-visible'));
 
     // On narrow screens the year scrolls sideways; open on the latest weeks.
+    // Done in the scroller's first observed size, which arrives after the
+    // browser has laid the year out and before it paints: asking for the width
+    // here would make it lay the section out half-rendered.
     const scroller = grid.closest('.heatmap__scroll');
-    if (scroller) scroller.scrollLeft = scroller.scrollWidth;
+    if (scroller) {
+        new ResizeObserver((_, observer) => {
+            observer.disconnect();
+            scroller.scrollLeft = scroller.scrollWidth;
+        }).observe(scroller);
+    }
     return grid;
 }
 

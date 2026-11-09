@@ -58,5 +58,10 @@ export function stageGrind(section) {
     ];
     section.classList.add('is-staged');
 
-    return (progress) => parts.forEach(([light, range]) => light(within(progress, range)));
+    return (progress) => {
+        // The transitions come on with the first step of the arrival, never
+        // with the staging itself (works-scroll.css).
+        if (progress > 0) section.classList.add('is-arriving');
+        parts.forEach(([light, range]) => light(within(progress, range)));
+    };
 }

@@ -19,17 +19,24 @@ export function initWorksScroll() {
     const sheet = works?.querySelector('.works__sheet');
     if (!projects || !sheet || prefersReducedMotion()) return;
 
+    // Staged before anything below measures the page, so the section is laid
+    // out once, as staged, rather than once each way.
+    const arrive = stageGrind(sheet.querySelector('.grind'));
+
     // The pin needs the section's height to hold a list taller than the
     // window by its last row rather than its first. Measured now as well as
     // observed: the pin must not wait for the observer's first frame.
-    const measure = () => works.style.setProperty('--projects-h', `${projects.offsetHeight}px`);
+    const measure = () => projects.style.setProperty('--projects-h', `${projects.offsetHeight}px`);
     works.classList.add('has-sheet');
     measure();
     new ResizeObserver(measure).observe(projects);
 
-    const arrive = stageGrind(sheet.querySelector('.grind'));
     const sheetTop = () => sheet.getBoundingClientRect().top + window.scrollY;
 
+    // ScrollTrigger runs a new tween to its end and back to record it. The
+    // marks sit that out: following it, they would have the page measured and
+    // laid out again with the works blurred and hidden.
+    let recorded = false;
     const markReceding = (tween) => {
         const progress = tween.progress();
         projects.classList.toggle('is-receding', progress > 0);
@@ -40,7 +47,7 @@ export function initWorksScroll() {
         '--recede': 1,
         ease: 'none',
         onUpdate() {
-            markReceding(this);
+            if (recorded) markReceding(this);
         },
         scrollTrigger: {
             trigger: sheet,
@@ -52,7 +59,6 @@ export function initWorksScroll() {
             onUpdate: (self) => arrive(self.progress)
         }
     });
-    // ScrollTrigger runs a new tween to its end and back to record it, which
-    // leaves the marks of the end behind; set them for where it really is.
+    recorded = true;
     markReceding(recede);
 }

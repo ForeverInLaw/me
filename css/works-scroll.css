@@ -11,6 +11,13 @@
     initial-value: 0;
 }
 
+/* The works' own height, from JS. Kept on the section for the same reason. */
+@property --projects-h {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+}
+
 /* Bleeds to the column's edges and repeats its inset, so the sheet's own
    background covers whatever it rises over. */
 .works__sheet {
@@ -74,11 +81,13 @@
 }
 
 /* ── the grind's arrival (grind-reveal.js) ──
-   Each part starts unlit and JS marks its pieces .is-lit in order as the
-   section comes up the screen; these transitions are all the motion there is,
-   so scrolling back simply unlights them. */
+   Each part starts unlit (.is-staged) and JS marks its pieces .is-lit in
+   order as the section comes up the screen; these transitions are all the
+   motion there is, so scrolling back simply unlights them. They wait for the
+   arrival to begin (.is-arriving): on from the start, they would play the
+   whole section going dark, off screen, while the page is still coming in. */
 
-.grind.is-staged .grind__sentence strong {
+.grind.is-arriving .grind__sentence strong {
     transition: color 500ms var(--ease-out);
 }
 
@@ -87,7 +96,7 @@
 }
 
 /* A week lights top to bottom (--row), so the year sweeps in on a slant. */
-.grind.is-staged .heatmap__cell {
+.grind.is-arriving .heatmap__cell {
     transition:
         background-color 600ms var(--ease-out) calc(var(--row, 0) * 30ms),
         opacity 200ms ease,
@@ -99,7 +108,7 @@
 }
 
 /* The hours come up one after another, clockwise from midnight. */
-.grind.is-staged .dial__bar {
+.grind.is-arriving .dial__bar {
     transition: stroke 200ms var(--ease-out), opacity 400ms var(--ease-out);
 }
 
@@ -108,7 +117,7 @@
 }
 
 /* Whatever steps in whole: a push, the records, a commit. */
-.grind.is-staged :is(.pushes__list li, .grind__records, .commits__list li) {
+.grind.is-arriving :is(.pushes__list li, .grind__records, .commits__list li) {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
 }
 
