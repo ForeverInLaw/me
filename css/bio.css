@@ -194,8 +194,11 @@
     min-width: 0;
 }
 
-.np-card__title,
-.np-card__artist {
+/* The ellipsis sits on the swapping span itself: as an inline-block it would
+   be clipped whole by the line instead of trimmed to "…". */
+.np-card__title .t-text-swap,
+.np-card__artist .t-text-swap {
+    display: block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
