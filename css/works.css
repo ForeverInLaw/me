@@ -107,7 +107,6 @@ a.project-card:hover h3 {
 /* ── the grind: GitHub activity rendered from assets/github.json ── */
 
 .grind {
-    margin-top: 80px;
     container-type: inline-size;
 }
 

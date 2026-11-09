@@ -16,8 +16,13 @@
     scrollbar-width: none;
 }
 
+/* The column's padding is named so the sheet inside it (works-scroll.css) can
+   bleed to the column's edges and repeat the same inset. */
 .works {
-    padding: 44px clamp(24px, 4vw, 64px) 40px;
+    --works-pad-x: clamp(24px, 4vw, 64px);
+    --works-pad-top: 44px;
+    --works-pad-bottom: 40px;
+    padding: var(--works-pad-top) var(--works-pad-x) 0;
     min-width: 0;
 }
 
@@ -45,7 +50,9 @@
     }
 
     .works {
-        padding: 36px 20px 32px;
+        --works-pad-x: 20px;
+        --works-pad-top: 36px;
+        --works-pad-bottom: 32px;
     }
 
     .site-footer {

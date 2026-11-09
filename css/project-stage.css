@@ -21,12 +21,22 @@
 
     /* ── the index: number, name, status dot, year ── */
 
+    /* The index takes whatever height the section gives it (a full screen
+       on desktop, works-scroll.css) and its rows share that evenly. */
     .has-stage .project-list {
         counter-reset: project;
+        display: grid;
+        grid-auto-rows: 1fr;
+        align-self: stretch;
+    }
+
+    .has-stage .project-list > li {
+        display: grid;
     }
 
     .has-stage .project-card {
         grid-template-columns: 28px minmax(0, 1fr) auto;
+        align-content: center;
         align-items: baseline;
         gap: 12px;
         padding: 9px 0;

@@ -4,6 +4,7 @@ import { initSpotify } from './modules/spotify.js';
 import { initGithubActivity } from './modules/github-activity.js';
 import { initPlaylists } from './modules/playlists.js';
 import { initLocalTime } from './modules/local-time.js';
+import { initWorksScroll } from './modules/works-scroll.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Row index drives the CSS cascade that brings the works list in.
@@ -14,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initProjectStage();
     initWorksReel();
     initSpotify();
-    initGithubActivity();
+    // The scroll scene stages what the grind rendered, so it waits for it.
+    initGithubActivity().then(initWorksScroll);
     initPlaylists();
     initLocalTime();
 });

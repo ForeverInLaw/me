@@ -1,0 +1,107 @@
+/* How the works column hands over on scroll (works-scroll.js). "Selected
+   works" takes the first screen whole; everything after it is one sheet. On
+   desktop the works hold still and fall out of focus while the sheet rises
+   over them, and "The grind" comes alive on it as it arrives. */
+
+/* Registered so it stays on the element that reads it: an inherited value
+   would restyle every row of the works on every scroll frame. */
+@property --recede {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+/* Bleeds to the column's edges and repeats its inset, so the sheet's own
+   background covers whatever it rises over. */
+.works__sheet {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    margin: calc(80px - var(--works-pad-top)) calc(-1 * var(--works-pad-x)) 0;
+    padding: var(--works-pad-top) var(--works-pad-x) var(--works-pad-bottom);
+    background: var(--bg);
+}
+
+.works__sheet .grind {
+    flex: 1;
+}
+
+@media (min-width: 901px) {
+    /* A screen of its own: the sheet starts below the fold, and the body
+       under the heading takes the whole height that leaves (the stage layout
+       spreads its index over it, project-stage.css). */
+    .projects {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100dvh - var(--works-pad-top));
+        padding-bottom: var(--works-pad-bottom);
+    }
+
+    .projects__body {
+        flex: 1;
+    }
+
+    /* Pinned where it sat. Taller than the window (--projects-h, from JS), it
+       scrolls until its last row is on screen and holds there instead. */
+    .works.has-sheet .projects {
+        position: sticky;
+        top: min(var(--works-pad-top), calc(100dvh - var(--projects-h)));
+    }
+
+    .works.has-sheet .works__sheet {
+        min-height: 100dvh;
+        margin-top: 0;
+        border-top: 1px solid var(--line);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        box-shadow: 0 -32px 64px -24px rgb(0 0 0 / 0.6);
+        /* The shadow falls on the works above, never sideways onto the bio. */
+        clip-path: inset(-96px 0 0);
+    }
+
+    /* --recede runs 0 to 1 with the sheet's rise. The class is only on while
+       it is above 0, so a works list at rest carries no filter at all. */
+    .works.has-sheet .projects.is-receding {
+        filter: blur(calc(var(--recede) * 6px));
+        opacity: calc(1 - var(--recede) * 0.65);
+        transform: scale(calc(1 - var(--recede) * 0.025));
+    }
+
+    /* Fully under the sheet: nothing left to draw behind its round corners. */
+    .works.has-sheet .projects.is-covered {
+        visibility: hidden;
+    }
+}
+
+/* ── the grind's arrival (grind-reveal.js) ──
+   Each part starts unlit and JS marks its pieces .is-lit in order as the
+   section comes up the screen; these transitions are all the motion there is,
+   so scrolling back simply unlights them. */
+
+.grind.is-staged .grind__sentence strong {
+    transition: color 500ms var(--ease-out);
+}
+
+.grind.is-staged .grind__sentence strong:not(.is-lit) {
+    color: inherit;
+}
+
+/* A week lights top to bottom (--row), so the year sweeps in on a slant. */
+.grind.is-staged .heatmap__cell {
+    transition:
+        background-color 600ms var(--ease-out) calc(var(--row, 0) * 30ms),
+        box-shadow 120ms ease-out;
+}
+
+.grind.is-staged .heatmap__cell:not(.is-lit) {
+    background-color: var(--raised);
+}
+
+.grind.is-staged .pushes__list li {
+    transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out);
+}
+
+.grind.is-staged .pushes__list li:not(.is-lit) {
+    opacity: 0;
+    transform: translateY(10px);
+}
