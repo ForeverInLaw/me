@@ -132,12 +132,16 @@ ol {
     transform: scale(var(--icon-swap-start-scale));
 }
 
+/* Delays go with the durations: a cascade left with only its delays would
+   hold each row back unseen and then snap it in, one after another. */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
         animation-duration: 0.01ms !important;
+        animation-delay: 0s !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        transition-delay: 0s !important;
     }
 }
