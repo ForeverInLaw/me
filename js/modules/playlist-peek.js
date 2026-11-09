@@ -4,10 +4,9 @@
 // then the frame widens around the cover into the card while the name,
 // description and size settle in. Leaving folds it back into the tile. Moving
 // along the row keeps the card open: it slides over, the next cover wipes in
-// from the side the pointer came from (shot-stack.js), and the text changes in
-// three beats so it never moves while it can be read: the old text fades out,
-// the card eases to its new height, the new text fades in. Pointer and keyboard only; on touch
-// the tiles stay plain links.
+// from the side the pointer came from (shot-stack.js), the text swaps and the
+// card eases to its new height. Pointer and keyboard only; on touch the tiles
+// stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 import { safeUrl } from './remote.js';
@@ -19,7 +18,6 @@ const COVER = WIDTH - INSET * 2;
 const CARD_RADIUS = 16;   // --radius-lg
 const GAP = 12;           // between the card and the row
 const EDGE = 12;          // keep-out from the viewport edges
-const TEXT_BLUR = 'blur(3px)'; // the text swap softens through this
 const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
 const SLIDE = { duration: 0.45, ease: 'expo.out' };
 
@@ -73,28 +71,6 @@ function overTile(tile) {
     return { x: tile.left - INSET * scale, y: tile.top - INSET * scale, scale };
 }
 
-/**
- * Leaves a copy of the outgoing text where it stood and fades it out, so the
- * new text can fade in over it rather than replace it in one frame.
- */
-function leaveGhost(card, body) {
-    const ghost = body.cloneNode(true);
-    Object.assign(ghost.style, {
-        position: 'absolute',
-        top: `${body.offsetTop}px`,
-        left: `${body.offsetLeft}px`,
-        width: `${body.offsetWidth}px`
-    });
-    card.append(ghost);
-    gsap.to(ghost, {
-        autoAlpha: 0,
-        filter: TEXT_BLUR,
-        duration: 0.1,
-        ease: 'power2.in',
-        onComplete: () => ghost.remove()
-    });
-}
-
 /** Reduced motion: the card just fades in and out where it rests. */
 function createCalmMotion({ peek, card, body }) {
     const stop = () => gsap.killTweensOf(peek);
@@ -137,29 +113,24 @@ function createMotion({ peek, card, body }) {
         },
         slide(apply) {
             stop();
-            leaveGhost(card, body);
             const before = card.offsetHeight;
             gsap.set(card, { clearProps: 'height' });
             const { x, y } = apply();
             const after = card.offsetHeight;
-            // The resize waits for the old text to fade, and the new text for
-            // the resize; the top and the height share one curve, so the
-            // bottom edge stays put over the row.
-            const resize = Math.abs(after - before) > 1;
-            const RESIZE = { duration: 0.3, delay: 0.1, ease: 'power2.inOut' };
+            // The top and the height share one curve, so the bottom edge stays
+            // put over the row while the new text settles. Caught halfway into
+            // its fold, the card is still small and low over the tile: it rises
+            // as it grows back, on the slide's curve, or it would swell down
+            // over the row first.
+            const folding = gsap.getProperty(peek, 'scale') < 0.999;
+            const RESIZE = folding ? SLIDE : { duration: 0.3, ease: 'power2.inOut' };
             gsap.set(peek, { autoAlpha: 1 });
             gsap.to(peek, { x, scale: 1, ...SLIDE });
             gsap.to(peek, { y, ...RESIZE });
             gsap.fromTo(card, { height: before }, { height: after, ...RESIZE, clearProps: 'height' });
             gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
-            gsap.fromTo(body, { autoAlpha: 0, filter: TEXT_BLUR, y: 0 }, {
-                autoAlpha: 1,
-                filter: 'blur(0px)',
-                duration: 0.22,
-                delay: resize ? 0.4 : 0.1,
-                ease: 'power2.out',
-                clearProps: 'filter'
-            });
+            // The fold faded the text out; anywhere else it is simply shown.
+            gsap.to(body, { autoAlpha: 1, y: 0, duration: folding ? 0.2 : 0 });
         },
         shrink(tile, radius, done) {
             stop();

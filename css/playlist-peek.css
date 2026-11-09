@@ -13,19 +13,13 @@
     will-change: transform, opacity;
 }
 
-/* Positioned for the outgoing text, which lingers over it while switching. */
 .playlist-peek__card {
-    position: relative;
     padding: 8px 8px 12px;
     border-radius: var(--radius-lg);
     background: var(--raised);
 }
 
-/* flow-root keeps the name's top margin inside this box. Otherwise it would
-   collapse through in the flow but not in the absolutely positioned copy the
-   switch fades out, and the copy would sit a margin lower than the text. */
 .playlist-peek__body {
-    display: flow-root;
     padding: 0 6px;
 }
 
