@@ -64,6 +64,11 @@
     --stagger-stagger: var(--duration-stagger);
     --stagger-blur: var(--blur-medium);
     --stagger-ease: var(--ease-smooth-out);
+    /* A sentence arriving word by word. */
+    --stream-gap: 60ms;
+    --stream-fade: 350ms;
+    --stream-blur: 1px;
+    --stream-ease: var(--ease-smooth-out);
     /* Loaded content taking a placeholder's place. */
     --reveal-dur: var(--duration-slow);
     --reveal-blur: var(--blur-small);

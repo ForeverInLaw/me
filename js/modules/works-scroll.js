@@ -1,9 +1,10 @@
 /* global gsap, ScrollTrigger -- loaded as a classic script before the modules (index.html). */
 // How the works column hands over on scroll. "Selected works" and the sheet
 // after it are a screen each. As the sheet comes up the screen, "The grind"
-// on it lights up (grind-reveal.js); on desktop the works are pinned under it
-// meanwhile and fall out of focus. The layout and the looks are CSS
-// (works-scroll.css): this module only measures and feeds it the progress.
+// on it lights up part by part (grind-reveal.js); on desktop the works are
+// pinned under it meanwhile and fall out of focus. The layout and the looks
+// are CSS (works-scroll.css): this module only measures and feeds it the
+// progress.
 
 import { prefersReducedMotion } from './viewport.js';
 import { stageGrind } from './grind-reveal.js';
@@ -21,7 +22,7 @@ export function initWorksScroll() {
 
     // Staged before anything below measures the page, so the section is laid
     // out once, as staged, rather than once each way.
-    const arrive = stageGrind(sheet.querySelector('.grind'));
+    stageGrind(sheet.querySelector('.grind'));
 
     // The pin needs the section's height to hold a list taller than the
     // window by its last row rather than its first. Measured now as well as
@@ -55,8 +56,7 @@ export function initWorksScroll() {
             // top, or to the end of the page where that comes first.
             start: 'top bottom',
             end: () => Math.min(sheetTop(), ScrollTrigger.maxScroll(window)),
-            scrub: SCRUB_LAG,
-            onUpdate: (self) => arrive(self.progress)
+            scrub: SCRUB_LAG
         }
     });
     recorded = true;

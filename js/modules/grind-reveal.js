@@ -1,42 +1,77 @@
-// How "The grind" arrives: its figures brighten one by one, the heatmap plays
-// the year week by week, then the latest pushes, the year's records and the
-// latest commits step in while the day's hours go round the dial. Each part
-// is "the first N of these are lit", so one progress value drives them all
-// and running it backwards undoes them. The easing is CSS (works-scroll.css).
+// How "The grind" arrives: each part lights as it comes up the screen. The
+// figures of its sentence brighten one by one, the heatmap plays the year week
+// by week, the records resolve word by word, the pushes and the commits step
+// in line by line and the day's hours go round the dial.
+//
+// A part is "the first N of these are lit". How much of it has crossed a line
+// near the bottom of the screen says how many should be, and the part gets
+// there one piece at a time: flicked past, it still plays out in order, and
+// scrolling back undoes it. Each part goes by its own place on the screen, so
+// one a few screens down a phone waits to be seen. The easing is CSS
+// (works-scroll.css).
 
-// Each part's share of the arrival, as [from, to] of the overall progress.
-// They overlap so the eye is handed down the section: sentence, year, pushes,
-// records, then the hours and the commits side by side.
-const FIGURES = [0.12, 0.5];
-const WEEKS = [0.3, 0.95];
-const PUSHES = [0.7, 0.95];
-const RECORDS = [0.8, 0.9];
-const HOURS = [0.7, 1];
-const COMMITS = [0.85, 1];
+import { motionMs } from './motion-tokens.js';
 
+// The line sits this share of the screen's height above its bottom edge.
+const LINE_MARGIN = 0.15;
+// Between two weeks of the year. Faster than any token: all 53 of them are to
+// pass in about two thirds of a second.
+const WEEK_GAP_MS = 12;
 const DAYS_PER_WEEK = 7;
 
+/** How much of a box `height` tall, with its top at `top`, lies above `line`: 0..1. */
+export function shareAbove(top, height, line) {
+    if (height <= 0) return 0;
+    return Math.min(1, Math.max(0, (line - top) / height));
+}
+
 /**
- * Returns `light(share)`: lights the leading `share` (0..1) of `groups`, each
- * a list of elements, touching only the groups whose state changes.
+ * Returns `light(share)`: sets the leading `share` (0..1) of `groups`, each a
+ * list of elements, as how many are to be lit. They follow one group every
+ * `gap` ms, the first at once.
  */
-function createLighter(groups) {
+function createLighter(groups, gap) {
     let lit = 0;
+    let aim = 0;
+    let waiting = 0;
+
+    const step = () => {
+        waiting = 0;
+        if (lit === aim) return;
+        const lighting = aim > lit;
+        groups[lighting ? lit : lit - 1].forEach((el) => el.classList.toggle('is-lit', lighting));
+        lit += lighting ? 1 : -1;
+        if (lit !== aim) waiting = setTimeout(step, gap);
+    };
+
     return (share) => {
-        const next = Math.round(share * groups.length);
-        for (let i = Math.min(lit, next); i < Math.max(lit, next); i += 1) {
-            groups[i].forEach((el) => el.classList.toggle('is-lit', i < next));
-        }
-        lit = next;
+        aim = Math.round(share * groups.length);
+        if (!waiting) step();
     };
 }
 
-/** Where `progress` falls inside `[from, to]`, as 0..1. */
-const within = (progress, [from, to]) => Math.min(1, Math.max(0, (progress - from) / (to - from)));
+/**
+ * Wraps every word under `el`, with the space after it, in a span of its own
+ * and returns the spans in reading order. The space goes in with the word so
+ * that an underlined run never shows its underline between words not yet in.
+ */
+function splitWords(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const texts = [];
+    while (walker.nextNode()) texts.push(walker.currentNode);
+
+    return texts.flatMap((text) => {
+        const words = (text.textContent.match(/\s*\S+\s*/g) ?? []).map((word) => (
+            Object.assign(document.createElement('span'), { className: 'grind__word', textContent: word })
+        ));
+        if (words.length) text.replaceWith(...words);
+        return words;
+    });
+}
 
 /**
- * Unlights the rendered section and returns `arrive(progress)`, which lights
- * it back up to `progress` (0..1). Call it once the section has its data.
+ * Unlights the rendered section and lights it back as its parts come up the
+ * screen. Call it once the section has its data.
  */
 export function stageGrind(section) {
     // The grid fills column by column, so every seven cells are one week.
@@ -46,22 +81,44 @@ export function stageGrind(section) {
         cell.style.setProperty('--row', String(i % DAYS_PER_WEEK));
         (weeks[Math.floor(i / DAYS_PER_WEEK)] ??= []).push(cell);
     });
+    const records = section.querySelector('.grind__records');
     const singly = (selector) => Array.from(section.querySelectorAll(selector), (el) => [el]);
+    const line = motionMs('--stagger-stagger');
 
+    // Each part: the box whose passage up the screen lights it, its pieces in
+    // order, and the beat between two of them.
     const parts = [
-        [createLighter(singly('.grind__sentence strong')), FIGURES],
-        [createLighter(weeks), WEEKS],
-        [createLighter(singly('.pushes__list li')), PUSHES],
-        [createLighter(singly('.grind__records')), RECORDS],
-        [createLighter(singly('.dial__bar')), HOURS],
-        [createLighter(singly('.commits__list li')), COMMITS],
-    ];
+        ['.grind__sentence', singly('.grind__sentence strong'), motionMs('--duration-micro')],
+        ['.heatmap', weeks, WEEK_GAP_MS],
+        ['.grind__records', records ? splitWords(records).map((word) => [word]) : [], motionMs('--stream-gap')],
+        ['.pushes__list', singly('.pushes__list li'), line],
+        ['.commits__list', singly('.commits__list li'), line],
+        ['.dial__face', singly('.dial__bar'), line],
+    ]
+        .filter(([, groups]) => groups.length)
+        .map(([over, groups, gap]) => ({ over: section.querySelector(over), light: createLighter(groups, gap) }));
     section.classList.add('is-staged');
 
-    return (progress) => {
+    const watch = () => {
+        const screen = window.innerHeight;
+        // At the end of the page nothing can come any higher: the line drops
+        // to the bottom edge with what is left to scroll, so the last parts
+        // light too.
+        const left = document.documentElement.scrollHeight - screen - window.scrollY;
+        const mark = screen - Math.min(screen * LINE_MARGIN, Math.max(0, left));
+        // Every box is read before anything is lit, so no part is measured
+        // against styles another has just changed.
+        const shares = parts.map(({ over }) => {
+            const box = over.getBoundingClientRect();
+            return shareAbove(box.top, box.height, mark);
+        });
         // The transitions come on with the first step of the arrival, never
         // with the staging itself (works-scroll.css).
-        if (progress > 0) section.classList.add('is-arriving');
-        parts.forEach(([light, range]) => light(within(progress, range)));
+        if (shares.some((share) => share > 0)) section.classList.add('is-arriving');
+        parts.forEach(({ light }, i) => light(shares[i]));
     };
+
+    window.addEventListener('scroll', watch, { passive: true });
+    window.addEventListener('resize', watch);
+    watch();
 }

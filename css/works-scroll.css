@@ -82,7 +82,7 @@
 
 /* ── the grind's arrival (grind-reveal.js) ──
    Each part starts unlit (.is-staged) and JS marks its pieces .is-lit in
-   order as the section comes up the screen; these transitions are all the
+   order as the part comes up the screen; these transitions are all the
    motion there is, so scrolling back simply unlights them. They wait for the
    arrival to begin (.is-arriving): on from the start, they would play the
    whole section going dark, off screen, while the page is still coming in. */
@@ -121,12 +121,23 @@
     stroke-dashoffset: 1;
 }
 
-/* Whatever steps in whole: a push, the records, a commit. */
-.grind.is-arriving :is(.pushes__list li, .grind__records, .commits__list li) {
+/* Whatever steps in whole: a push, a commit. */
+.grind.is-arriving :is(.pushes__list li, .commits__list li) {
     transition: opacity var(--stagger-dur) var(--stagger-ease), transform var(--stagger-dur) var(--stagger-ease);
 }
 
-.grind.is-staged :is(.pushes__list li, .grind__records, .commits__list li):not(.is-lit) {
+.grind.is-staged :is(.pushes__list li, .commits__list li):not(.is-lit) {
     opacity: 0;
     transform: translateY(var(--stagger-distance));
+}
+
+/* The records resolve word by word, each out of a slight blur. The words stay
+   inline, so a record's underline runs on through them. */
+.grind.is-arriving .grind__word {
+    transition: opacity var(--stream-fade) var(--stream-ease), filter var(--stream-fade) var(--stream-ease);
+}
+
+.grind.is-staged .grind__word:not(.is-lit) {
+    opacity: 0;
+    filter: blur(var(--stream-blur));
 }
