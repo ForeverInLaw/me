@@ -1,17 +1,26 @@
 /* Hover window over the playlist row (playlist-peek.js). It lives on <body>,
-   outside the bio column, whose own scrolling would clip it. */
+   outside the bio column, whose own scrolling would clip it. The outer box
+   moves and casts the shadow, drawn around whatever the card's clip leaves
+   while it opens out of the tile. */
 .playlist-peek {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9998;
     width: 248px; /* WIDTH in playlist-peek.js */
-    padding: 8px 8px 12px;
-    border-radius: var(--radius-lg);
-    background: var(--raised);
     pointer-events: none;
     filter: drop-shadow(0 22px 28px rgb(0 0 0 / 0.5)) drop-shadow(0 4px 8px rgb(0 0 0 / 0.35));
     will-change: transform, opacity;
+}
+
+.playlist-peek__card {
+    padding: 8px 8px 12px;
+    border-radius: var(--radius-lg);
+    background: var(--raised);
+}
+
+.playlist-peek__body {
+    padding: 0 6px;
 }
 
 .playlist-peek__cover {
@@ -24,7 +33,7 @@
 }
 
 .playlist-peek__name {
-    margin: 12px 6px 0;
+    margin-top: 12px;
     font-size: 15px;
     font-weight: 700;
     line-height: 1.25;
@@ -33,7 +42,7 @@
 
 .playlist-peek__desc {
     display: -webkit-box;
-    margin: 4px 6px 0;
+    margin-top: 4px;
     overflow: hidden;
     color: var(--muted);
     font-size: 13px;
@@ -49,7 +58,7 @@
 }
 
 .playlist-peek__meta {
-    margin: 8px 6px 0;
+    margin-top: 8px;
     color: var(--spotify);
     font-size: 12px;
     font-weight: 600;
@@ -58,8 +67,22 @@
 
 /* With the window open, the row steps back so the hovered tile leads; the
    tile no longer tips, since the card growing out of it is the response. */
+.playlists.has-peek .playlist {
+    display: block;
+    border-radius: var(--radius-sm);
+}
+
 .playlists.has-peek .playlist img {
     transition: opacity 200ms var(--ease-out);
+}
+
+/* Its cover is out in the card: the tile is left as an empty socket. */
+.playlists.has-peek .playlist.is-lifted {
+    background: var(--raised);
+}
+
+.playlists.has-peek .playlist.is-lifted img {
+    visibility: hidden;
 }
 
 .playlists.has-peek:hover .playlist img {

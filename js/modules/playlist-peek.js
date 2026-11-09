@@ -1,16 +1,21 @@
 /* global gsap -- loaded as a classic script before the modules (index.html). */
-// Hover window for the playlist row: the hovered cover grows out of its tile
-// into a card above the row with the playlist's name, description and size.
-// Moving along the row slides the open card to the next tile. Pointer and
-// keyboard only; on touch the tiles stay plain links.
+// Hover window for the playlist row. The hovered cover lifts out of its tile
+// and opens into a card above the row: the first frame is the tile itself,
+// then the frame widens around the cover into the card while the name,
+// description and size settle in. Leaving folds it back into the tile. Moving
+// along the row slides the open card to the next tile. Pointer and keyboard
+// only; on touch the tiles stay plain links.
 
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 import { safeUrl } from './remote.js';
 
-const WIDTH = 248;  // css/playlist-peek.css sets the same width
-const INSET = 8;    // card padding around the cover
-const GAP = 12;     // between the card and the row
-const EDGE = 12;    // keep-out from the viewport edges
+const WIDTH = 248;        // css/playlist-peek.css sets the same width
+const INSET = 8;          // card padding around the cover
+const COVER = WIDTH - INSET * 2;
+const CARD_RADIUS = 16;   // --radius-lg
+const GAP = 12;           // between the card and the row
+const EDGE = 12;          // keep-out from the viewport edges
+const FULL_CLIP = `inset(0px 0px 0px 0px round ${CARD_RADIUS}px)`;
 
 const el = (tag, className) => Object.assign(document.createElement(tag), { className });
 
@@ -18,26 +23,39 @@ const el = (tag, className) => Object.assign(document.createElement(tag), { clas
 // reads them without running anything, and textContent keeps only the words.
 const plainText = (html) => new DOMParser().parseFromString(html, 'text/html').documentElement.textContent.trim();
 
-function createCard() {
-    const card = el('div', 'playlist-peek');
-    card.setAttribute('aria-hidden', 'true');
+/**
+ * Clips the card down to its cover. Corners are given in screen pixels and
+ * divided by `scale`, so at the tile's size they match the tile's own.
+ */
+const coverClip = (height, scale, radius) =>
+    `inset(${INSET}px ${INSET}px ${height - INSET - COVER}px ${INSET}px round ${radius / scale}px)`;
+
+// The outer element moves and carries the shadow; the inner card is clipped,
+// since a clip on the shadow's own element would cut the shadow off with it.
+function createPeek() {
+    const peek = el('div', 'playlist-peek');
+    peek.setAttribute('aria-hidden', 'true');
+    const card = el('div', 'playlist-peek__card');
     const cover = el('img', 'playlist-peek__cover');
     cover.alt = '';
     cover.decoding = 'async';
+    const body = el('div', 'playlist-peek__body');
     const name = el('p', 'playlist-peek__name');
     const desc = el('p', 'playlist-peek__desc');
     const meta = el('p', 'playlist-peek__meta');
-    card.append(cover, name, desc, meta);
-    document.body.append(card);
-    return { card, cover, name, desc, meta };
+    body.append(name, desc, meta);
+    card.append(cover, body);
+    peek.append(card);
+    document.body.append(peek);
+    return { peek, card, body, cover, name, desc, meta };
 }
 
 /**
  * Where the card rests for `tile`: centred over it but kept within the row's
  * edges, above the row, or below it when there is no room above.
  */
-function restFor(tile, row, card) {
-    const height = card.offsetHeight;
+function restFor(tile, row, peek) {
+    const height = peek.offsetHeight;
     const left = Math.max(EDGE, row.left);
     const right = Math.min(window.innerWidth - EDGE, row.right);
     const x = gsap.utils.clamp(left, Math.max(left, right - WIDTH), tile.left + tile.width / 2 - WIDTH / 2);
@@ -47,8 +65,68 @@ function restFor(tile, row, card) {
 
 /** The transform that lays the card's cover exactly over `tile`. */
 function overTile(tile) {
-    const scale = tile.width / (WIDTH - INSET * 2);
+    const scale = tile.width / COVER;
     return { x: tile.left - INSET * scale, y: tile.top - INSET * scale, scale };
+}
+
+/** Reduced motion: the card just fades in and out where it rests. */
+function createCalmMotion({ peek, card, body }) {
+    const stop = () => gsap.killTweensOf(peek);
+    return {
+        grow(tile, rest) {
+            stop();
+            gsap.set(peek, { ...rest, scale: 1 });
+            gsap.set(card, { clipPath: FULL_CLIP });
+            gsap.set(body, { autoAlpha: 1, y: 0 });
+            gsap.to(peek, { autoAlpha: 1, duration: 0.15 });
+        },
+        slide(rest) {
+            stop();
+            gsap.set(peek, { ...rest, autoAlpha: 1 });
+        },
+        shrink(tile, radius, done) {
+            stop();
+            gsap.to(peek, { autoAlpha: 0, duration: 0.12, onComplete: done });
+        }
+    };
+}
+
+/** The three moves: open out of a tile, slide to another, fold back into one. */
+function createMotion({ peek, card, body }) {
+    const OPEN = { duration: 0.6, ease: 'expo.out' };
+    const FOLD = { duration: 0.34, ease: 'power3.inOut' };
+    const stop = () => gsap.killTweensOf([peek, card, body]);
+    return {
+        grow(tile, rest, radius) {
+            stop();
+            const from = overTile(tile);
+            gsap.set(peek, { autoAlpha: 1 });
+            gsap.fromTo(peek, from, { ...rest, scale: 1, ...OPEN });
+            gsap.fromTo(card, { clipPath: coverClip(card.offsetHeight, from.scale, radius) }, { clipPath: FULL_CLIP, ...OPEN });
+            gsap.fromTo(body, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.35, delay: 0.16, ease: 'power2.out' });
+        },
+        slide(rest) {
+            stop();
+            gsap.set(peek, { autoAlpha: 1 });
+            gsap.to(peek, { ...rest, scale: 1, duration: 0.45, ease: 'expo.out' });
+            gsap.to(card, { clipPath: FULL_CLIP, duration: 0.3, ease: 'power2.out' });
+            gsap.fromTo(body, { autoAlpha: 0 }, { autoAlpha: 1, y: 0, duration: 0.25, ease: 'power2.out' });
+        },
+        shrink(tile, radius, done) {
+            stop();
+            const to = overTile(tile);
+            gsap.to(body, { autoAlpha: 0, duration: 0.12 });
+            gsap.to(card, { clipPath: coverClip(card.offsetHeight, to.scale, radius), ...FOLD });
+            gsap.to(peek, {
+                ...to,
+                ...FOLD,
+                onComplete: () => {
+                    gsap.set(peek, { autoAlpha: 0 });
+                    done();
+                }
+            });
+        }
+    };
 }
 
 /** Wires the window to the `.playlist` links rendered from `playlists`. */
@@ -56,13 +134,15 @@ export function attachPlaylistPeek(container, playlists) {
     if (!canHoverPreview()) return;
 
     const calm = prefersReducedMotion();
-    const parts = createCard();
-    const { card } = parts;
+    const parts = createPeek();
+    const motion = calm ? createCalmMotion(parts) : createMotion(parts);
     const links = Array.from(container.querySelectorAll('.playlist'));
     const tileRect = (index) => links[index].closest('li').getBoundingClientRect();
+    const radius = parseFloat(getComputedStyle(links[0].querySelector('img')).borderTopLeftRadius) || 0;
     let current = null;
+    let lifted = null;
 
-    gsap.set(card, { transformOrigin: '0 0', autoAlpha: 0 });
+    gsap.set(parts.peek, { transformOrigin: '0 0', autoAlpha: 0 });
 
     const fill = (playlist) => {
         parts.cover.src = safeUrl(playlist.image);
@@ -71,39 +151,31 @@ export function attachPlaylistPeek(container, playlists) {
         parts.meta.textContent = `${playlist.tracks} tracks`;
     };
 
+    // The tile whose cover is out in the card shows an empty socket.
+    const lift = (index) => {
+        links[lifted]?.classList.remove('is-lifted');
+        lifted = index;
+        links[index]?.classList.add('is-lifted');
+    };
+
     const show = (index) => {
         if (index === current) return;
-        // Still on screen, even halfway out, counts as open: slide, don't regrow.
-        const open = gsap.getProperty(card, 'opacity') > 0;
+        // Still on screen, even halfway folded, counts as open: slide, don't regrow.
+        const open = gsap.getProperty(parts.peek, 'opacity') > 0;
         current = index;
         fill(playlists[index]);
         const tile = tileRect(index);
-        const rest = restFor(tile, container.getBoundingClientRect(), card);
-
-        gsap.killTweensOf(card);
-        if (calm) {
-            gsap.set(card, { ...rest, scale: 1 });
-            gsap.to(card, { autoAlpha: 1, duration: 0.15 });
-        } else if (open) {
-            gsap.to(card, { ...rest, scale: 1, autoAlpha: 1, duration: 0.45, ease: 'expo.out' });
-        } else {
-            gsap.fromTo(card, overTile(tile), { ...rest, scale: 1, duration: 0.55, ease: 'expo.out' });
-            gsap.fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12, ease: 'none' });
-        }
+        const rest = restFor(tile, container.getBoundingClientRect(), parts.peek);
+        if (open) motion.slide(rest);
+        else motion.grow(tile, rest, radius);
+        if (!calm) lift(index);
     };
 
-    // Shrinks back into the tile it came from.
     const hide = () => {
         if (current === null) return;
-        const tile = tileRect(current);
+        const index = current;
         current = null;
-        gsap.killTweensOf(card);
-        if (calm) {
-            gsap.to(card, { autoAlpha: 0, duration: 0.12 });
-            return;
-        }
-        gsap.to(card, { ...overTile(tile), duration: 0.3, ease: 'power3.in' });
-        gsap.to(card, { autoAlpha: 0, duration: 0.12, delay: 0.18, ease: 'none' });
+        motion.shrink(tileRect(index), radius, () => lift(null));
     };
 
     links.forEach((link, index) => {
