@@ -507,6 +507,45 @@
     }
 }
 
+/* The way to the rest of the works on a phone (works-more.js): a last row of
+   the list, ruled like the others. Hidden everywhere else. */
+.works__more {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 60px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: none;
+    color: var(--fg);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.works__more::after {
+    content: "+";
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* A phone opens on the projects that have a picture; the others wait behind
+   the button. Never beside the desktop stage, which lists every project. */
+@media (max-width: 768px) {
+    .projects.is-short:not(.has-stage) .project-list > .is-extra {
+        display: none;
+    }
+
+    .projects.is-short:not(.has-stage) .works__more:not([hidden]) {
+        display: flex;
+    }
+}
+
 /* Touch screens never get the desktop stage, so each card carries its own
    shot, opening once as it scrolls into view (see works-reel.js). */
 @media (max-width: 768px) and (hover: none) {
