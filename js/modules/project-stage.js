@@ -2,17 +2,25 @@
 // Desktop stage beside the works list. Hovering or focusing a row puts that
 // project on the stage: its screenshot wipes in (shot-stack.js) inside one
 // fixed frame, fitted whole, with a blurred glow of itself filling the margins;
-// a project without a screenshot shows its name there instead. The list stays
-// the content - the stage only repeats it - so it is hidden from assistive tech
-// and left out of the tab order. Touch screens never get it; works-reel.js
-// shows their screenshots inline instead.
+// a project without a screenshot shows its name there instead.
+//
+// A pointer running down the list is only passing through, so the stage skims
+// instead of following: the frame wears each passing row's name over a wash of
+// its glow, the text below goes out of focus, and nothing loads or wipes. Once
+// the pointer stays on a row, that project comes into focus.
+//
+// The list stays the content - the stage only repeats it - so it is hidden
+// from assistive tech and left out of the tab order. Touch screens never get
+// it; works-reel.js shows their screenshots inline instead.
 
 import { projectCards, readProjectCard } from './project-card.js';
 import { canHoverPreview, prefersReducedMotion } from './viewport.js';
 import { createShotStack } from './shot-stack.js';
+import { watchRowIntent } from './row-intent.js';
 
 const SWAP_IN = { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', overwrite: true, lazy: false };
 const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
+const SKIM_BLUR = { autoAlpha: 0.3, filter: 'blur(3px)', duration: 0.2, ease: 'sine.out', overwrite: true };
 
 const glows = new Map();
 
@@ -34,6 +42,19 @@ function glowFor(src) {
         }).catch(() => ''));
     }
     return glows.get(src);
+}
+
+/**
+ * Puts the glow for `src` behind `el`, or clears it for no `src`. A glow that
+ * arrives after `el` was dressed for another image is dropped.
+ */
+function setGlow(el, src) {
+    el.dataset.glow = src;
+    el.style.backgroundImage = '';
+    if (!src) return;
+    glowFor(src).then((url) => {
+        if (url && el.dataset.glow === src) el.style.backgroundImage = `url(${url})`;
+    });
 }
 
 /**
@@ -62,25 +83,32 @@ function statusLine({ status, when, href, domain }) {
     return [dot, year, Object.assign(document.createElement('span'), { className: 'project-stage__domain', textContent: `${domain} ↗` })];
 }
 
-export function initProjectStage() {
-    const stage = document.getElementById('project-stage');
-    const cards = Array.from(projectCards());
-    if (!stage || !cards.length || !canHoverPreview()) return;
+/** Writes `project` into the stage's link and the text block under its frame. */
+function writeInfo(stage, info, project) {
+    if (project.href) stage.href = project.href;
+    else stage.removeAttribute('href');
+    info.querySelector('.project-stage__title').textContent = project.title;
+    info.querySelector('.project-stage__desc').textContent = project.description;
+    info.querySelector('.project-tags').replaceChildren(...tagChips(project.tags));
+    info.querySelector('.project-stage__meta').replaceChildren(...statusLine(project));
+}
 
-    const calm = prefersReducedMotion();
-    const section = stage.closest('.projects');
+/**
+ * The stage for `cards`: `show(index)` puts a project on it, `skim(index)`
+ * runs the frame ahead to a row without putting it on, and `rest()` drops a
+ * skim, back to the project on show.
+ */
+function createStage(stage, cards, calm) {
     const poster = stage.querySelector('.project-stage__poster');
     const posterName = poster.firstElementChild;
     const info = stage.querySelector('.project-stage__info');
-    const title = info.querySelector('.project-stage__title');
-    const desc = info.querySelector('.project-stage__desc');
-    const tags = info.querySelector('.project-tags');
-    const meta = info.querySelector('.project-stage__meta');
     const projects = cards.map((card) => readProjectCard(card));
 
     projects.forEach((p) => p.screenshot && glowFor(p.screenshot));
-    let current = -1;
+    let current = -1; // the project on the stage
+    let aimed = -1; // the row under the pointer or focus, which a skim runs ahead with
     let showingShot = false;
+    let skimming = false;
 
     const shots = createShotStack(stage.querySelector('.project-stage__shots'), {
         calm,
@@ -93,47 +121,81 @@ export function initProjectStage() {
         },
         // Each layer carries its own glow, so a wipe never shows the previous
         // shot through the margins of the next.
-        onPaint: (img, src) => {
-            img.style.backgroundImage = '';
-            glowFor(src).then((url) => {
-                if (url && img.getAttribute('src') === src) img.style.backgroundImage = `url(${url})`;
-            });
-        }
+        onPaint: setGlow
     });
 
-    const show = (index) => {
-        if (index === current) return;
-        const direction = index > current ? 1 : -1;
-        cards[current]?.classList.remove('is-current');
+    const aim = (index) => {
+        cards[aimed]?.classList.remove('is-current');
         cards[index].classList.add('is-current');
-        current = index;
+        aimed = index;
+    };
+
+    const dressPoster = ({ title, screenshot }) => {
+        fitPosterName(poster, posterName, title);
+        setGlow(poster, screenshot);
+    };
+
+    /** Puts project `index` on the stage, ending any skim. */
+    const show = (index) => {
+        const fromSkim = skimming;
+        skimming = false;
+        stage.classList.remove('is-skimming');
+        aim(index);
         const project = projects[index];
 
+        if (index === current) {
+            // A skim that came back to where it started: nothing to swap.
+            if (fromSkim) {
+                dressPoster(project);
+                gsap.to(info, SWAP_IN);
+            }
+            return;
+        }
+        const direction = index > current ? 1 : -1;
+        current = index;
+
         if (project.screenshot) {
-            if (showingShot) shots.wipeTo(project.screenshot, '', direction);
+            // Out of a skim the frame already wears this project's glow, so
+            // the shot comes into focus under it rather than wiping across.
+            if (showingShot && !fromSkim) shots.wipeTo(project.screenshot, '', direction);
             else shots.reveal(project.screenshot, '');
-        } else {
+        } else if (!fromSkim) {
             // Only a poster project renames the poster: leaving one, it fades
             // out as it was rather than flashing the next name over its shot.
-            fitPosterName(poster, posterName, project.title);
+            dressPoster(project);
             if (!calm) gsap.fromTo(posterName, SWAP_FROM, SWAP_IN);
         }
         showingShot = Boolean(project.screenshot);
         stage.classList.toggle('has-shot', showingShot);
 
-        if (project.href) stage.href = project.href;
-        else stage.removeAttribute('href');
-        title.textContent = project.title;
-        desc.textContent = project.description;
-        tags.replaceChildren(...tagChips(project.tags));
-        meta.replaceChildren(...statusLine(project));
-        if (!calm) gsap.fromTo(info, SWAP_FROM, SWAP_IN);
+        writeInfo(stage, info, project);
+        // Calm, the text only has a skim's blur to come back from.
+        if (calm) gsap.to(info, SWAP_IN);
+        else gsap.fromTo(info, SWAP_FROM, SWAP_IN);
     };
 
-    cards.forEach((card, index) => {
-        card.addEventListener('pointerenter', () => show(index));
-        card.addEventListener('focus', () => show(index));
-    });
+    /** Runs the frame ahead to row `index` without putting it on the stage yet. */
+    const skim = (index) => {
+        aim(index);
+        dressPoster(projects[index]);
+        if (skimming) return;
+        skimming = true;
+        stage.classList.add('is-skimming');
+        gsap.to(info, SKIM_BLUR);
+    };
+
+    return { show, skim, rest: () => show(current) };
+}
+
+export function initProjectStage() {
+    const stage = document.getElementById('project-stage');
+    const cards = Array.from(projectCards());
+    if (!stage || !cards.length || !canHoverPreview()) return;
+
+    const section = stage.closest('.projects');
+    const { show, skim, rest } = createStage(stage, cards, prefersReducedMotion());
+    // A skim that runs off the list was never looking at anything.
+    watchRowIntent(cards, { area: section, onLook: show, onPass: skim, onAbandon: rest });
 
     stage.hidden = false;
     section.classList.add('has-stage');

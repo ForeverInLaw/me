@@ -113,9 +113,12 @@
     container-type: inline-size;
 }
 
+/* Isolated, so the z-order the layers trade among themselves (shot-stack.js)
+   never lifts one above the poster. */
 .project-stage__shots {
     position: absolute;
     inset: 0;
+    isolation: isolate;
     transition: opacity 250ms var(--ease-out);
 }
 
@@ -160,8 +163,9 @@
     line-height: 0.9;
     letter-spacing: -0.03em;
     text-wrap: balance;
+    background: var(--panel) center / cover no-repeat;
     opacity: 0;
-    transition: opacity 250ms var(--ease-out);
+    transition: opacity 250ms var(--ease-out), color 250ms var(--ease-out);
 }
 
 .project-stage__poster span {
@@ -176,6 +180,15 @@
 .project-stage:not(.has-shot) .project-stage__poster,
 .project-stage[data-state="error"] .project-stage__poster {
     opacity: 1;
+}
+
+/* Skimming: the pointer is running down the index, so the poster covers the
+   frame with the passing row's name over a wash of its screenshot's glow (set
+   from JS). It arrives faster than it leaves, to be there while rows fly by. */
+.project-stage.is-skimming .project-stage__poster {
+    color: var(--fg);
+    opacity: 1;
+    transition-duration: 120ms;
 }
 
 .project-stage__info {
