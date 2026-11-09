@@ -66,6 +66,7 @@
     --stagger-ease: var(--ease-smooth-out);
     /* Loaded content taking a placeholder's place. */
     --reveal-dur: var(--duration-slow);
+    --reveal-blur: var(--blur-small);
     --reveal-ease: var(--ease-in-out);
     /* A dot popping onto what it marks, and leaving it quicker. */
     --badge-pop-dur: var(--duration-very-slow);

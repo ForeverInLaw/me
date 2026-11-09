@@ -1,3 +1,4 @@
+import { initAvatar } from './modules/avatar.js';
 import { initProjectStage } from './modules/project-stage.js';
 import { initWorksReel } from './modules/works-reel.js';
 import { initWorksMore } from './modules/works-more.js';
@@ -9,6 +10,7 @@ import { initLocalTime } from './modules/local-time.js';
 import { initWorksScroll } from './modules/works-scroll.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initAvatar();
     initProjectStage();
     initWorksReel();
     initWorksMore();

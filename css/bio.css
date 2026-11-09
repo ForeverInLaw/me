@@ -28,10 +28,25 @@
 }
 
 .who__avatar {
+    flex: none;
     width: 64px;
     height: 64px;
     border-radius: 50%;
     background: var(--raised);
+    overflow: hidden;
+}
+
+/* The picture is GitHub's to serve. It stays out until it has decoded
+   (avatar.js), then comes into focus over the circle that held its place. */
+.who__avatar img {
+    transition:
+        opacity var(--reveal-dur) var(--reveal-ease),
+        filter var(--reveal-dur) var(--reveal-ease);
+}
+
+.js .who__avatar img:not(.is-loaded) {
+    opacity: 0;
+    filter: blur(var(--reveal-blur));
 }
 
 .who__meta {
