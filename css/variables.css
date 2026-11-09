@@ -37,6 +37,7 @@
     --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-in-out: ease-in-out;
     --ease-out: ease-out;
+    --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
     --distance-micro: 4px;
     --distance-medium: 12px;
     --blur-small: 2px;
@@ -62,6 +63,14 @@
     /* Loaded content taking a placeholder's place. */
     --reveal-dur: var(--duration-slow);
     --reveal-ease: var(--ease-in-out);
+    /* A dot popping onto what it marks, and leaving it quicker. */
+    --badge-pop-dur: var(--duration-very-slow);
+    --badge-pop-close-dur: 180ms;
+    --badge-fade-dur: var(--duration-slow);
+    --badge-fade-close-dur: 180ms;
+    --badge-blur: var(--blur-small);
+    --badge-pop-ease: var(--ease-bounce);
+    --badge-close-ease: cubic-bezier(0.4, 0, 0.2, 1);
     /* Tooltips come in quickly and leave at once. */
     --tt-in-dur: var(--duration-quick);
     --tt-out-dur: 50ms;

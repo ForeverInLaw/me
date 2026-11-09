@@ -212,7 +212,8 @@
     fill: #000;
 }
 
-/* Only rendered while Spotify reports isPlaying, so the pulse is real. */
+/* Only shown while Spotify reports isPlaying, so the pulse is real. It pops in
+   when the music starts and shrinks away, quicker, when it stops. */
 .np-card__pulse {
     position: absolute;
     top: 5px;
@@ -221,6 +222,20 @@
     height: 8px;
     border-radius: 50%;
     background: var(--spotify);
+    transition:
+        transform var(--badge-pop-dur) var(--badge-pop-ease),
+        opacity var(--badge-fade-dur) var(--badge-pop-ease),
+        filter var(--badge-pop-dur) var(--badge-pop-ease);
+}
+
+.np-card.is-stale .np-card__pulse {
+    transform: scale(0);
+    opacity: 0;
+    filter: blur(var(--badge-blur));
+    transition:
+        transform var(--badge-pop-close-dur) var(--badge-close-ease),
+        opacity var(--badge-fade-close-dur) var(--badge-close-ease),
+        filter var(--badge-pop-close-dur) var(--badge-close-ease);
 }
 
 /* The ring is a copy of the dot that grows and fades: transform and opacity
@@ -239,8 +254,8 @@
     70%, to { opacity: 0; transform: scale(3); }
 }
 
-.np-card.is-stale .np-card__pulse {
-    display: none;
+.np-card.is-stale .np-card__pulse::after {
+    animation: none;
 }
 
 .np-card__info {
@@ -286,6 +301,7 @@
     background: var(--spotify);
     transform: scaleX(0);
     transform-origin: left;
+    transition: background-color 200ms var(--ease-smooth-out);
 }
 
 .np-card.is-stale .np-card__bar {
