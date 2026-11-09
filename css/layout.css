@@ -7,11 +7,18 @@
     min-height: 100dvh;
 }
 
-.bio {
+/* The column and the surface under it (.bio-glow, bio.css) share one cell, so
+   the column can scroll its own content over a surface that stays put. */
+.bio,
+.bio-glow {
+    grid-area: 1 / 1;
     position: sticky;
     top: 0;
     height: 100vh;
     height: 100dvh;
+}
+
+.bio {
     overflow-y: auto;
     scrollbar-width: none;
 }
@@ -43,9 +50,14 @@
         grid-template-columns: 1fr;
     }
 
-    .bio {
-        position: static;
+    /* Still positioned: the surface is as tall as the column and under it. */
+    .bio,
+    .bio-glow {
+        position: relative;
         height: auto;
+    }
+
+    .bio {
         overflow: visible;
     }
 

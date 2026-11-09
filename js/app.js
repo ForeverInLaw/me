@@ -1,3 +1,4 @@
+import { initBioGlow } from './modules/bio-glow.js';
 import { initAvatar } from './modules/avatar.js';
 import { initProjectStage } from './modules/project-stage.js';
 import { initWorksReel } from './modules/works-reel.js';
@@ -10,6 +11,7 @@ import { initLocalTime } from './modules/local-time.js';
 import { initWorksScroll } from './modules/works-scroll.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initBioGlow();
     initAvatar();
     initProjectStage();
     initWorksReel();

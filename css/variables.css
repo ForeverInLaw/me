@@ -25,6 +25,9 @@
     --radius-xl: 22px;
 
     --bio-width: clamp(340px, 30vw, 440px);
+    /* How much of the bio column's gradient shows over its panel. Any more
+       and the muted text falls under 4.5:1 on the gradient's lightest tone. */
+    --glow-opacity: 0.45;
 
     /* Motion: the transitions.dev scale, as far as this site uses it. A value
        is picked by what the motion is (a text swap, a reveal), never by which
