@@ -96,10 +96,12 @@
 
     /* ── the stage ── */
 
+    /* As tall as the index beside it: the picture and the words at the top,
+       the way out along the bottom. */
     .has-stage .project-stage {
-        position: sticky;
-        top: 32px;
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
     }
 
     .js .has-stage .project-stage {
@@ -208,7 +210,9 @@
 }
 
 .project-stage__info {
+    flex: 1;
     display: grid;
+    align-content: start;
     gap: 10px;
     padding: 22px 4px 0;
 }
@@ -222,7 +226,7 @@
     transition: color 200ms var(--ease-out);
 }
 
-.project-stage[href]:hover .project-stage__title {
+.project-stage[href]:hover :is(.project-stage__title, .project-stage__domain) {
     color: var(--accent);
 }
 
@@ -237,15 +241,43 @@
     margin-top: 0;
 }
 
-.project-stage__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 16px;
-    color: var(--muted);
-    font-size: 13px;
+/* The stage's last row: as tall as a row of the index (--rows of them share
+   the same height, set from JS) and ruled like one, so the two columns end
+   level. */
+.project-stage__foot {
+    flex: none;
+    display: grid;
+    align-content: center;
+    height: calc(100% / var(--rows));
+    min-height: 42px;
+    padding: 0 4px;
+    border-bottom: 1px solid var(--line);
+    /* The rule above sits where the index draws its own: under the row before. */
+    box-shadow: 0 -1px 0 var(--line);
 }
 
+.project-stage__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Where the project lives leads the row; status and year keep to the right. */
 .project-stage__domain {
-    margin-left: auto;
+    min-width: 0;
+    margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--fg);
+    font-size: 15px;
+    font-weight: 600;
+    transition: color 200ms var(--ease-out);
+}
+
+.project-stage:not([href]) .project-stage__domain {
+    color: inherit;
+    font-weight: 400;
 }

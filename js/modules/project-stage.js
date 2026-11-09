@@ -66,21 +66,22 @@ function fitPosterName(poster, name, text) {
 
 const tagChips = (tags) => tags.map((tag) => Object.assign(document.createElement('span'), { className: 'project-tag', textContent: tag }));
 
-function statusLine({ status, when, href, domain }) {
+/** The stage's bottom row: where the project lives, then its status and year. */
+function footLine({ status, when, href, domain }) {
+    const place = Object.assign(document.createElement('span'), { className: 'project-stage__domain', textContent: href ? `${domain} ↗` : domain });
     const dot = Object.assign(document.createElement('span'), { className: `status status--${status.kind}`, textContent: status.label });
     const year = Object.assign(document.createElement('span'), { textContent: when });
-    if (!href) return [dot, year];
-    return [dot, year, Object.assign(document.createElement('span'), { className: 'project-stage__domain', textContent: `${domain} ↗` })];
+    return [place, dot, year];
 }
 
-/** Writes `project` into the stage's link and the text block under its frame. */
-function writeInfo(stage, info, project) {
+/** Writes `project` into the stage's link, the text under its frame and its bottom row. */
+function writeInfo(stage, project) {
     if (project.href) stage.href = project.href;
     else stage.removeAttribute('href');
-    info.querySelector('.project-stage__title').textContent = project.title;
-    info.querySelector('.project-stage__desc').textContent = project.description;
-    info.querySelector('.project-tags').replaceChildren(...tagChips(project.tags));
-    info.querySelector('.project-stage__meta').replaceChildren(...statusLine(project));
+    stage.querySelector('.project-stage__title').textContent = project.title;
+    stage.querySelector('.project-stage__desc').textContent = project.description;
+    stage.querySelector('.project-tags').replaceChildren(...tagChips(project.tags));
+    stage.querySelector('.project-stage__meta').replaceChildren(...footLine(project));
 }
 
 /**
@@ -91,7 +92,8 @@ function writeInfo(stage, info, project) {
 function createStage(stage, cards, calm) {
     const poster = stage.querySelector('.project-stage__poster');
     const posterName = poster.firstElementChild;
-    const info = stage.querySelector('.project-stage__info');
+    // Everything that is words: it swaps and goes out of focus as one.
+    const text = stage.querySelectorAll('.project-stage__info, .project-stage__meta');
     const projects = cards.map((card) => readProjectCard(card));
 
     projects.forEach((p) => p.screenshot && glowFor(p.screenshot));
@@ -132,7 +134,7 @@ function createStage(stage, cards, calm) {
 
         if (index === current) {
             // A skim that came back to where it started: nothing to swap.
-            if (fromSkim) gsap.to(info, SWAP_IN);
+            if (fromSkim) gsap.to(text, SWAP_IN);
             return;
         }
         const direction = index > current ? 1 : -1;
@@ -151,10 +153,10 @@ function createStage(stage, cards, calm) {
         showingShot = Boolean(project.screenshot);
         stage.classList.toggle('has-shot', showingShot);
 
-        writeInfo(stage, info, project);
+        writeInfo(stage, project);
         // Calm, the text only has a skim's blur to come back from.
-        if (calm) gsap.to(info, SWAP_IN);
-        else gsap.fromTo(info, SWAP_FROM, SWAP_IN);
+        if (calm) gsap.to(text, SWAP_IN);
+        else gsap.fromTo(text, SWAP_FROM, SWAP_IN);
     };
 
     /** Marks row `index` as a run crosses it; the stage keeps what it has. */
@@ -162,7 +164,7 @@ function createStage(stage, cards, calm) {
         aim(index);
         if (stage.classList.contains('is-skimming')) return;
         stage.classList.add('is-skimming');
-        gsap.to(info, SKIM_BLUR);
+        gsap.to(text, SKIM_BLUR);
     };
 
     return { show, skim };
@@ -177,6 +179,8 @@ export function initProjectStage() {
     const { show, skim } = createStage(stage, cards, prefersReducedMotion());
     watchRowIntent(cards, { area: section, onLook: show, onPass: skim });
 
+    // The stage's bottom row takes the height of one of the index's rows.
+    stage.style.setProperty('--rows', String(cards.length));
     stage.hidden = false;
     section.classList.add('has-stage');
     show(0);
