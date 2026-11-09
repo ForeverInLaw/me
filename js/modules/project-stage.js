@@ -6,9 +6,9 @@
 //
 // A pointer running down the list is only passing through, so the stage does
 // not follow it row by row: it holds the project it has and drifts out of
-// focus the longer the run lasts, then wipes to the row the pointer rests on
-// as it sharpens again. A quick hop to a nearby row is over before the drift
-// shows.
+// focus the longer the run lasts, then wipes to the row the run ended on as
+// it sharpens again - the last row crossed, even when the pointer went on off
+// the list. A quick hop to a nearby row is over before the drift shows.
 //
 // The list stays the content - the stage only repeats it - so it is hidden
 // from assistive tech and left out of the tab order. Touch screens never get
@@ -86,7 +86,7 @@ function writeInfo(stage, info, project) {
 /**
  * The stage for `cards`: `show(index)` puts a project on it, `skim(index)`
  * marks a row the pointer is running over while the stage drifts out of
- * focus, and `rest()` drops a skim, back to the project on show.
+ * focus.
  */
 function createStage(stage, cards, calm) {
     const poster = stage.querySelector('.project-stage__poster');
@@ -165,7 +165,7 @@ function createStage(stage, cards, calm) {
         gsap.to(info, SKIM_BLUR);
     };
 
-    return { show, skim, rest: () => show(current) };
+    return { show, skim };
 }
 
 export function initProjectStage() {
@@ -174,9 +174,8 @@ export function initProjectStage() {
     if (!stage || !cards.length || !canHoverPreview()) return;
 
     const section = stage.closest('.projects');
-    const { show, skim, rest } = createStage(stage, cards, prefersReducedMotion());
-    // A skim that runs off the list was never looking at anything.
-    watchRowIntent(cards, { area: section, onLook: show, onPass: skim, onAbandon: rest });
+    const { show, skim } = createStage(stage, cards, prefersReducedMotion());
+    watchRowIntent(cards, { area: section, onLook: show, onPass: skim });
 
     stage.hidden = false;
     section.classList.add('has-stage');

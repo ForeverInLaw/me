@@ -17,40 +17,33 @@ const SETTLE_MS = 120;
  * running.
  *
  * - `onLook(index)`: the row was entered slowly, took focus, or is where a
- *   run came to rest.
+ *   run ended - the last row it crossed, whether the pointer stayed on it or
+ *   ran on off the rows.
  * - `onPass(index)`: a run is crossing the row.
- * - `onAbandon()`: a run left the rows without coming to rest on one.
  */
-export function watchRowIntent(rows, { area, onLook, onPass, onAbandon }) {
+export function watchRowIntent(rows, { area, onLook, onPass }) {
     const speedAt = createPointerSpeed();
     let running = false;
     let settleTimer = 0;
 
-    // Ends the run, if any, with `outcome`.
-    const rest = (outcome, index) => {
+    const look = (index) => {
         clearTimeout(settleTimer);
         running = false;
-        outcome(index);
-    };
-
-    const settleWith = (outcome, index) => {
-        clearTimeout(settleTimer);
-        settleTimer = setTimeout(rest, SETTLE_MS, outcome, index);
+        onLook(index);
     };
 
     area.addEventListener('pointermove', speedAt, { passive: true });
 
     rows.forEach((row, index) => {
-        // Once running, only staying on a row ends it: a pointer slowing as
-        // it crosses rows would otherwise flip between the two answers.
+        // Once running, only time ends it: a pointer slowing as it crosses
+        // rows would otherwise flip between the two answers.
         row.addEventListener('pointerenter', (event) => {
-            if (speedAt(event) <= RUN_SPEED && !running) return rest(onLook, index);
+            if (speedAt(event) <= RUN_SPEED && !running) return look(index);
             running = true;
-            settleWith(onLook, index);
+            clearTimeout(settleTimer);
+            settleTimer = setTimeout(look, SETTLE_MS, index);
             onPass(index);
         });
-        // Unless the next row picks the run up, it has left the rows.
-        row.addEventListener('pointerleave', () => running && settleWith(onAbandon));
-        row.addEventListener('focus', () => rest(onLook, index));
+        row.addEventListener('focus', () => look(index));
     });
 }
