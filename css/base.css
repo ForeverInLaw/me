@@ -78,8 +78,8 @@ ol {
 }
 
 /* ── transitions.dev primitives ──────────────────────────────────────────
-   Portable swaps used by the clock and the now-playing card. Tune via the
-   tokens in variables.css rather than editing the rules. */
+   Portable swaps used by the clock, the now-playing card and the captions.
+   Tune via the tokens in variables.css rather than editing the rules. */
 
 .t-text-swap {
     display: inline-block;
@@ -103,6 +103,38 @@ ol {
     filter: blur(var(--text-swap-blur));
     opacity: 0;
     transition: none;
+}
+
+/* softSwap (text-swap.js) puts the old content and the new in the element as
+   two layers. The old one is lifted out of the flow onto the new one's place,
+   so they cross-blur on the spot and the element keeps the new one's size. */
+.t-text-soft {
+    position: relative;
+}
+
+.t-text-soft-old,
+.t-text-soft-new {
+    white-space: pre;
+    transition:
+        filter var(--text-soft-dur) var(--text-soft-ease),
+        opacity var(--text-soft-dur) var(--text-soft-ease);
+}
+
+.t-text-soft-old {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.t-text-soft-new,
+.t-text-soft.is-swapping .t-text-soft-old {
+    opacity: 0;
+    filter: blur(var(--text-soft-blur));
+}
+
+.t-text-soft.is-swapping .t-text-soft-new {
+    opacity: 1;
+    filter: blur(0);
 }
 
 .t-icon-swap {

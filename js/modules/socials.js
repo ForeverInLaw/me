@@ -1,6 +1,9 @@
 // The places to find me: a row of icon tiles in the bio column. The tiles are
 // too small to carry their names, so the line under them reads the one being
-// hovered or focused - its name and the handle to look for there.
+// hovered or focused - its name and the handle to look for there. One reading
+// blurs into the next where it stands (softSwap).
+
+import { softSwap } from './text-swap.js';
 
 /** The address of the email tile, kept in pieces in the markup away from scrapers. */
 const addressOf = ({ user, host, tld }) => (user && host && tld ? `${user}@${host}.${tld}` : '');
@@ -20,8 +23,8 @@ export function initSocials() {
     if (!row || !caption) return;
 
     const links = Array.from(row.querySelectorAll('.social'));
-    const rest = () => { caption.textContent = `${links.length} places to find me`; };
-    const read = (link) => caption.replaceChildren(...describe(link));
+    const rest = () => softSwap(caption, `${links.length} places to find me`);
+    const read = (link) => softSwap(caption, ...describe(link));
 
     links.forEach((link) => {
         // A finger has no hover: its tap goes straight through and reads nothing.

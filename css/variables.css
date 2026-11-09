@@ -51,6 +51,9 @@
     --text-swap-translate-y: var(--distance-micro);
     --text-swap-blur: var(--blur-small);
     --text-swap-ease: var(--ease-in-out);
+    --text-soft-dur: 200ms;
+    --text-soft-blur: var(--blur-small);
+    --text-soft-ease: var(--ease-in-out);
     --icon-swap-dur: var(--duration-fast);
     --icon-swap-blur: var(--blur-small);
     --icon-swap-start-scale: 0.25;
