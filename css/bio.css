@@ -194,7 +194,7 @@
 .social__play,
 .social__lens,
 .social__flash,
-.social__wave {
+.social__ring {
     transform-box: fill-box;
     transform-origin: center;
 }
@@ -230,10 +230,7 @@
     stroke: none;
 }
 
-/* The three waves take turns, top to bottom: each has a third of the round
-   (--wave-round) to draw in and let out again, and waits out the rest. */
 .social__wave {
-    --turn: 0;
     fill: none;
     stroke: var(--social-bg);
     stroke-width: 2.1;
@@ -242,20 +239,34 @@
 }
 
 .social__wave:nth-of-type(2) {
-    --turn: 1;
     stroke-width: 1.8;
 }
 
 .social__wave:nth-of-type(3) {
-    --turn: 2;
     stroke-width: 1.5;
+}
+
+/* Sound leaving the Spotify mark: rings its own size, out of sight behind its
+   edge until they are sent out past it, the second half a round after the
+   first (--ring-round). */
+.social__ring {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+    opacity: 0;
+}
+
+.social__ring + .social__ring {
+    animation-delay: calc(var(--ring-round) / 2);
 }
 
 /* What each icon does when its tile is taken up. socials.js marks the tile
    (.is-waking) and lets the move play through, whether or not the pointer
    stays for it. Two are states instead: the envelope stands open for as long
-   as it is in hand, and the waves of Spotify keep time while a track is
-   playing - read off the card below, which is not stale then (spotify.js). */
+   as it is in hand, and the Spotify mark gives off sound for as long as a
+   track is playing - read off the card below, which is not stale then
+   (spotify.js). */
 @media (prefers-reduced-motion: no-preference) {
     .social__flap {
         transition: transform var(--duration-fast) var(--ease-smooth-out);
@@ -291,20 +302,18 @@
         animation: social-flash 460ms var(--ease-in-out) both;
     }
 
-    .social--spotify.is-waking .social__wave {
-        --wave-round: 1200ms;
-        animation-name: social-wave;
-        animation-duration: var(--wave-round);
-        animation-delay: calc(var(--turn) * var(--wave-round) / 3);
-        animation-timing-function: var(--ease-in-out);
+    .social--spotify.is-waking .social__ring {
+        --ring-round: 1000ms;
+        animation-name: social-ring;
+        animation-duration: var(--ring-round);
+        animation-timing-function: var(--ease-out);
     }
 
-    .bio:has(.np-card:not(.is-stale)) .social--spotify .social__wave {
-        --wave-round: 1500ms;
-        animation-name: social-wave;
-        animation-duration: var(--wave-round);
-        animation-delay: calc(var(--turn) * var(--wave-round) / 3);
-        animation-timing-function: var(--ease-in-out);
+    .bio:has(.np-card:not(.is-stale)) .social--spotify .social__ring {
+        --ring-round: 2400ms;
+        animation-name: social-ring;
+        animation-duration: var(--ring-round);
+        animation-timing-function: var(--ease-out);
         animation-iteration-count: infinite;
     }
 }
@@ -349,9 +358,17 @@
     30%, 45% { opacity: 0.15; }
 }
 
-@keyframes social-wave {
-    0%, 34%, 100% { transform: none; }
-    17% { transform: scaleX(0.4); }
+/* From the edge of the mark out toward the edge of the tile, fading on the way. */
+@keyframes social-ring {
+    0% {
+        transform: none;
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(2.3);
+        opacity: 0;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
