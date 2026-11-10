@@ -116,43 +116,241 @@
     gap: 8px;
 }
 
+/* A tile is its link and, inside it, the face: an <svg> the icon is drawn
+   into. The link keeps still as the thing to aim at while the face moves, so
+   a tile never slides out from under the pointer that moved it. */
 .social {
+    --social-bg: var(--raised);
     display: grid;
-    place-items: center;
     aspect-ratio: 1;
     /* Held to its column: a box with a ratio would otherwise take its width
        from the finger-sized min-height below and close the gaps. */
     justify-self: stretch;
-    border-radius: var(--radius-sm);
-    background: var(--raised);
-    font-size: clamp(16px, 5.5cqi, 20px);
-    transition:
-        background-color 200ms var(--ease-smooth-out),
-        color 200ms var(--ease-smooth-out),
-        transform 160ms var(--ease-smooth-out);
 }
 
-.social:active {
-    transform: scale(0.96);
+/* The face leans with the row (socials.js hands each tile its share, --lean):
+   up and a little larger under the pointer, less so beside it, and back with
+   a spring once the row is let go. A press sinks it. */
+.social__face {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-sm);
+    background: var(--social-bg);
+    fill: currentColor;
+    transform:
+        translateY(calc(var(--lean, 0) * var(--lean-lift)))
+        scale(calc(1 + var(--lean, 0) * var(--lean-grow)));
+    transition:
+        transform var(--lean-dur) var(--lean-now-ease, var(--lean-return-ease)),
+        scale var(--press-dur) var(--press-ease),
+        background-color 200ms var(--ease-smooth-out),
+        color 200ms var(--ease-smooth-out);
+}
+
+/* In hand, the row moves cleanly; the spring is kept for the way back. */
+.socials__row:is(:hover, :has(:focus-visible)) {
+    --lean-now-ease: var(--lean-ease);
+}
+
+.social:active .social__face {
+    scale: var(--press-scale);
+}
+
+/* The ring goes round the face, wherever the lean has put it. */
+.social:focus-visible {
+    outline: none;
+}
+
+.social:focus-visible .social__face {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
 }
 
 /* Only where the pointer hovers; a tap would leave the tile lit. */
 @media (hover: hover) {
     .social:hover {
-        background: var(--accent);
+        --social-bg: var(--accent);
         color: var(--on-accent);
     }
 }
 
 @media (hover: none) {
     .social:active {
-        background: var(--raised-hover);
+        --social-bg: var(--raised-hover);
     }
 }
 
 @media (pointer: coarse) {
     .social {
         min-height: 44px;
+    }
+}
+
+/* ── the icons, drawn in parts so each can make a move of its own ── */
+
+/* A part that moves turns and grows about its own middle. */
+.social__icon,
+.social__flap,
+.social__play,
+.social__lens,
+.social__flash,
+.social__wave {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.social--telegram .social__icon {
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-linejoin: round;
+}
+
+/* The flap of the envelope is hinged where its sides end. */
+.social__flap {
+    transform-origin: 50% 28%;
+}
+
+/* Cut out of the icon: the tile shows through, whatever colour it is. */
+.social__play {
+    fill: var(--social-bg);
+    stroke: var(--social-bg);
+    stroke-width: 0.8;
+    stroke-linejoin: round;
+    transition: fill 200ms var(--ease-smooth-out), stroke 200ms var(--ease-smooth-out);
+}
+
+.social__lines {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+}
+
+.social__flash {
+    fill: currentColor;
+    stroke: none;
+}
+
+.social__wave {
+    fill: none;
+    stroke: var(--social-bg);
+    stroke-width: 2.1;
+    stroke-linecap: round;
+    transition: stroke 200ms var(--ease-smooth-out);
+}
+
+.social__wave:nth-of-type(2) {
+    stroke-width: 1.8;
+    animation-delay: 110ms;
+}
+
+.social__wave:nth-of-type(3) {
+    stroke-width: 1.5;
+    animation-delay: 220ms;
+}
+
+/* What each icon does when its tile is taken up. socials.js marks the tile
+   (.is-waking) and lets the move play through, whether or not the pointer
+   stays for it. Two are states instead: the envelope stands open for as long
+   as it is in hand, and the waves of Spotify keep time while a track is
+   playing - read off the card below, which is not stale then (spotify.js). */
+@media (prefers-reduced-motion: no-preference) {
+    .social__flap {
+        transition: transform var(--duration-fast) var(--ease-smooth-out);
+    }
+
+    .social--email:focus-visible .social__flap {
+        transform: scaleY(-1);
+    }
+
+    @media (hover: hover) {
+        .social--email:hover .social__flap {
+            transform: scaleY(-1);
+        }
+    }
+
+    .social--telegram.is-waking .social__icon {
+        animation: social-fly 640ms both;
+    }
+
+    .social--github.is-waking .social__icon {
+        animation: social-tilt 560ms var(--ease-in-out) both;
+    }
+
+    .social--youtube.is-waking .social__play {
+        animation: social-nudge 420ms var(--ease-smooth-out) both;
+    }
+
+    .social--instagram.is-waking .social__lens {
+        animation: social-shutter 460ms var(--ease-smooth-out) both;
+    }
+
+    .social--instagram.is-waking .social__flash {
+        animation: social-flash 460ms var(--ease-in-out) both;
+    }
+
+    .social--spotify.is-waking .social__wave {
+        animation-name: social-wave;
+        animation-duration: 800ms;
+        animation-timing-function: var(--ease-in-out);
+        animation-iteration-count: 2;
+    }
+
+    .bio:has(.np-card:not(.is-stale)) .social--spotify .social__wave {
+        animation-name: social-wave;
+        animation-duration: 1600ms;
+        animation-timing-function: var(--ease-in-out);
+        animation-iteration-count: infinite;
+    }
+}
+
+/* Off past one corner of the tile and back in at the opposite one. */
+@keyframes social-fly {
+    0% {
+        transform: none;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.4);
+    }
+
+    45% {
+        transform: translate(46px, -46px);
+        animation-timing-function: step-end;
+    }
+
+    46% {
+        transform: translate(-46px, 46px);
+        animation-timing-function: var(--ease-smooth-out);
+    }
+
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes social-tilt {
+    35% { transform: rotate(-14deg); }
+    70% { transform: rotate(6deg); }
+}
+
+@keyframes social-nudge {
+    40% { transform: translateX(1.8px) scale(1.15); }
+}
+
+@keyframes social-shutter {
+    35% { transform: scale(0.55); }
+    70% { transform: scale(1.08); }
+}
+
+@keyframes social-flash {
+    30%, 45% { opacity: 0.15; }
+}
+
+@keyframes social-wave {
+    50% { transform: scaleX(0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .social__face {
+        transform: none;
+        scale: none;
     }
 }
 

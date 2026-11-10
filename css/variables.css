@@ -42,6 +42,7 @@
     --ease-in-out: ease-in-out;
     --ease-out: ease-out;
     --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+    --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1);
     --distance-micro: 4px;
     --distance-medium: 12px;
     --blur-small: 2px;
@@ -93,6 +94,19 @@
     --tt-ease: var(--ease-out);
     --tt-move-dur: 160ms;
     --tt-move-ease: var(--ease-smooth-out);
+    /* A row leaning toward the pointer: the tile under it lifts and grows,
+       the ones beside it by this much less for each step away, and the row
+       springs back when it is let go. */
+    --lean-lift: -4px;
+    --lean-grow: 0.05;
+    --lean-falloff: 0.45;
+    --lean-dur: 320ms;
+    --lean-ease: var(--ease-smooth-out);
+    --lean-return-ease: var(--ease-bounce-strong);
+    /* A tile sinking under a press and coming back up. */
+    --press-scale: 0.94;
+    --press-dur: 160ms;
+    --press-ease: var(--ease-bounce);
 
     --status-active: #4ade80;
     --status-wip: #facc15;
