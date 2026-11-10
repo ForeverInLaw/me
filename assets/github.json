@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-09T20:23:12.343Z",
+  "generatedAt": "2026-11-10T04:25:31.228Z",
   "totals": {
-    "contributions": 7649,
-    "commits": 6484,
-    "pullRequests": 514,
-    "issues": 397,
-    "repos": 85
+    "contributions": 7772,
+    "commits": 3542,
+    "pullRequests": 409,
+    "issues": 142,
+    "repos": 34
   },
   "calendar": {
     "start": "2025-11-09",
@@ -374,36 +374,16 @@
       168,
       180,
       195,
-      60,
-      2
+      63,
+      81,
+      41
     ]
   },
   "recent": [
     {
-      "name": "ForeverInLaw/ForeverInLaw",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw",
-      "pushedAt": "2026-11-09T16:17:42Z",
-      "language": "TypeScript",
-      "color": "#3178c6"
-    },
-    {
-      "name": "ForeverInLaw/foreverinlaw.github.io",
-      "url": "https://github.com/ForeverInLaw/foreverinlaw.github.io",
-      "pushedAt": "2026-11-09T12:27:00Z",
-      "language": "JavaScript",
-      "color": "#f1e05a"
-    },
-    {
-      "name": "ForeverInLaw/me",
-      "url": "https://github.com/ForeverInLaw/me",
-      "pushedAt": "2026-11-09T12:20:21Z",
-      "language": "JavaScript",
-      "color": "#f1e05a"
-    },
-    {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-08T19:41:17Z",
+      "pushedAt": "2026-11-10T02:33:53Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -413,73 +393,94 @@
       "pushedAt": "2026-11-08T12:13:29Z",
       "language": "Dart",
       "color": "#00B4AB"
+    },
+    {
+      "name": "ForeverInLaw/picoclaw",
+      "url": "https://github.com/ForeverInLaw/picoclaw",
+      "pushedAt": "2026-11-08T07:13:41Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
+      "name": "ForeverInLaw/cutcap",
+      "url": "https://github.com/ForeverInLaw/cutcap",
+      "pushedAt": "2026-11-08T02:21:14Z",
+      "language": "Dart",
+      "color": "#00B4AB"
+    },
+    {
+      "name": "redstone-md/flucord",
+      "url": "https://github.com/redstone-md/flucord",
+      "pushedAt": "2026-11-07T18:25:58Z",
+      "language": "Dart",
+      "color": "#00B4AB"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
-      414,
-      377,
-      378,
-      331,
-      373,
-      290,
-      233,
-      214,
-      142,
-      94,
-      84,
-      56,
-      50,
-      77,
-      123,
-      185,
-      236,
-      295,
-      277,
-      333,
-      383,
-      344,
-      351,
-      440
+      254,
+      213,
+      232,
+      208,
+      257,
+      197,
+      163,
+      128,
+      108,
+      68,
+      58,
+      19,
+      9,
+      18,
+      38,
+      55,
+      60,
+      109,
+      106,
+      129,
+      184,
+      141,
+      193,
+      263
     ]
   },
   "commits": [
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "fix: match the gap above now-playing to the gap between log blocks",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/9c07367c9deb08a5ec26c951798d97fd652b552e",
-      "at": "2026-11-09T16:16:46Z"
+      "repo": "LaunchVPN/launchvpn-client",
+      "message": "feat(brand): states on Home, in Locations and on «Вход» change smooth…",
+      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/1ac3f875ba91d654907f96d90d9ba5ff1c99067f",
+      "at": "2026-11-08T12:03:32Z"
     },
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "chore(impeccable): skip the font check on rejected direction mocks",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/8753d33abbb9f2b65ffd061fb8cfee9004fe581e",
-      "at": "2026-11-08T22:22:01Z"
+      "repo": "LaunchVPN/launchvpn-client",
+      "message": "feat(brand): one motion scale, rising toasts and press feedback (LVPN…",
+      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/1465ee092b2df101f1034e21c534094a4117c19c",
+      "at": "2026-11-08T12:03:32Z"
     },
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "docs(design): record the phosphor design system",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/baa80ceadeb3ae088d88dd15d8d3e1b707167839",
-      "at": "2026-11-08T22:21:17Z"
+      "repo": "LaunchVPN/launchvpn-client",
+      "message": "fix(home): the cards stay put while Home is pulled (LVPN-77) (#57)",
+      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/93cf9217f7bcf871edfb9ed2ef4c616ec9e7fb88",
+      "at": "2026-11-08T12:03:32Z"
     },
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "fix: keep the current-year label clear of its bar on phones",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/d47fe3c94a9ce7e63a37438ad6b5a83adab8863d",
-      "at": "2026-11-08T22:21:17Z"
+      "repo": "LaunchVPN/launchvpn-client",
+      "message": "fix(locations): the dots turn straight into the delay, and a tap mid-…",
+      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/134a25ac208ab4e861fc584f73952659cfd28cb0",
+      "at": "2026-11-08T12:03:31Z"
     },
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "feat: redesign the profile as a phosphor character grid",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/ee70e9c6c77ef2f1706d7e47c66614e9958b727d",
-      "at": "2026-11-08T22:18:47Z"
+      "repo": "ForeverInLaw/cutcap",
+      "message": "Merge pull request #2 from ForeverInLaw/fix/release-job",
+      "url": "https://github.com/ForeverInLaw/cutcap/commit/c1880d46c599dc92908236b9f4befbe29270fcff",
+      "at": "2026-11-08T02:21:07Z"
     },
     {
-      "repo": "ForeverInLaw/ForeverInLaw",
-      "message": "docs(product): record product context and the redesign direction",
-      "url": "https://github.com/ForeverInLaw/ForeverInLaw/commit/c0484ef067420f43ed89ba1b772994e0eadffbd9",
-      "at": "2026-11-08T22:18:40Z"
+      "repo": "ForeverInLaw/cutcap",
+      "message": "ci: run the release job when the skipped changes job is an ancestor",
+      "url": "https://github.com/ForeverInLaw/cutcap/commit/629e33aee1c3be6c11bb6dd36f681cbaa689b83a",
+      "at": "2026-11-08T02:20:22Z"
     }
   ]
 }
