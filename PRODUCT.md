@@ -12,7 +12,7 @@ Friends, fellow developers, and people from the owner's online circles (Telegram
 
 ## Product Purpose
 
-A personal home page for ForeverInLaw (Sergei), a developer who builds Telegram bots, P2P software, Go/Python backends, Tauri apps, and animated web. It exists as self-expression: a place that reads as *theirs*, collects their work and live activity, and points to every channel they are on. Success is a visitor leaving with a clear sense of the person: their taste, night-owl rhythm, music, and the things they ship.
+A personal home page for ForeverInLaw (Sergei), a developer and co-founder of redstone.md who builds networking tools, encrypted chat, web apps and bots. It exists as self-expression: a place that reads as *theirs*, collects their work and live activity, and points to every channel they are on. Success is a visitor leaving with a clear sense of the person: their taste, night-owl rhythm, music, and the things they ship.
 
 ## Positioning
 
