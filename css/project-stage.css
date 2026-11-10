@@ -53,10 +53,13 @@
         transition: color 200ms var(--ease-smooth-out);
     }
 
+    /* The line is taller than the type, so clipping the name to one line
+       does not also cut its descenders. */
     .has-stage .project-card h3 {
         overflow: hidden;
         color: inherit;
         font-size: clamp(16px, 2.3cqi, 20px);
+        line-height: 1.2;
         letter-spacing: -0.015em;
         white-space: nowrap;
         text-overflow: ellipsis;
