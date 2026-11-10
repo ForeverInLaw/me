@@ -230,7 +230,10 @@
     stroke: none;
 }
 
+/* The three waves swing at different paces (--beat stretches each one), so
+   together they read as levels moving, not as one shape breathing. */
 .social__wave {
+    --beat: 1;
     fill: none;
     stroke: var(--social-bg);
     stroke-width: 2.1;
@@ -239,13 +242,13 @@
 }
 
 .social__wave:nth-of-type(2) {
+    --beat: 1.35;
     stroke-width: 1.8;
-    animation-delay: 110ms;
 }
 
 .social__wave:nth-of-type(3) {
+    --beat: 0.8;
     stroke-width: 1.5;
-    animation-delay: 220ms;
 }
 
 /* What each icon does when its tile is taken up. socials.js marks the tile
@@ -290,14 +293,14 @@
 
     .social--spotify.is-waking .social__wave {
         animation-name: social-wave;
-        animation-duration: 800ms;
+        animation-duration: calc(700ms * var(--beat));
         animation-timing-function: var(--ease-in-out);
         animation-iteration-count: 2;
     }
 
     .bio:has(.np-card:not(.is-stale)) .social--spotify .social__wave {
         animation-name: social-wave;
-        animation-duration: 1600ms;
+        animation-duration: calc(1100ms * var(--beat));
         animation-timing-function: var(--ease-in-out);
         animation-iteration-count: infinite;
     }
@@ -344,7 +347,7 @@
 }
 
 @keyframes social-wave {
-    50% { transform: scaleX(0.7); }
+    50% { transform: scaleX(0.4); }
 }
 
 @media (prefers-reduced-motion: reduce) {
