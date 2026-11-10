@@ -14,6 +14,10 @@ const LOGIN = 'ForeverInLaw';
 const OUT = new URL('../assets/github.json', import.meta.url);
 const RECENT_LIMIT = 5;
 const LOG_LIMIT = 6;
+// Kept out of the latest pushes and commits: the profile README, the site
+// before this one and this site are housekeeping, not work to show. Their
+// commits still count toward the totals and the hours.
+const HIDDEN = new Set(['ForeverInLaw/ForeverInLaw', 'ForeverInLaw/foreverinlaw.github.io', 'ForeverInLaw/me']);
 // GitHub reports commit times in UTC; the hours of the day are told in this
 // zone - central European time, the offset the commits themselves carry.
 const TIME_ZONE = 'CET';
@@ -81,7 +85,7 @@ export function hourCounts(dates, timeZone = TIME_ZONE) {
 export function toStats(user, commits = [], generatedAt = new Date().toISOString()) {
     const collection = user.contributionsCollection;
     const days = collection.contributionCalendar.weeks.flatMap((week) => week.contributionDays);
-    const latest = commits.filter((commit) => !commit.isPrivate)
+    const latest = commits.filter((commit) => !commit.isPrivate && !HIDDEN.has(commit.repo))
         .sort((a, b) => Date.parse(b.authoredDate) - Date.parse(a.authoredDate))
         .slice(0, LOG_LIMIT);
 
@@ -98,7 +102,7 @@ export function toStats(user, commits = [], generatedAt = new Date().toISOString
             start: days[0]?.date ?? null,
             counts: days.map((day) => day.contributionCount),
         },
-        recent: user.repositories.nodes.map((repo) => ({
+        recent: user.repositories.nodes.filter((repo) => !HIDDEN.has(repo.nameWithOwner)).slice(0, RECENT_LIMIT).map((repo) => ({
             name: repo.nameWithOwner,
             url: repo.url,
             pushedAt: repo.pushedAt,
@@ -171,7 +175,9 @@ async function main() {
     const token = process.env.STATS_TOKEN || process.env.GITHUB_TOKEN;
     if (!token) throw new Error('Set STATS_TOKEN or GITHUB_TOKEN.');
 
-    const body = await graphql(token, QUERY, { login: LOGIN, recent: RECENT_LIMIT });
+    // Asked for with room to spare, so the list is still full once the hidden
+    // repositories are taken out of it.
+    const body = await graphql(token, QUERY, { login: LOGIN, recent: RECENT_LIMIT + HIDDEN.size });
     if (body.errors) throw new Error(`GitHub GraphQL failed: ${JSON.stringify(body.errors)}`);
     const { user } = body.data;
 
