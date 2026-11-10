@@ -37,7 +37,7 @@ Optional, may be dropped in a redesign: the "Slide to enter" entry screen, the l
 ## Brand Commitments
 
 - Name: ForeverInLaw; domain zaebal.dev.
-- Voice: short, dry, a little self-ironic, in English ("I build things that move… Mostly after dark.", "The Grind — Proof of work.").
+- Voice: short, dry, a little self-ironic, in English ("…mostly closed source and mostly after dark.", "The Grind — Proof of work.").
 - The night-time rhythm and music are real parts of the identity; the current purple/pink look is not binding.
 
 ## Evidence on Hand
