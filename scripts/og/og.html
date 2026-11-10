@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- The card scripts/og.mjs photographs into og.png. Nothing is written here:
+     the name, the line under it and the head of the works list are read out of
+     index.html, over the bio column's own glow, so the card says what the page
+     says. -->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>og.png</title>
+	<link rel="stylesheet" href="/css/variables.css">
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/bio.css">
+	<style>
+		body {
+			overflow: hidden;
+		}
+
+		.og {
+			position: relative;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 380px;
+			gap: 72px;
+			width: 1200px;
+			height: 630px;
+			padding: 60px 64px 56px;
+		}
+
+		/* The column's surface, here under the whole card and lit at once. */
+		.bio-glow {
+			position: absolute;
+			inset: 0;
+		}
+
+		.bio-glow canvas {
+			transition: none;
+		}
+
+		.og__who,
+		.og__works {
+			position: relative;
+		}
+
+		.og__who {
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+		}
+
+		.og .bio__name {
+			font-size: 124px;
+		}
+
+		.og .bio__line {
+			font-size: 26px;
+			line-height: 1.45;
+		}
+
+		.og__domain {
+			margin-top: auto;
+			color: var(--accent);
+			font-size: 24px;
+			font-weight: 600;
+		}
+
+		/* The index as the page draws it: number, name, status dot, year. */
+		.og__works {
+			align-self: center;
+			-webkit-mask-image: linear-gradient(#000 60%, transparent);
+			mask-image: linear-gradient(#000 60%, transparent);
+		}
+
+		.og__works li {
+			display: grid;
+			grid-template-columns: 34px minmax(0, 1fr) auto auto;
+			align-items: baseline;
+			gap: 14px;
+			padding: 15px 0;
+			border-bottom: 1px solid rgb(255 255 255 / 0.1);
+			color: var(--muted);
+			font-size: 16px;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.og__works strong {
+			overflow: hidden;
+			color: var(--fg);
+			font-size: 26px;
+			font-weight: 800;
+			font-stretch: 112%;
+			line-height: 1.2;
+			letter-spacing: -0.015em;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.og__works i {
+			align-self: center;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+
+<body>
+	<main class="og">
+		<div class="bio-glow"></div>
+		<div class="og__who">
+			<h1 class="bio__name"></h1>
+			<p class="bio__line"></p>
+			<p class="og__domain"></p>
+		</div>
+		<ol class="og__works"></ol>
+	</main>
+
+	<script type="module">
+		import { initBioGlow } from '/js/modules/bio-glow.js';
+		import { readProjectCard } from '/js/modules/project-card.js';
+
+		// As many rows of the index as the card has room for.
+		const ROWS = 7;
+
+		const page = new DOMParser().parseFromString(await (await fetch('/index.html')).text(), 'text/html');
+		const el = (tag, props) => Object.assign(document.createElement(tag), props);
+
+		for (const part of ['.bio__name', '.bio__line']) {
+			document.querySelector(part).innerHTML = page.querySelector(part).innerHTML;
+		}
+		document.querySelector('.og__domain').textContent = new URL(page.querySelector('link[rel="canonical"]').href).hostname;
+
+		const rows = Array.from(page.querySelectorAll('.projects .project-card'), (card) => readProjectCard(card)).slice(0, ROWS);
+		document.querySelector('.og__works').replaceChildren(...rows.map(({ title, status, when }, index) => {
+			const row = el('li');
+			const dot = el('i');
+			dot.style.background = `var(--status-${status.kind})`;
+			row.append(
+				el('span', { textContent: String(index + 1).padStart(2, '0') }),
+				el('strong', { textContent: title }),
+				dot,
+				el('span', { textContent: parseInt(when, 10) })
+			);
+			return row;
+		}));
+
+		initBioGlow();
+		await document.fonts.ready;
+		// What og.mjs waits for before it takes the picture.
+		document.documentElement.dataset.ready = '';
+	</script>
+</body>
+</html>
