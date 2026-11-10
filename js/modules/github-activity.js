@@ -210,26 +210,25 @@ export async function initGithubActivity() {
     if (!section) return;
     const sentence = section.querySelector('#grind-sentence');
 
-    let data;
+    // A file that loads but is not the shape the page draws fails the same
+    // way as one that does not load.
     try {
         const res = await fetch(DATA_URL, { cache: 'no-cache' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        data = await res.json();
+        const data = await res.json();
+        const { counts } = data.calendar;
+        const dayAt = calendarDays(data.calendar.start);
+
+        renderSentence(sentence, data.totals);
+        const heatmap = renderHeatmap(section, counts, dayAt, data.totals.contributions);
+        renderRecords(section.querySelector('#grind-records'), heatmap, counts, dayAt);
+        if (data.hours) renderDayDial(section.querySelector('#day-dial'), data.hours);
+        renderCommits(section.querySelector('#commit-log'), data.commits);
+        renderRecent(section.querySelector('#recent-pushes'), data.recent);
+        section.classList.add('is-ready');
     } catch (error) {
         console.error('GitHub activity failed to load:', error);
         sentence.textContent = 'GitHub activity is unavailable right now.';
         section.classList.add('is-error');
-        return;
     }
-
-    const { counts } = data.calendar;
-    const dayAt = calendarDays(data.calendar.start);
-
-    renderSentence(sentence, data.totals);
-    const heatmap = renderHeatmap(section, counts, dayAt, data.totals.contributions);
-    renderRecords(section.querySelector('#grind-records'), heatmap, counts, dayAt);
-    if (data.hours) renderDayDial(section.querySelector('#day-dial'), data.hours);
-    renderCommits(section.querySelector('#commit-log'), data.commits);
-    renderRecent(section.querySelector('#recent-pushes'), data.recent);
-    section.classList.add('is-ready');
 }

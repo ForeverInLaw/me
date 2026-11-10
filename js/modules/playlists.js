@@ -20,26 +20,27 @@ export async function initPlaylists() {
     const caption = document.getElementById('playlists-caption');
     if (!container) return;
 
+    // An answer that is not the list it should be fails the same way as no
+    // answer at all: the row is built inside the same try.
     let playlists;
+    const row = document.createElement('ul');
     try {
         playlists = await fetchJson(PLAYLISTS_API);
+        row.innerHTML = playlists.map((playlist, index) => {
+            const name = escapeHtml(playlist.name.trim());
+            return `
+            <li style="--i: ${index}">
+                <a class="playlist" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer"
+                    aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
+                    <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" decoding="async">
+                </a>
+            </li>`;
+        }).join('');
     } catch (error) {
         console.error('Error loading playlists:', error);
         container.innerHTML = '<li class="playlists__error">Playlists are unavailable right now.</li>';
         return;
     }
-
-    const row = document.createElement('ul');
-    row.innerHTML = playlists.map((playlist, index) => {
-        const name = escapeHtml(playlist.name.trim());
-        return `
-        <li style="--i: ${index}">
-            <a class="playlist" href="${escapeHtml(safeUrl(playlist.url))}" target="_blank" rel="noopener noreferrer"
-                aria-label="${name}, ${escapeHtml(playlist.tracks)} tracks">
-                <img src="${escapeHtml(safeUrl(playlist.image))}" alt="" decoding="async">
-            </a>
-        </li>`;
-    }).join('');
 
     // Detached images still load (no lazy loading here, or they never would);
     // a broken cover just shows its tile colour instead of holding up the row.

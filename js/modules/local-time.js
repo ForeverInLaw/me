@@ -1,7 +1,7 @@
-// Live local-time clock in the footer ("Hand-built after dark") - the 2am
-// joke becomes real. Runs on a 1s interval, paused when the tab is hidden.
-// Minute/hour text changes go through swapText (.t-text-swap); the CSS glow
-// stays, and reduced-motion users get instant text changes (no transform).
+// The live local time beside the handle in the bio column, with a word on
+// what that hour is worth. Runs on a 1s interval, paused when the tab is
+// hidden. Minute and hour changes go through swapText (.t-text-swap), which
+// changes the text at once for anyone who asked for less motion.
 import { swapText } from './text-swap.js';
 export function initLocalTime() {
     const timeEl = document.getElementById('local-time');
