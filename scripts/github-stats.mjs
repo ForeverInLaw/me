@@ -43,6 +43,10 @@ query ($login: String!, $recent: Int!) {
                  ownerAffiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER]) {
       nodes { nameWithOwner url pushedAt primaryLanguage { name color } }
     }
+    forks: repositories(first: 100, isFork: true, orderBy: { field: PUSHED_AT, direction: DESC },
+                        ownerAffiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER]) {
+      nodes { nameWithOwner isPrivate pushedAt }
+    }
   }
 }`;
 
@@ -54,7 +58,7 @@ query ($owner: String!, $name: String!, $author: ID!, $since: GitTimestamp!, $af
         ... on Commit {
           history(first: 100, since: $since, author: { id: $author }, after: $after) {
             pageInfo { hasNextPage endCursor }
-            nodes { authoredDate messageHeadline url }
+            nodes { oid authoredDate messageHeadline url }
           }
         }
       }
@@ -122,6 +126,17 @@ export function toStats(user, commits = [], generatedAt = new Date().toISOString
     };
 }
 
+/**
+ * The repositories whose history is read: the ones GitHub counts commits in,
+ * then the forks pushed to since `since`. GitHub leaves a fork out of the
+ * contributions, so the work done in one is found only by looking there.
+ */
+export function reposToRead(user, since) {
+    const counted = user.contributionsCollection.commitContributionsByRepository.map((entry) => entry.repository);
+    const forks = user.forks.nodes.filter((repo) => Date.parse(repo.pushedAt) >= Date.parse(since));
+    return [...counted, ...forks];
+}
+
 /** Posts a GraphQL query and returns the response body, `errors` and all. */
 async function graphql(token, query, variables) {
     const res = await fetch('https://api.github.com/graphql', {
@@ -155,20 +170,25 @@ async function commitsIn(token, repo, author, since) {
 
 /**
  * The year's commits across every repository the user committed to, one
- * repository after another so the API is never hit in parallel.
+ * repository after another so the API is never hit in parallel. A fork holds
+ * its parent's history too, so a commit is kept once, under the repository it
+ * was first met in.
  */
 async function yearOfCommits(token, user, since) {
-    const repos = user.contributionsCollection.commitContributionsByRepository.map((entry) => entry.repository);
-    const commits = [];
+    const repos = reposToRead(user, since);
+    const byOid = new Map();
     let unreadable = 0;
     for (const repo of repos) {
         const found = await commitsIn(token, repo, user.id, since);
-        if (found) commits.push(...found);
-        else unreadable += 1;
+        if (!found) {
+            unreadable += 1;
+            continue;
+        }
+        found.forEach((commit) => { if (!byOid.has(commit.oid)) byOid.set(commit.oid, commit); });
     }
     // A count, never names: this log is public and some of the repositories are not.
     if (unreadable) console.warn(`${unreadable} of ${repos.length} repositories could not be read with this token.`);
-    return commits;
+    return [...byOid.values()];
 }
 
 async function main() {

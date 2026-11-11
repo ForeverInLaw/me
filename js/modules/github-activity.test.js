@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { compactNumber, levelFor, levelThresholds, timeAgo } from './github-activity.js';
-import { hourCounts, toStats } from '../../scripts/github-stats.mjs';
+import { hourCounts, reposToRead, toStats } from '../../scripts/github-stats.mjs';
 
 test('compactNumber keeps small values and shortens thousands', () => {
     assert.equal(compactNumber(513), '513');
@@ -58,6 +58,17 @@ test('toStats flattens the calendar and keeps only what the page reads', () => {
         { repo: 'a/b', message: 'older', url: 'c1', at: '2026-01-01T10:00:00Z' },
     ]);
     assert.ok(!JSON.stringify(stats).includes('secret'));
+});
+
+test('reposToRead adds the forks pushed to within the year, which GitHub does not count', () => {
+    const user = {
+        contributionsCollection: { commitContributionsByRepository: [{ repository: { nameWithOwner: 'a/counted', isPrivate: false } }] },
+        forks: { nodes: [
+            { nameWithOwner: 'a/fork', isPrivate: false, pushedAt: '2026-11-11T21:38:15Z' },
+            { nameWithOwner: 'a/stale-fork', isPrivate: false, pushedAt: '2025-06-01T00:00:00Z' },
+        ] },
+    };
+    assert.deepEqual(reposToRead(user, '2025-11-09T00:00:00Z').map((repo) => repo.nameWithOwner), ['a/counted', 'a/fork']);
 });
 
 test('hourCounts tells the hour in the given zone, daylight saving included', () => {
