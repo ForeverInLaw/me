@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-11T11:35:57.938Z",
+  "generatedAt": "2026-11-11T22:32:08.532Z",
   "totals": {
-    "contributions": 7782,
-    "commits": 6606,
-    "pullRequests": 525,
+    "contributions": 7786,
+    "commits": 6607,
+    "pullRequests": 528,
     "issues": 397,
     "repos": 85
   },
@@ -377,14 +377,14 @@
       63,
       81,
       47,
-      4
+      8
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-11T11:32:21Z",
+      "pushedAt": "2026-11-11T22:18:39Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -420,68 +420,68 @@
   "hours": {
     "timeZone": "CET",
     "counts": [
-      427,
-      381,
-      384,
-      341,
-      388,
-      292,
-      233,
-      214,
-      142,
-      94,
-      84,
-      56,
-      50,
-      77,
-      123,
-      185,
-      244,
-      309,
-      286,
-      333,
-      391,
-      355,
-      368,
-      445
+      527,
+      521,
+      536,
+      502,
+      549,
+      409,
+      319,
+      282,
+      186,
+      125,
+      116,
+      87,
+      75,
+      95,
+      180,
+      263,
+      339,
+      438,
+      411,
+      478,
+      548,
+      501,
+      548,
+      609
     ]
   },
   "commits": [
     {
-      "repo": "LaunchVPN/launchvpn-client",
-      "message": "feat(brand): states on Home, in Locations and on «Вход» change smooth…",
-      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/1ac3f875ba91d654907f96d90d9ba5ff1c99067f",
-      "at": "2026-11-08T12:03:32Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #154 from redstone-md/feat/android-player",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/070899b8e0f3a944c6f56457482c802374450e9d",
+      "at": "2026-11-11T21:26:03Z"
     },
     {
-      "repo": "LaunchVPN/launchvpn-client",
-      "message": "feat(brand): one motion scale, rising toasts and press feedback (LVPN…",
-      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/1465ee092b2df101f1034e21c534094a4117c19c",
-      "at": "2026-11-08T12:03:32Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(android): give a video no preview when its frame does not fit in …",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/30c7a32eb478061514ff06e0b6232960e13461c2",
+      "at": "2026-11-11T21:20:44Z"
     },
     {
-      "repo": "LaunchVPN/launchvpn-client",
-      "message": "fix(home): the cards stay put while Home is pulled (LVPN-77) (#57)",
-      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/93cf9217f7bcf871edfb9ed2ef4c616ec9e7fb88",
-      "at": "2026-11-08T12:03:32Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(voice): let go of a recording preview's player that cannot play",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c7822ca9bd23ec9c1fe746435eb5cfd3d1686cc9",
+      "at": "2026-11-11T21:20:44Z"
     },
     {
-      "repo": "LaunchVPN/launchvpn-client",
-      "message": "fix(locations): the dots turn straight into the delay, and a tap mid-…",
-      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/134a25ac208ab4e861fc584f73952659cfd28cb0",
-      "at": "2026-11-08T12:03:31Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "docs(android): say in ADR 0053 that a backgrounded video stays paused",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/eeb3baa7cb5fc99302130d176ae254656c22d372",
+      "at": "2026-11-11T20:47:49Z"
     },
     {
-      "repo": "ForeverInLaw/cutcap",
-      "message": "Merge pull request #2 from ForeverInLaw/fix/release-job",
-      "url": "https://github.com/ForeverInLaw/cutcap/commit/c1880d46c599dc92908236b9f4befbe29270fcff",
-      "at": "2026-11-08T02:21:07Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "test(viewer): name the time label's cases after the label",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/74ea2231108e4853652453b54dc4e53dcb4cad18",
+      "at": "2026-11-11T20:47:49Z"
     },
     {
-      "repo": "ForeverInLaw/cutcap",
-      "message": "ci: run the release job when the skipped changes job is an ancestor",
-      "url": "https://github.com/ForeverInLaw/cutcap/commit/629e33aee1c3be6c11bb6dd36f681cbaa689b83a",
-      "at": "2026-11-08T02:20:22Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "refactor(media): keep the server's windows out of the parsed range",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c20eb3eae2702cbc95fe1bfb46aa4ba921524213",
+      "at": "2026-11-11T20:47:49Z"
     }
   ]
 }
