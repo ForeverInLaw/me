@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-10T11:57:58.365Z",
+  "generatedAt": "2026-11-11T11:35:57.938Z",
   "totals": {
-    "contributions": 7774,
+    "contributions": 7782,
     "commits": 6606,
-    "pullRequests": 517,
+    "pullRequests": 525,
     "issues": 397,
     "repos": 85
   },
@@ -376,23 +376,31 @@
       195,
       63,
       81,
-      43
+      47,
+      4
     ]
   },
   "recent": [
+    {
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-11T11:32:21Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "ForeverInLaw/cutcap",
+      "url": "https://github.com/ForeverInLaw/cutcap",
+      "pushedAt": "2026-11-10T14:45:26Z",
+      "language": "Dart",
+      "color": "#00B4AB"
+    },
     {
       "name": "redstone-md/flucord",
       "url": "https://github.com/redstone-md/flucord",
       "pushedAt": "2026-11-10T11:05:50Z",
       "language": "Dart",
       "color": "#00B4AB"
-    },
-    {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-10T04:58:24Z",
-      "language": "Rust",
-      "color": "#dea584"
     },
     {
       "name": "LaunchVPN/launchvpn-client",
@@ -407,13 +415,6 @@
       "pushedAt": "2026-11-08T07:13:41Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "ForeverInLaw/cutcap",
-      "url": "https://github.com/ForeverInLaw/cutcap",
-      "pushedAt": "2026-11-08T02:21:14Z",
-      "language": "Dart",
-      "color": "#00B4AB"
     }
   ],
   "hours": {
