@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { compactNumber, levelFor, levelThresholds, timeAgo } from './github-activity.js';
-import { hourCounts, reposToRead, toStats } from '../../scripts/github-stats.mjs';
+import { dayCounts, hourCounts, reposToRead, toStats } from '../../scripts/github-stats.mjs';
 
 test('compactNumber keeps small values and shortens thousands', () => {
     assert.equal(compactNumber(513), '513');
@@ -47,7 +47,7 @@ test('toStats flattens the calendar and keeps only what the page reads', () => {
         { repo: 'a/secret', isPrivate: true, authoredDate: '2026-01-03T10:00:00Z', messageHeadline: 'hidden', url: 'c2' },
         { repo: 'a/b', isPrivate: false, authoredDate: '2026-01-02T10:00:00Z', messageHeadline: 'newer', url: 'c3' },
     ];
-    const stats = toStats(user, commits, 'now');
+    const stats = toStats(user, commits);
     assert.deepEqual(stats.calendar, { start: '2026-01-01', counts: [4, 0, 9] });
     assert.deepEqual(stats.recent, [{ name: 'a/b', url: 'u', pushedAt: 't', language: null, color: null }]);
     assert.equal(stats.totals.commits, 10);
@@ -58,6 +58,34 @@ test('toStats flattens the calendar and keeps only what the page reads', () => {
         { repo: 'a/b', message: 'older', url: 'c1', at: '2026-01-01T10:00:00Z' },
     ]);
     assert.ok(!JSON.stringify(stats).includes('secret'));
+});
+
+test('toStats adds the commits made in forks to the totals and to their days', () => {
+    const user = {
+        contributionsCollection: {
+            totalCommitContributions: 10, totalPullRequestContributions: 2, totalIssueContributions: 1,
+            totalRepositoriesWithContributedCommits: 3,
+            contributionCalendar: {
+                totalContributions: 13,
+                weeks: [{ contributionDays: [{ date: '2026-01-01', contributionCount: 4 }, { date: '2026-01-02', contributionCount: 9 }] }],
+            },
+        },
+        repositories: { nodes: [] },
+    };
+    const commit = (repo, isFork, authoredDate) => ({ repo, isPrivate: false, isFork, authoredDate, messageHeadline: 'm', url: 'u' });
+    const stats = toStats(user, [
+        commit('a/counted', false, '2026-01-01T10:00:00Z'),
+        commit('a/fork', true, '2026-01-02T10:00:00Z'),
+        commit('a/fork', true, '2026-01-02T11:00:00Z'),
+        commit('a/fork', true, '2026-01-09T10:00:00Z'), // past the calendar: waits for its day
+    ]);
+    assert.deepEqual(stats.calendar.counts, [4, 11]);
+    assert.deepEqual(stats.totals, { contributions: 15, commits: 12, pullRequests: 2, issues: 1, repos: 4 });
+});
+
+test('dayCounts tells the day in the given zone', () => {
+    // 23:30 UTC is already the next day in Warsaw.
+    assert.deepEqual(dayCounts(['2026-01-01T23:30:00Z', '2026-01-02T10:00:00Z'], ['2026-01-01', '2026-01-02'], 'Europe/Warsaw'), [0, 2]);
 });
 
 test('reposToRead adds the forks pushed to within the year, which GitHub does not count', () => {
