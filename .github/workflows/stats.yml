@@ -1,8 +1,10 @@
 name: Refresh GitHub Stats SVG
 
 on:
+  # Every three hours, off the top of the hour, where GitHub's queue holds a
+  # scheduled run back for hours. A run that finds nothing new commits nothing.
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "23 */3 * * *"
   workflow_dispatch:
 
 permissions:
