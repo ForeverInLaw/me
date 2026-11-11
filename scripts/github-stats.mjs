@@ -1,6 +1,6 @@
 // Pulls a year of GitHub activity through the GraphQL API and writes it to
 // assets/github.json, which the page renders itself (js/modules/github-activity.js).
-// Runs daily from .github/workflows/stats.yml; locally: GITHUB_TOKEN=... node scripts/github-stats.mjs
+// Runs every few hours from .github/workflows/stats.yml; locally: GITHUB_TOKEN=... node scripts/github-stats.mjs
 //
 // Use a personal token (STATS_TOKEN in the workflow) so private contributions
 // count toward the totals; the default Actions token only sees public ones.
@@ -36,7 +36,7 @@ query ($login: String!, $recent: Int!) {
         weeks { contributionDays { date contributionCount } }
       }
       commitContributionsByRepository(maxRepositories: 100) {
-        repository { nameWithOwner isPrivate }
+        repository { nameWithOwner isPrivate isFork }
       }
     }
     repositories(first: $recent, privacy: PUBLIC, orderBy: { field: PUSHED_AT, direction: DESC },
@@ -45,7 +45,7 @@ query ($login: String!, $recent: Int!) {
     }
     forks: repositories(first: 100, isFork: true, orderBy: { field: PUSHED_AT, direction: DESC },
                         ownerAffiliations: [OWNER, COLLABORATOR, ORGANIZATION_MEMBER]) {
-      nodes { nameWithOwner isPrivate pushedAt }
+      nodes { nameWithOwner isPrivate isFork pushedAt }
     }
   }
 }`;
@@ -80,31 +80,50 @@ export function hourCounts(dates, timeZone = TIME_ZONE) {
 }
 
 /**
- * Shapes the GraphQL `user` node and the year's `commits` (each a history
- * node plus its `repo` and `isPrivate`) into the compact payload the page
- * reads: totals, one count per day from `start` onward, the latest public
- * pushes, commits per hour of the day and the latest public commits. Private
- * commits only ever add to the hours; nothing else of them is written.
+ * How many of the ISO timestamps `dates` fall on each of `days` ("2026-11-11"),
+ * the day told in `timeZone`; a date on none of them is left out.
  */
-export function toStats(user, commits = [], generatedAt = new Date().toISOString()) {
+export function dayCounts(dates, days, timeZone = TIME_ZONE) {
+    const format = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone });
+    const indexOf = new Map(days.map((day, i) => [day, i]));
+    const counts = new Array(days.length).fill(0);
+    dates.forEach((iso) => {
+        const i = indexOf.get(format.format(new Date(iso)));
+        if (i !== undefined) counts[i] += 1;
+    });
+    return counts;
+}
+
+/**
+ * Shapes the GraphQL `user` node and the year's `commits` (each a history
+ * node plus its `repo`, `isPrivate` and `isFork`) into the compact payload
+ * the page reads: totals, one count per day from `start` onward, the latest
+ * public pushes, commits per hour of the day and the latest public commits.
+ * GitHub counts no commit made in a fork, so those are added to its totals
+ * and to their days here. Private commits only ever add to the figures;
+ * nothing else of them is written.
+ */
+export function toStats(user, commits = []) {
     const collection = user.contributionsCollection;
     const days = collection.contributionCalendar.weeks.flatMap((week) => week.contributionDays);
+    const inForks = commits.filter((commit) => commit.isFork);
+    const forkDays = dayCounts(inForks.map((commit) => commit.authoredDate), days.map((day) => day.date));
+    const forkCommits = forkDays.reduce((sum, count) => sum + count, 0);
     const latest = commits.filter((commit) => !commit.isPrivate && !HIDDEN.has(commit.repo))
         .sort((a, b) => Date.parse(b.authoredDate) - Date.parse(a.authoredDate))
         .slice(0, LOG_LIMIT);
 
     return {
-        generatedAt,
         totals: {
-            contributions: collection.contributionCalendar.totalContributions,
-            commits: collection.totalCommitContributions,
+            contributions: collection.contributionCalendar.totalContributions + forkCommits,
+            commits: collection.totalCommitContributions + forkCommits,
             pullRequests: collection.totalPullRequestContributions,
             issues: collection.totalIssueContributions,
-            repos: collection.totalRepositoriesWithContributedCommits,
+            repos: collection.totalRepositoriesWithContributedCommits + new Set(inForks.map((commit) => commit.repo)).size,
         },
         calendar: {
             start: days[0]?.date ?? null,
-            counts: days.map((day) => day.contributionCount),
+            counts: days.map((day, i) => day.contributionCount + forkDays[i]),
         },
         recent: user.repositories.nodes.filter((repo) => !HIDDEN.has(repo.nameWithOwner)).slice(0, RECENT_LIMIT).map((repo) => ({
             name: repo.nameWithOwner,
@@ -162,7 +181,7 @@ async function commitsIn(token, repo, author, since) {
         if (!data?.repository) return null;
         const history = data.repository.defaultBranchRef?.target?.history;
         if (!history) break;
-        commits.push(...history.nodes.map((node) => ({ ...node, repo: repo.nameWithOwner, isPrivate: repo.isPrivate })));
+        commits.push(...history.nodes.map((node) => ({ ...node, repo: repo.nameWithOwner, isPrivate: repo.isPrivate, isFork: repo.isFork })));
         after = history.pageInfo.hasNextPage ? history.pageInfo.endCursor : null;
     } while (after);
     return commits;
