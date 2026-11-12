@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10253,
-    "commits": 9072,
-    "pullRequests": 530,
+    "contributions": 10331,
+    "commits": 9146,
+    "pullRequests": 534,
     "issues": 397,
     "repos": 92
   },
@@ -377,14 +377,28 @@
       81,
       70,
       76,
-      19
+      97
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-12T07:15:33Z",
+      "pushedAt": "2026-11-12T17:19:21Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "redstone-md/Overhaul",
+      "url": "https://github.com/redstone-md/Overhaul",
+      "pushedAt": "2026-11-12T09:42:43Z",
+      "language": "Java",
+      "color": "#b07219"
+    },
+    {
+      "name": "redstone-md/relic",
+      "url": "https://github.com/redstone-md/relic",
+      "pushedAt": "2026-11-12T09:34:15Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -401,20 +415,6 @@
       "pushedAt": "2026-11-10T11:05:50Z",
       "language": "Dart",
       "color": "#00B4AB"
-    },
-    {
-      "name": "LaunchVPN/launchvpn-client",
-      "url": "https://github.com/LaunchVPN/launchvpn-client",
-      "pushedAt": "2026-11-08T12:13:29Z",
-      "language": "Dart",
-      "color": "#00B4AB"
-    },
-    {
-      "name": "ForeverInLaw/picoclaw",
-      "url": "https://github.com/ForeverInLaw/picoclaw",
-      "pushedAt": "2026-11-08T07:13:41Z",
-      "language": "Go",
-      "color": "#00ADD8"
     }
   ],
   "hours": {
@@ -429,16 +429,16 @@
       319,
       282,
       187,
+      131,
+      135,
       125,
-      116,
-      87,
-      75,
-      95,
+      81,
+      97,
       180,
-      263,
+      264,
       339,
-      438,
-      411,
+      439,
+      412,
       478,
       548,
       501,
@@ -449,39 +449,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #155 from redstone-md/test/peer-wait-diagnostics",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/845a2af0c90e760c572fba4e040fa1b9f716d818",
-      "at": "2026-11-12T07:15:25Z"
+      "message": "Merge pull request #156 from redstone-md/perf/dm-message-writes",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1a567914211edd271b21a00e5726850f3a0f21a6",
+      "at": "2026-11-12T14:03:16Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(ci): give the setup action's Moss switch the shape of its ot…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/528735647c66b38fc1ce3195c82e8528000082fd",
-      "at": "2026-11-12T02:56:56Z"
+      "message": "perf(dm): count a device-link write as the sync it is",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/ea7fa161fbb535d102b5ffb1ecae0dcfb96989fd",
+      "at": "2026-11-12T12:58:38Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "ci: key the Moss library cache on its module file and country database",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/08da1daa7f70372ba4778c75f1245e28058ddc81",
-      "at": "2026-11-12T02:37:06Z"
+      "message": "fix(dm): let a joiner's key package leave before its ratchet exists",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/cd7b9b6da33d584847d8cf83d6b22420c1502813",
+      "at": "2026-11-12T12:10:59Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "test(core): time the commands a worker adds for its scenario",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/0eadf7aef8d6e48c2663c817e340b16956dbeacb",
-      "at": "2026-11-12T02:37:06Z"
+      "message": "fix(dm): save the ratchet before any session's frames leave",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/b4110036580d10ee97630da1b6e665a8d7323595",
+      "at": "2026-11-12T11:05:59Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(test): end a peer's step when its work panics",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/67db455943e7450e444378d5f811338f979f4df8",
-      "at": "2026-11-12T02:37:06Z"
+      "message": "refactor(dm): give a session one store, and `saved` its own sync",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/330405a1aaa706106368c33cbdf190a5c04cc355",
+      "at": "2026-11-12T10:29:55Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "docs(ci): set the macOS build's phases beside its runner-to-runner sp…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/fa7443557fe3639f79ceac5b6c819d726a5763a6",
-      "at": "2026-11-12T02:16:54Z"
+      "message": "refactor(dm): name the step helpers for what they do and correct its …",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1569e314b456053ce467384a1fda467890404105",
+      "at": "2026-11-12T09:37:25Z"
     }
   ]
 }
