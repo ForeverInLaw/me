@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10331,
-    "commits": 9146,
-    "pullRequests": 534,
+    "contributions": 10355,
+    "commits": 9167,
+    "pullRequests": 537,
     "issues": 397,
     "repos": 92
   },
@@ -377,16 +377,24 @@
       81,
       70,
       76,
-      97
+      121,
+      0
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-12T17:19:21Z",
+      "pushedAt": "2026-11-12T20:05:56Z",
       "language": "Rust",
       "color": "#dea584"
+    },
+    {
+      "name": "ForeverInLaw/picoclaw",
+      "url": "https://github.com/ForeverInLaw/picoclaw",
+      "pushedAt": "2026-11-12T19:37:23Z",
+      "language": "Go",
+      "color": "#00ADD8"
     },
     {
       "name": "redstone-md/Overhaul",
@@ -406,13 +414,6 @@
       "name": "ForeverInLaw/cutcap",
       "url": "https://github.com/ForeverInLaw/cutcap",
       "pushedAt": "2026-11-10T14:45:26Z",
-      "language": "Dart",
-      "color": "#00B4AB"
-    },
-    {
-      "name": "redstone-md/flucord",
-      "url": "https://github.com/redstone-md/flucord",
-      "pushedAt": "2026-11-10T11:05:50Z",
       "language": "Dart",
       "color": "#00B4AB"
     }
@@ -437,11 +438,11 @@
       180,
       264,
       339,
-      439,
-      412,
-      478,
-      548,
-      501,
+      441,
+      413,
+      487,
+      556,
+      502,
       548,
       615
     ]
@@ -449,39 +450,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #156 from redstone-md/perf/dm-message-writes",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1a567914211edd271b21a00e5726850f3a0f21a6",
-      "at": "2026-11-12T14:03:16Z"
+      "message": "Merge pull request #158 from redstone-md/feat/third-party-licenses",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/3b395f335ca051bc2d4b7ad5db1109bb86bd3cda",
+      "at": "2026-11-12T20:05:56Z"
+    },
+    {
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "Merge pull request #7 from ForeverInLaw/feat/model-image-capability",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/3e87d3f148d8f65aab7f95f11616739ebcb74d37",
+      "at": "2026-11-12T19:37:23Z"
+    },
+    {
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "fix(test): scope the image-capable fixture to image tests",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/d4230fc3155fe2fe0a103c826927d1b1003363f5",
+      "at": "2026-11-12T19:33:20Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "perf(dm): count a device-link write as the sync it is",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/ea7fa161fbb535d102b5ffb1ecae0dcfb96989fd",
-      "at": "2026-11-12T12:58:38Z"
+      "message": "fix(licenses): give the unlicensed anacrolix versions their MPL-2.0 text",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/9a87fb72be9219aaa440f380c01c208598157ddb",
+      "at": "2026-11-12T19:31:15Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(dm): let a joiner's key package leave before its ratchet exists",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/cd7b9b6da33d584847d8cf83d6b22420c1502813",
-      "at": "2026-11-12T12:10:59Z"
+      "message": "fix(licenses): make the notices the same on every machine",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/9e47a05f171d92d6b70921ec0dbef694dd59c856",
+      "at": "2026-11-12T19:30:59Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(dm): save the ratchet before any session's frames leave",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/b4110036580d10ee97630da1b6e665a8d7323595",
-      "at": "2026-11-12T11:05:59Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(dm): give a session one store, and `saved` its own sync",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/330405a1aaa706106368c33cbdf190a5c04cc355",
-      "at": "2026-11-12T10:29:55Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(dm): name the step helpers for what they do and correct its …",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1569e314b456053ce467384a1fda467890404105",
-      "at": "2026-11-12T09:37:25Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "fix(test): declare image support in fixtures and wrap long lines",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/fe3c63b614c246ac6d7703cf102646f4a2eb11fe",
+      "at": "2026-11-12T19:18:10Z"
     }
   ]
 }
