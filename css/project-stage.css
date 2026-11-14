@@ -227,15 +227,15 @@
     flex: 1;
     display: grid;
     align-content: start;
-    gap: 10px;
-    padding: 22px 4px 0;
+    gap: 14px;
+    padding: 28px 4px 0;
 }
 
 .project-stage__title {
-    font-size: 30px;
+    font-size: clamp(32px, 5.2cqi, 46px);
     font-weight: 800;
     font-stretch: 112%;
-    line-height: 1.1;
+    line-height: 1.05;
     letter-spacing: -0.02em;
     transition: color 200ms var(--ease-smooth-out);
 }
@@ -247,7 +247,7 @@
 .project-stage__desc {
     max-width: 58ch;
     color: var(--muted);
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.5;
 }
 
