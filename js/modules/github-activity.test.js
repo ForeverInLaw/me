@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { compactNumber, levelFor, levelThresholds, timeAgo } from './github-activity.js';
+import { commitTitle, compactNumber, levelFor, levelThresholds, timeAgo } from './github-activity.js';
 import { dayCounts, hourCounts, reposToRead, toStats } from '../../scripts/github-stats.mjs';
 
 test('compactNumber keeps small values and shortens thousands', () => {
@@ -25,6 +25,11 @@ test('timeAgo reads naturally', () => {
     const now = Date.parse('2026-11-09T12:00:00Z');
     assert.equal(timeAgo('2026-11-09T09:00:00Z', now), '3 hours ago');
     assert.equal(timeAgo('2026-11-08T12:00:00Z', now), 'yesterday');
+});
+
+test('commitTitle names a merge by its branch and leaves other commits as written', () => {
+    assert.equal(commitTitle('Merge pull request #163 from redstone-md/build/libwebrtc-headers'), 'Merge build/libwebrtc-headers (#163)');
+    assert.equal(commitTitle('fix(ci): publish a release only when no build was cancelled'), 'fix(ci): publish a release only when no build was cancelled');
 });
 
 test('toStats flattens the calendar and keeps only what the page reads', () => {

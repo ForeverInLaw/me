@@ -52,6 +52,16 @@ export function timeAgo(iso, now = Date.now()) {
     return 'just now';
 }
 
+/**
+ * What a commit's line says. A merge goes by the branch it brought in:
+ * "Merge pull request #163 from org/branch" opens on words every merge shares
+ * and leaves the telling part where a narrow line cuts it off.
+ */
+export function commitTitle(message) {
+    const merge = /^Merge pull request #(\d+) from [^/]+\/(.+)$/.exec(message);
+    return merge ? `Merge ${merge[2]} (#${merge[1]})` : message;
+}
+
 const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -196,7 +206,7 @@ function renderCommits(block, commits) {
         const when = el('time', 'commit__when', timeAgo(commit.at));
         when.dateTime = commit.at;
         // Own repos go by name alone here too.
-        link.append(el('span', 'commit__message', commit.message), el('span', 'commit__repo', owner === OWN_LOGIN ? name : commit.repo), when);
+        link.append(el('span', 'commit__message', commitTitle(commit.message)), el('span', 'commit__repo', owner === OWN_LOGIN ? name : commit.repo), when);
 
         const item = el('li');
         item.append(link);
