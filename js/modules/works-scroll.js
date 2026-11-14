@@ -41,24 +41,36 @@ export function initWorksScroll() {
 
     const sheetTop = () => sheet.getBoundingClientRect().top + window.scrollY;
 
-    // ScrollTrigger runs a new tween to its end and back to record it. The
-    // marks sit that out: following it, they would have the page measured and
-    // laid out again with the works blurred and hidden.
+    // How far the works have receded, 0 to 1. The tween writes it here rather
+    // than to the element, so the marks are set by the same write as the
+    // value. ScrollTrigger runs a tween to its end and back to record it, when
+    // it is made and again on the first scroll, and the way back fires no
+    // onUpdate: marks set from there stay at "covered" and hide the works for
+    // a frame.
+    let recede = 0;
+    // The marks sit out the first of those runs: following it, they would have
+    // the page measured and laid out again with the works blurred and hidden.
     let recorded = false;
-    const markReceding = (tween) => {
-        const progress = tween.progress();
+    const markReceding = () => {
         const wasReceding = projects.classList.contains('is-receding');
-        projects.classList.toggle('is-receding', progress > 0);
-        projects.classList.toggle('is-covered', progress === 1);
-        if (wasReceding && progress === 0) projects.dispatchEvent(new CustomEvent(WORKS_BACK_EVENT));
+        projects.classList.toggle('is-receding', recede > 0);
+        projects.classList.toggle('is-covered', recede === 1);
+        if (wasReceding && recede === 0) projects.dispatchEvent(new CustomEvent(WORKS_BACK_EVENT));
+    };
+    const scene = {
+        get recede() {
+            return recede;
+        },
+        set recede(value) {
+            recede = value;
+            projects.style.setProperty('--recede', String(value));
+            if (recorded) markReceding();
+        }
     };
 
-    const recede = gsap.fromTo(projects, { '--recede': 0 }, {
-        '--recede': 1,
+    gsap.fromTo(scene, { recede: 0 }, {
+        recede: 1,
         ease: 'none',
-        onUpdate() {
-            if (recorded) markReceding(this);
-        },
         scrollTrigger: {
             trigger: sheet,
             // From the sheet's top edge entering the screen to it reaching the
@@ -69,5 +81,5 @@ export function initWorksScroll() {
         }
     });
     recorded = true;
-    markReceding(recede);
+    markReceding();
 }
