@@ -19,7 +19,7 @@ import { hasStage, prefersReducedMotion } from './viewport.js';
 import { createShotStack } from './shot-stack.js';
 import { watchRowIntent } from './row-intent.js';
 import { WORKS_BACK_EVENT } from './works-scroll.js';
-import { fillFor, paintFill } from './shot-fill.js';
+import { paintFill } from './shot-fill.js';
 
 const SWAP_IN = { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', overwrite: true, lazy: false };
 const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
@@ -76,7 +76,6 @@ function createStage(stage, cards, calm) {
     const text = stage.querySelectorAll('.project-stage__info, .project-stage__meta');
     const projects = cards.map((card) => readProjectCard(card));
 
-    projects.forEach((p) => p.screenshot && fillFor(p.screenshot));
     let current = -1; // the project on the stage
     let aimed = -1; // the row under the pointer or focus, which a skim runs ahead with
     let showingShot = false;
