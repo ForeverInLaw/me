@@ -661,6 +661,12 @@ html:not(.js) .np-placeholder {
         padding: 32px 20px 28px;
     }
 
+    /* Stacked, the surface ends where the works begin: it thins out into the
+       page behind it over its last stretch rather than stopping at a line. */
+    .bio-glow {
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 180px), transparent);
+    }
+
     /* Stacked, the column can be tablet-wide; the music block keeps the
        width it was drawn for instead of swelling its covers across it. */
     .music {
