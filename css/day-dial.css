@@ -33,12 +33,22 @@
     stroke: var(--line);
 }
 
+/* The scale every hour is read against, in the colour of an empty day on the
+   heatmap. */
+.dial__track,
+.dial__bar {
+    stroke-width: 7;
+    stroke-linecap: round;
+}
+
+.dial__track {
+    stroke: var(--raised);
+}
+
 /* --share (from JS) is the hour's commits against the busiest hour's: it sets
    the bar's length there and its place on the heatmap's ramp here. */
 .dial__bar {
     stroke: color-mix(in srgb, var(--accent) calc(var(--share) * 100%), var(--heat-1));
-    stroke-width: 7;
-    stroke-linecap: round;
     /* One dash as long as the bar (pathLength, day-dial.js): offset by its
        whole length the bar is undrawn, and it grows from the rim as the
        offset runs out (works-scroll.css). */

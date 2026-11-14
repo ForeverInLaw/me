@@ -1,16 +1,18 @@
 // "Around the clock": the year's commits by hour of the day, as a 24-hour dial
-// with midnight at the top. A mark travels the rim at the current time in the
-// zone the hours were counted in, and the middle reads the hour it is in;
+// with midnight at the top. Every hour has a track the full height of the
+// scale and its bar on it, so a quiet hour reads as a low bar rather than as a
+// gap in the dial. A mark travels the rim inside them at the current time in
+// the zone the hours were counted in, and the middle reads the hour it is in;
 // pointing at another hour reads that one instead.
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const HOURS = 24;
 // Geometry, in units of the 280-unit viewBox (index.html).
 const CENTER = 140;
-const BASE = 58; // the radius the bars stand on
-const REACH = 46; // how far the busiest hour's bar rises from it
+const RIM = 50; // the circle round the readout, which the "now" mark travels
+const BASE = 60; // the radius the bars stand on
+const REACH = 52; // how far the busiest hour's bar rises from it
 const STUB = 3; // an hour with nothing still leaves a mark
-const ORBIT = 114; // where the "now" mark travels
 const NUMERALS = 128;
 const LABELLED = [0, 6, 12, 18];
 // The hours called "after dark" in the note under the dial.
@@ -35,20 +37,23 @@ export function shareBetween(counts, [from, to]) {
     return counts.reduce((sum, count, hour) => sum + (inside(hour) ? count : 0), 0) / total;
 }
 
-/** One bar per hour, each centred on its hour's slice of the dial. */
+/** A line `length` long standing on the bars' radius, in the middle of `hour`'s slice of the dial. */
+const spoke = (hour, length, attrs) => svg('line', {
+    x1: CENTER, y1: CENTER - BASE,
+    x2: CENTER, y2: CENTER - BASE - length,
+    transform: turned((hour + 0.5) * 360 / HOURS),
+    ...attrs,
+});
+
+/** A track per hour, then on each the hour's bar; returns the bars. */
 function drawBars(plot, counts) {
     const busiest = Math.max(...counts);
+    plot.append(...counts.map((_, hour) => spoke(hour, REACH, { class: 'dial__track' })));
     return counts.map((count, hour) => {
         const share = count / busiest;
-        const bar = svg('line', {
-            class: 'dial__bar',
-            x1: CENTER, y1: CENTER - BASE,
-            x2: CENTER, y2: CENTER - BASE - STUB - share * (REACH - STUB),
-            transform: turned((hour + 0.5) * 360 / HOURS),
-            // Its length counts as 1 whatever it is, so the stylesheet can
-            // draw any bar from its foot by one dash (day-dial.css).
-            pathLength: 1,
-        });
+        // Its length counts as 1 whatever it is, so the stylesheet can draw
+        // any bar from its foot by one dash (day-dial.css).
+        const bar = spoke(hour, STUB + share * (REACH - STUB), { class: 'dial__bar', pathLength: 1 });
         bar.style.setProperty('--share', share.toFixed(3));
         plot.append(bar);
         return bar;
@@ -88,10 +93,10 @@ export function renderDayDial(panel, { timeZone, counts }) {
     const countLabel = panel.querySelector('.dial__count');
     const clock = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone });
 
-    plot.replaceChildren(svg('circle', { class: 'dial__rim', cx: CENTER, cy: CENTER, r: BASE - 8 }));
+    plot.replaceChildren(svg('circle', { class: 'dial__rim', cx: CENTER, cy: CENTER, r: RIM }));
     const bars = drawBars(plot, counts);
     drawNumerals(plot);
-    const mark = svg('circle', { class: 'dial__now', cx: CENTER, cy: CENTER - ORBIT, r: 3.5 });
+    const mark = svg('circle', { class: 'dial__now', cx: CENTER, cy: CENTER - RIM, r: 3.5 });
     plot.append(mark);
 
     let pointed = null; // the hour under the pointer, if any
