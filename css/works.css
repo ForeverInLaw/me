@@ -466,7 +466,19 @@
         display: contents;
     }
 
-    .pushes { order: 1; }
+    /* In one column the panels are left to the two charts; the pushes are a
+       plain ruled list, like the commits under them. */
+    .pushes {
+        order: 1;
+        padding: 0;
+        border-radius: 0;
+        background: none;
+    }
+
+    .pushes,
+    .commits {
+        margin-top: 8px;
+    }
     .commits { order: 2; }
     .dial { order: 3; }
 
