@@ -24,28 +24,12 @@ const CARD_HTML = `
         </div>
     </a>`.trim();
 
-// What holds the card's place until the first answer: the same boxes, empty,
-// with a bar where each line of text will be.
-const PLACEHOLDER_HTML = `
-    <div class="np-placeholder" aria-hidden="true">
-        <div class="np-card__art"></div>
-        <div class="np-card__info">
-            <div class="np-card__title"><span class="np-ghost"></span></div>
-            <div class="np-card__artist"><span class="np-ghost"></span></div>
-            <div class="np-card__progress"></div>
-        </div>
-    </div>`.trim();
-
 export function initSpotify() {
     const spotifyWidget = document.getElementById('spotify-now-playing');
     const spotifyTitle = document.querySelector('.spotify-title');
 
     if (spotifyTitle) {
         spotifyTitle.classList.add('loading');
-    }
-
-    if (spotifyWidget) {
-        spotifyWidget.innerHTML = PLACEHOLDER_HTML;
     }
 
     let progress = null; // the bar's run to the end of the track, while one plays

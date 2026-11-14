@@ -393,7 +393,7 @@
     animation: fade-in var(--reveal-dur) var(--reveal-ease);
 }
 
-/* The card and the placeholder that holds its place (spotify.js) share one
+/* The card and the placeholder that holds its place (index.html) share one
    layout, so the card lands exactly on the shapes that stood in for it. */
 .np-card,
 .np-placeholder {
@@ -555,6 +555,11 @@
     border-radius: 3px;
     background: var(--raised-hover);
     vertical-align: middle;
+}
+
+/* Without JS no card ever comes, so nothing stands in for one. */
+html:not(.js) .np-placeholder {
+    visibility: hidden;
 }
 
 .np-card__title .np-ghost { --ghost-w: 62%; }

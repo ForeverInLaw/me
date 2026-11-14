@@ -109,7 +109,19 @@
 
 			<section class="music" aria-label="Music">
 				<h2 class="music__title spotify-title"><span class="t-text-swap">Loading...</span></h2>
-				<div id="spotify-now-playing" aria-live="polite" aria-atomic="true"></div>
+				<div id="spotify-now-playing" aria-live="polite" aria-atomic="true">
+					<!-- Holds the card's place from the first paint: the same boxes,
+					     empty, with a bar where each line of text will be (spotify.js
+					     puts the card in its place). -->
+					<div class="np-placeholder" aria-hidden="true">
+						<div class="np-card__art"></div>
+						<div class="np-card__info">
+							<div class="np-card__title"><span class="np-ghost"></span></div>
+							<div class="np-card__artist"><span class="np-ghost"></span></div>
+							<div class="np-card__progress"></div>
+						</div>
+					</div>
+				</div>
 				<ul class="playlists" id="playlists-container" aria-label="Playlists">
 					<li class="playlists__ghost" aria-hidden="true"></li>
 					<li class="playlists__ghost" aria-hidden="true"></li>
