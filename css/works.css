@@ -592,14 +592,13 @@
         background: var(--panel);
     }
 
-    /* A desktop screenshot whole is too small to read at this width, so the
-       frame is taller than it and shows the middle of its top at a larger
-       scale. */
+    /* The stage's frame (project-stage.css): one shape for every project,
+       the shot whole in it, its margins filled from its own edges. */
     .project-shot img {
         width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        object-position: center top;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        background: var(--panel) no-repeat;
         opacity: 0;
         transform: scale(1.04);
         transition:

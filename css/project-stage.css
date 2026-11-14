@@ -163,12 +163,14 @@
     background: var(--panel) no-repeat;
 }
 
-.project-stage__shots .preview-shot[data-fill="rows"] {
+.project-stage__shots .preview-shot[data-fill="rows"],
+.project-shot img[data-fill="rows"] {
     background-position: top, bottom;
     background-size: 100% 50%;
 }
 
-.project-stage__shots .preview-shot[data-fill="columns"] {
+.project-stage__shots .preview-shot[data-fill="columns"],
+.project-shot img[data-fill="columns"] {
     background-position: left, right;
     background-size: 50% 100%;
 }

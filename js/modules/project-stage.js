@@ -19,52 +19,13 @@ import { hasStage, prefersReducedMotion } from './viewport.js';
 import { createShotStack } from './shot-stack.js';
 import { watchRowIntent } from './row-intent.js';
 import { WORKS_BACK_EVENT } from './works-scroll.js';
+import { fillFor, paintFill } from './shot-fill.js';
 
 const SWAP_IN = { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', overwrite: true, lazy: false };
 const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
 // The text's share of the drift out of focus; the frame's is in
 // project-stage.css, on the same clock.
 const SKIM_BLUR = { autoAlpha: 0.45, filter: 'blur(3px)', duration: 0.52, delay: 0.08, ease: 'sine.inOut', overwrite: true };
-
-// The frame's shape (project-stage.css): a shot wider than it is left with
-// margins above and below, a narrower one with margins at its sides.
-const FRAME_RATIO = 16 / 9;
-
-const fills = new Map();
-
-/** A strip of `shot`, one pixel deep, as a CSS image. */
-function edgeStrip(shot, x, y, width, height) {
-    const canvas = Object.assign(document.createElement('canvas'), { width, height });
-    canvas.getContext('2d').drawImage(shot, x, y, width, height, 0, 0, width, height);
-    return `url(${canvas.toDataURL()})`;
-}
-
-/**
- * What fills a screenshot's margins in the frame: its two outer rows of
- * pixels, or columns, which the layer draws out to the frame's edges
- * (project-stage.css), so the picture carries on past its own.
- *
- * The shot is decoded off the main thread and only the two strips are ever
- * drawn; decoding it into a canvas instead stalls the page as it comes in.
- */
-function fillFor(src) {
-    if (!fills.has(src)) {
-        fills.set(src, fetch(src)
-            .then((res) => res.blob())
-            .then((blob) => createImageBitmap(blob))
-            .then((shot) => {
-                const { width, height } = shot;
-                const rows = width / height > FRAME_RATIO;
-                const strips = rows
-                    ? [edgeStrip(shot, 0, 0, width, 1), edgeStrip(shot, 0, height - 1, width, 1)]
-                    : [edgeStrip(shot, 0, 0, 1, height), edgeStrip(shot, width - 1, 0, 1, height)];
-                shot.close();
-                return { axis: rows ? 'rows' : 'columns', image: strips.join(', ') };
-            })
-            .catch(() => null));
-    }
-    return fills.get(src);
-}
 
 /**
  * Sets `name` in the poster at the largest size its longest word still fits
@@ -131,14 +92,7 @@ function createStage(stage, cards, calm) {
         },
         // Each layer carries its own fill, so a wipe never shows the previous
         // shot through the margins of the next.
-        onPaint: (img, src) => {
-            img.style.backgroundImage = '';
-            fillFor(src).then((fill) => {
-                if (!fill || img.getAttribute('src') !== src) return;
-                img.dataset.fill = fill.axis;
-                img.style.backgroundImage = fill.image;
-            });
-        }
+        onPaint: paintFill
     });
 
     const aim = (index) => {

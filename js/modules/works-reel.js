@@ -1,5 +1,6 @@
 import { readProjectCard, screenshotCards } from './project-card.js';
 import { isTouchReel } from './viewport.js';
+import { paintFill } from './shot-fill.js';
 
 // The desktop stage (project-stage.js) is inert on touch, so the project
 // screenshots never reached mobile at all. Here every card that has one carries
@@ -55,6 +56,7 @@ function loadShot(shot) {
     if (image.src) return;
 
     image.src = shot.dataset.src;
+    paintFill(image, shot.dataset.src);
     image.decode()
         .then(() => shot.classList.add('is-shot-ready'))
         .catch(() => { /* broken screenshot: leave the frame empty */ });
