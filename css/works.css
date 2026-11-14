@@ -568,7 +568,8 @@
 }
 
 /* Touch screens never get the desktop stage, so each card carries its own
-   shot, opening once as it scrolls into view (see works-reel.js). */
+   shot, opening once as it scrolls into view and its picture is ready (see
+   works-reel.js). */
 @media (max-width: 768px) and (hover: none) {
     .project-shot {
         grid-column: 1 / -1;
@@ -581,9 +582,15 @@
             opacity 180ms ease-out;
     }
 
-    .project-card.is-revealed .project-shot {
+    .project-shot.is-open {
         grid-template-rows: 1fr;
         opacity: 1;
+    }
+
+    /* Opened above the screen, where the reader is already past it: all at
+       once, so the page can be held still in the same frame. */
+    .project-shot.is-passed {
+        transition: none;
     }
 
     .project-shot__frame {
@@ -606,7 +613,7 @@
             transform var(--reveal-dur) var(--reveal-ease) 60ms;
     }
 
-    .project-card.is-revealed .project-shot.is-shot-ready img {
+    .project-shot.is-open img {
         opacity: 1;
         transform: none;
     }
