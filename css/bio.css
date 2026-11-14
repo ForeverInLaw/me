@@ -249,10 +249,8 @@
 
 /* What each icon does when its tile is taken up. socials.js marks the tile
    (.is-waking) and lets the move play through, whether or not the pointer
-   stays for it. Two are states instead: the envelope stands open for as long
-   as it is in hand, and the Spotify mark gives off sound for as long as a
-   track is playing - read off the card below, which is not stale then
-   (spotify.js). */
+   stays for it. One is a state instead: the envelope stands open for as long
+   as it is in hand. */
 @media (prefers-reduced-motion: no-preference) {
     .social__flap {
         transition: transform var(--duration-fast) var(--ease-smooth-out);
@@ -293,14 +291,6 @@
         animation-name: social-ring;
         animation-duration: var(--ring-round);
         animation-timing-function: var(--ease-out);
-    }
-
-    .bio:has(.np-card:not(.is-stale)) .social--spotify .social__ring {
-        --ring-round: 2400ms;
-        animation-name: social-ring;
-        animation-duration: var(--ring-round);
-        animation-timing-function: var(--ease-out);
-        animation-iteration-count: infinite;
     }
 }
 
@@ -561,14 +551,7 @@
     width: 100%;
     height: 12px;
     border-radius: 3px;
-    background: linear-gradient(90deg, var(--raised) 0%, var(--raised-hover) 50%, var(--raised) 100%);
-    background-size: 200% 100%;
-    animation: np-shimmer 1.6s linear infinite;
-}
-
-@keyframes np-shimmer {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
+    background: var(--raised-hover);
 }
 
 .np-message {

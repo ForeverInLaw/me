@@ -22,7 +22,7 @@ function describe(link) {
     return handle ? [name, ` ${handle}`] : [name];
 }
 
-/** The moves the icon on `link` is making: its own, and the ones it keeps up by itself. */
+/** The moves the icon on `link` is making right now. */
 const moves = (link) => link.getAnimations({ subtree: true }).filter((animation) => animation instanceof CSSAnimation);
 
 /**
