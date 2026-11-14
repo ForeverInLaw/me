@@ -1,7 +1,6 @@
-// How "The grind" arrives: each part lights as it comes up the screen. The
-// figures of its sentence brighten one by one, the heatmap plays the year week
-// by week, the records resolve word by word, the pushes and the commits step
-// in line by line and the day's hours go round the dial.
+// How "The grind" arrives: its two charts draw themselves as they come up the
+// screen. The heatmap plays the year week by week and the day's hours go round
+// the dial; the words and the lists around them are simply there.
 //
 // A part is "the first N of these are lit". How much of it has crossed a line
 // near the bottom of the screen says how many should be, and the part gets
@@ -51,26 +50,7 @@ function createLighter(groups, gap) {
 }
 
 /**
- * Wraps every word under `el`, with the space after it, in a span of its own
- * and returns the spans in reading order. The space goes in with the word so
- * that an underlined run never shows its underline between words not yet in.
- */
-function splitWords(el) {
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    const texts = [];
-    while (walker.nextNode()) texts.push(walker.currentNode);
-
-    return texts.flatMap((text) => {
-        const words = (text.textContent.match(/\s*\S+\s*/g) ?? []).map((word) => (
-            Object.assign(document.createElement('span'), { className: 'grind__word', textContent: word })
-        ));
-        if (words.length) text.replaceWith(...words);
-        return words;
-    });
-}
-
-/**
- * Unlights the rendered section and lights it back as its parts come up the
+ * Unlights the section's charts and lights them back as they come up the
  * screen. Call it once the section has its data.
  */
 export function stageGrind(section) {
@@ -81,19 +61,13 @@ export function stageGrind(section) {
         cell.style.setProperty('--row', String(i % DAYS_PER_WEEK));
         (weeks[Math.floor(i / DAYS_PER_WEEK)] ??= []).push(cell);
     });
-    const records = section.querySelector('.grind__records');
-    const singly = (selector) => Array.from(section.querySelectorAll(selector), (el) => [el]);
-    const line = motionMs('--stagger-stagger');
+    const hours = Array.from(section.querySelectorAll('.dial__bar'), (bar) => [bar]);
 
     // Each part: the box whose passage up the screen lights it, its pieces in
     // order, and the beat between two of them.
     const parts = [
-        ['.grind__sentence', singly('.grind__sentence strong'), motionMs('--duration-micro')],
         ['.heatmap', weeks, WEEK_GAP_MS],
-        ['.grind__records', records ? splitWords(records).map((word) => [word]) : [], motionMs('--stream-gap')],
-        ['.pushes__list', singly('.pushes__list li'), line],
-        ['.commits__list', singly('.commits__list li'), line],
-        ['.dial__face', singly('.dial__bar'), line],
+        ['.dial__face', hours, motionMs('--stagger-stagger')],
     ]
         .filter(([, groups]) => groups.length)
         .map(([over, groups, gap]) => ({ over: section.querySelector(over), light: createLighter(groups, gap) }));

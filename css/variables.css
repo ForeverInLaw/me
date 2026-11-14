@@ -52,7 +52,6 @@
     --distance-micro: 4px;
     --distance-medium: 12px;
     --blur-small: 2px;
-    --blur-medium: 3px;
 
     /* The patterns built on that scale. */
     --resize-dur: 300ms;
@@ -68,17 +67,11 @@
     --icon-swap-blur: var(--blur-small);
     --icon-swap-start-scale: 0.25;
     --icon-swap-ease: var(--ease-in-out);
-    /* Lines rising in one after another: the works list, the grind's rows. */
+    /* Lines rising in one after another: the works list. */
     --stagger-dur: var(--duration-very-slow);
     --stagger-distance: var(--distance-medium);
     --stagger-stagger: var(--duration-stagger);
-    --stagger-blur: var(--blur-medium);
     --stagger-ease: var(--ease-smooth-out);
-    /* A sentence arriving word by word. */
-    --stream-gap: 60ms;
-    --stream-fade: 350ms;
-    --stream-blur: 1px;
-    --stream-ease: var(--ease-smooth-out);
     /* Loaded content taking a placeholder's place. */
     --reveal-dur: var(--duration-slow);
     --reveal-blur: var(--blur-small);

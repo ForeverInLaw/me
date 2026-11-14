@@ -633,15 +633,11 @@
     }
 }
 
-/* Entrance: the heading comes in with the bio column beside it (bio.css), then
-   the works list cascades in once, row by row, each by its --i (set in
-   index.html ahead of the first paint). Without JS it all simply sits there,
-   so nothing depends on the animation. */
-.js .projects .works__head {
-    animation: rise-in var(--stagger-dur) var(--stagger-ease) backwards;
-}
-
+/* Entrance: the bio column and the heading are simply there; the works list
+   cascades in once, row by row, each by its --i (set in index.html ahead of
+   the first paint). Without JS it all simply sits there, so nothing depends
+   on the animation. */
 .js .project-list > li {
     animation: rise-in var(--stagger-dur) var(--stagger-ease) both;
-    animation-delay: calc(var(--i, 0) * var(--stagger-stagger) + 80ms);
+    animation-delay: calc(var(--i, 0) * var(--stagger-stagger));
 }

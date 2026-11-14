@@ -164,14 +164,12 @@ ol {
     transform: scale(var(--icon-swap-start-scale));
 }
 
-/* How the page's parts first come in, one after another: the bio column's
-   blocks, the works list's rows, the stage. Only where they start from, so
-   each ends as it is styled. */
+/* How the works first come in: the list's rows one after another, then the
+   stage. Only where they start from, so each ends as it is styled. */
 @keyframes rise-in {
     from {
         opacity: 0;
         transform: translateY(var(--stagger-distance));
-        filter: blur(var(--stagger-blur));
     }
 }
 

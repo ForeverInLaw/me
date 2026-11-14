@@ -1,7 +1,7 @@
 /* How the works column hands over on scroll (works-scroll.js). "Selected
    works" takes the first screen whole; everything after it is one sheet. On
    desktop the works hold still and fall out of focus while the sheet rises
-   over them, and "The grind" comes alive on it as it arrives. */
+   over them, and the charts of "The grind" draw themselves as it arrives. */
 
 /* Registered so it stays on the element that reads it: an inherited value
    would restyle every row of the works on every scroll frame. */
@@ -81,19 +81,12 @@
 }
 
 /* ── the grind's arrival (grind-reveal.js) ──
-   Each part starts unlit (.is-staged) and JS marks its pieces .is-lit in
-   order as the part comes up the screen; these transitions are all the
+   The two charts draw themselves as they come up the screen; the words and
+   the lists around them are simply there. A chart starts unlit (.is-staged)
+   and JS marks its pieces .is-lit in order; these transitions are all the
    motion there is, so scrolling back simply unlights them. They wait for the
    arrival to begin (.is-arriving): on from the start, they would play the
-   whole section going dark, off screen, while the page is still coming in. */
-
-.grind.is-arriving .grind__sentence strong {
-    transition: color 500ms var(--ease-smooth-out);
-}
-
-.grind.is-staged .grind__sentence strong:not(.is-lit) {
-    color: inherit;
-}
+   charts going dark, off screen, while the page is still coming in. */
 
 /* A week lights top to bottom (--row), so the year sweeps in on a slant. */
 .grind.is-arriving .heatmap__cell {
@@ -119,25 +112,4 @@
 .grind.is-staged .dial__bar:not(.is-lit) {
     opacity: 0;
     stroke-dashoffset: 1;
-}
-
-/* Whatever steps in whole: a push, a commit. */
-.grind.is-arriving :is(.pushes__list li, .commits__list li) {
-    transition: opacity var(--stagger-dur) var(--stagger-ease), transform var(--stagger-dur) var(--stagger-ease);
-}
-
-.grind.is-staged :is(.pushes__list li, .commits__list li):not(.is-lit) {
-    opacity: 0;
-    transform: translateY(var(--stagger-distance));
-}
-
-/* The records resolve word by word, each out of a slight blur. The words stay
-   inline, so a record's underline runs on through them. */
-.grind.is-arriving .grind__word {
-    transition: opacity var(--stream-fade) var(--stream-ease), filter var(--stream-fade) var(--stream-ease);
-}
-
-.grind.is-staged .grind__word:not(.is-lit) {
-    opacity: 0;
-    filter: blur(var(--stream-blur));
 }

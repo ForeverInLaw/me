@@ -1,7 +1,7 @@
 /* global gsap, ScrollTrigger -- loaded as a classic script before the modules (index.html). */
 // How the works column hands over on scroll. "Selected works" and the sheet
-// after it are a screen each. As the sheet comes up the screen, "The grind"
-// on it lights up part by part (grind-reveal.js); on desktop the works are
+// after it are a screen each. As the sheet comes up the screen, the charts of
+// "The grind" on it draw themselves (grind-reveal.js); on desktop the works are
 // pinned under it meanwhile and fall out of focus. The layout and the looks
 // are CSS (works-scroll.css): this module only measures and feeds it the
 // progress.
