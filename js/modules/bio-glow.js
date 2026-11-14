@@ -34,7 +34,7 @@ const float ZOOM = 0.9;
 const float TURN = 500.0;
 const float GRAIN = 0.1;
 const float CONTRAST = 1.08;
-const float SATURATION = 0.82;
+const float SATURATION = 1.0;
 
 mat2 rot(float a) {
     float s = sin(a), c = cos(a);
