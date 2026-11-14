@@ -636,6 +636,14 @@ html:not(.js) .np-placeholder {
     font-size: 13px;
 }
 
+/* The line under the tiles reads the one being hovered. A finger hovers
+   nothing, so there it would only ever count the tiles above it. */
+@media (hover: none) {
+    .socials__caption {
+        display: none;
+    }
+}
+
 .socials__caption b,
 .playlists__caption b {
     color: var(--fg);

@@ -49,5 +49,5 @@ export async function initPlaylists() {
     container.replaceChildren(...row.children);
 
     attachPlaylistPeek(container, playlists);
-    swapText(caption, `${playlists.length} playlists on Spotify`);
+    swapText(caption, 'Playlists on Spotify');
 }
