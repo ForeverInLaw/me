@@ -16,11 +16,13 @@ import { paintFill } from './shot-fill.js';
 // page came back at the place it was left, or jumped) opens at once, unseen,
 // and the page is held where it was.
 
-// A card is reached once its top is above the lower third of the viewport, and
-// stays reached however far above the viewport it goes: the margin's top is
-// taller than any page. A card that only counted while on screen would be
-// missed by a page that lands past it.
-const REVEAL_MARGIN = '1000000px 0px -30% 0px';
+// A frame is reached once it has come a little way up from the bottom of the
+// viewport, so it opens where it can be seen opening: the frame itself is
+// watched, not its card, whose words would set it off while the frame was
+// still below the edge. It stays reached however far above the viewport it
+// goes: the margin's top is taller than any page. A frame that only counted
+// while on screen would be missed by a page that lands past it.
+const REVEAL_MARGIN = '1000000px 0px -15% 0px';
 
 // Start downloading two screens ahead of the reveal. loading="lazy" cannot do
 // this job here: the image sits inside a 0fr grid row, so as far as the browser
@@ -73,19 +75,17 @@ function loadShot(shot) {
 }
 
 /**
- * Opens the frame of `card`, whose shot is decoded. On screen or below it, the
- * frame slides open (works.css). Above the screen it is simply open, and the
- * page stays where the reader has it.
+ * Opens `shot`, which is decoded. On screen or below it, the frame slides open
+ * (works.css). Above the screen it is simply open, and the page stays where
+ * the reader has it.
  */
-function openShot(card) {
-    const shot = card.querySelector('.project-shot');
-    const { bottom, height } = card.getBoundingClientRect();
-    if (bottom > 0) {
+function openShot(shot) {
+    if (shot.getBoundingClientRect().bottom > 0) {
         shot.classList.add('is-open');
         return;
     }
     shot.classList.add('is-open', 'is-passed');
-    if (!keepsItsPlace()) window.scrollBy(0, card.getBoundingClientRect().height - height);
+    if (!keepsItsPlace()) window.scrollBy(0, shot.getBoundingClientRect().height);
 }
 
 export function initWorksReel() {
@@ -96,9 +96,9 @@ export function initWorksReel() {
     const cards = screenshotCards();
     if (!cards.length) return;
 
-    // Two passes over the same cards at different distances: fetch early so the
-    // file is decoded by the time the frame opens, reveal late so the opening
-    // lands where the reader is looking.
+    // Two passes at different distances: a card is fetched for early, so the
+    // file is decoded by the time its frame opens, and the frame is revealed
+    // late, so the opening lands where the reader is looking.
     const fetcher = new IntersectionObserver((entries, self) => {
         entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
@@ -111,19 +111,19 @@ export function initWorksReel() {
     const revealer = new IntersectionObserver((entries, self) => {
         entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            const card = entry.target;
-            // A card reached before its fetch margin fired still needs the
+            const shot = entry.target;
+            // A frame reached before its fetch margin fired still needs the
             // shot, and one reached before its shot is decoded opens when it
             // is. A broken shot keeps its frame closed rather than open onto
             // nothing.
-            loadShot(card.querySelector('.project-shot')).then(() => openShot(card), () => {});
-            self.unobserve(card);
+            loadShot(shot).then(() => openShot(shot), () => {});
+            self.unobserve(shot);
         });
     }, { rootMargin: REVEAL_MARGIN });
 
     cards.forEach((card) => {
         if (!mountShot(card)) return;
         fetcher.observe(card);
-        revealer.observe(card);
+        revealer.observe(card.querySelector('.project-shot'));
     });
 }
