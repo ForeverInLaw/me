@@ -1,4 +1,4 @@
-// "The grind": renders assets/github.json (written every few hours by scripts/github-stats.mjs)
+// "On GitHub", the grind in the code: renders assets/github.json (written every few hours by scripts/github-stats.mjs)
 // as a sentence of totals, a contribution heatmap in the site palette, the
 // year's records (grind-records.js), the latest public pushes and commits, and
 // the commits by hour of the day (day-dial.js).
