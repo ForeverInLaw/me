@@ -399,7 +399,7 @@
     font-size: clamp(20px, 2.2cqi, 28px);
     font-weight: 700;
     font-stretch: 112%;
-    line-height: 1.25;
+    line-height: 1.3;
     letter-spacing: -0.015em;
     text-wrap: pretty;
 }
