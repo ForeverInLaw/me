@@ -32,12 +32,14 @@ export function initWorksMore() {
     const sheet = document.querySelector('.works__sheet');
     if (!section || !sheet) return;
 
-    const extra = Array.from(projectCards())
+    const cards = Array.from(projectCards());
+    const extra = cards
         .filter((card) => !card.dataset.screenshot)
         .map((card) => card.closest('li'));
     if (!extra.length) return;
 
-    button.textContent = `${extra.length} more works`;
+    // The whole count, the one the heading gives, not how many are waiting.
+    button.textContent = `All ${cards.length} projects`;
     button.hidden = false;
 
     button.addEventListener('click', () => {
