@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10392,
-    "commits": 9199,
-    "pullRequests": 542,
+    "contributions": 10426,
+    "commits": 9231,
+    "pullRequests": 544,
     "issues": 397,
     "repos": 92
   },
@@ -379,21 +379,21 @@
       76,
       123,
       23,
-      12
+      46
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-14T15:41:40Z",
+      "pushedAt": "2026-11-14T21:41:12Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
       "name": "redstone-md/Overhaul",
       "url": "https://github.com/redstone-md/Overhaul",
-      "pushedAt": "2026-11-14T12:31:09Z",
+      "pushedAt": "2026-11-14T18:46:05Z",
       "language": "Java",
       "color": "#b07219"
     },
@@ -434,15 +434,15 @@
       136,
       140,
       125,
-      85,
-      97,
-      180,
-      267,
-      339,
+      86,
+      98,
+      184,
+      271,
+      344,
       444,
-      413,
-      488,
-      557,
+      420,
+      497,
+      558,
       503,
       551,
       616
@@ -451,39 +451,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #163 from redstone-md/build/libwebrtc-headers",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/aedb2ea4d243f442eb0705eaebb13b54ac54e177",
-      "at": "2026-11-13T22:27:06Z"
+      "message": "Merge pull request #165 from redstone-md/feat/ios-testflight",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1fd937b8b12fab766d13c3d7a25cd4511045288d",
+      "at": "2026-11-14T18:23:40Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "build(media): pin the libwebrtc-m150-9c3a138-2 archives",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/499967d955f46d3fc46a279d9b736e1b8edf739f",
-      "at": "2026-11-13T21:35:41Z"
+      "message": "Merge pull request #164 from redstone-md/feat/macos-notarization",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/24c87a0a331801da8efaa45ca00f644a8dff40fa",
+      "at": "2026-11-14T18:23:24Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "build(media): keep only the libwebrtc headers webrtc-sys includes",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/e7797b0d00a72a46bcf392018b600e9af61f4005",
-      "at": "2026-11-13T20:53:10Z"
+      "message": "fix(ios): unique build numbers, uploads that fail without a key, clea…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/32528531c2b463813553c1d93cba90e8e6e9dd3d",
+      "at": "2026-11-14T17:03:44Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #162 from redstone-md/fix/release-publish-gate",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/769e61647a41169e2bea7a649afbeec3d9e70b22",
-      "at": "2026-11-13T19:44:05Z"
+      "message": "Merge branch 'feat/macos-notarization' into feat/ios-testflight",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/3a4b2cebda4f8e59d22cbd28a1e1b75e33558fbc",
+      "at": "2026-11-14T17:03:28Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ci): publish a release only when no build was cancelled",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/d755348a1b60c0d25c1f6c0b183d6d19f99f4882",
-      "at": "2026-11-13T18:15:55Z"
+      "message": "fix(macos): keep the certificate from PRs and never ship an unnotariz…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/b24b002c95c9832938cc69ce19cbf001c6247343",
+      "at": "2026-11-14T17:03:15Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "chore(release): prepare 0.29.1",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/652d20e1926948c6c733ecc2f5d64166ec61f1d3",
-      "at": "2026-11-13T16:43:56Z"
+      "message": "ci(ios): upload release tags to TestFlight",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/ed4fc2a7e851398bc09b7b9837cb8e206020bb95",
+      "at": "2026-11-14T15:55:04Z"
     }
   ]
 }
