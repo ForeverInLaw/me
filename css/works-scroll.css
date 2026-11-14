@@ -67,8 +67,11 @@
     }
 
     /* --recede runs 0 to 1 with the sheet's rise. The class is only on while
-       it is above 0, so a works list at rest carries no filter at all. */
+       it is above 0, so a works list at rest carries no filter at all. Out of
+       focus it is out of reach too: a pointer crossing it on the way to the
+       sheet moves no row and changes no project on the stage. */
     .works.has-sheet .projects.is-receding {
+        pointer-events: none;
         filter: blur(calc(var(--recede) * 6px));
         opacity: calc(1 - var(--recede) * 0.65);
         transform: scale(calc(1 - var(--recede) * 0.025));
