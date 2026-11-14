@@ -1,18 +1,24 @@
 :root {
     color-scheme: dark;
 
-    /* Ground and surfaces: a near-black violet page, one raised tone for the
+    /* Ground and surfaces: a warm near-black page, one raised tone for the
        bio column, one more for chips and cards sitting on it. */
-    --bg: #0b0a0f;
-    --panel: #121019;
-    --raised: #1b1824;
-    --raised-hover: #242030;
-    --line: #24202e;
+    --bg: #0c0b0a;
+    --panel: #141210;
+    --raised: #1e1b18;
+    --raised-hover: #292520;
+    --line: #27231e;
 
-    --fg: #f1eef6;
-    --muted: #9a93a9;
-    --accent: #c8a8ff;
-    --on-accent: #0b0a0f;
+    --fg: #f3efe8;
+    --muted: #a09a8f;
+    --accent: #f0ad52;
+    --on-accent: #0c0b0a;
+
+    /* The steps up to the accent: a day's or an hour's share of the work
+       (the heatmap, the dial). */
+    --heat-1: #3a2e1d;
+    --heat-2: #6b4f27;
+    --heat-3: #a97a37;
 
     --font: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
 
@@ -108,9 +114,9 @@
     --press-dur: 160ms;
     --press-ease: var(--ease-bounce);
 
-    --status-active: #4ade80;
-    --status-wip: #facc15;
-    --status-oss: #38bdf8;
-    --status-archived: #8a8399;
+    --status-active: #8ccf8f;
+    --status-wip: #e4d77a;
+    --status-oss: #86b9dc;
+    --status-archived: #8b867d;
     --spotify: #1ed760;
 }

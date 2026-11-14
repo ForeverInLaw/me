@@ -228,9 +228,9 @@
     visibility: hidden;
 }
 
-.heatmap__cell[data-level="1"] { background: #3a3150; }
-.heatmap__cell[data-level="2"] { background: #5e4e86; }
-.heatmap__cell[data-level="3"] { background: #8f76c4; }
+.heatmap__cell[data-level="1"] { background: var(--heat-1); }
+.heatmap__cell[data-level="2"] { background: var(--heat-2); }
+.heatmap__cell[data-level="3"] { background: var(--heat-3); }
 .heatmap__cell[data-level="4"] { background: var(--accent); }
 
 /* An inset ring, not an outline: the scroll wrapper clips anything drawn

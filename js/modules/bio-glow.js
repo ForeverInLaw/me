@@ -25,9 +25,9 @@ uniform vec2 uResolution;
 uniform float uTime;
 out vec4 fragColor;
 
-const vec3 LIGHT = vec3(0.478, 0.243, 0.643);
-const vec3 MID = vec3(0.165, 0.102, 0.400);
-const vec3 DARK = vec3(0.047, 0.031, 0.102);
+const vec3 LIGHT = vec3(0.500, 0.275, 0.100);
+const vec3 MID = vec3(0.250, 0.115, 0.060);
+const vec3 DARK = vec3(0.050, 0.042, 0.036);
 
 const float SPEED = 0.25;
 const float ZOOM = 0.9;

@@ -38,7 +38,7 @@ Optional, may be dropped in a redesign: the "Slide to enter" entry screen, the l
 
 - Name: ForeverInLaw; domain zaebal.dev.
 - Voice: short, dry, a little self-ironic, in English ("…mostly closed source and mostly after dark.", "The Grind — Proof of work.").
-- The night-time rhythm and music are real parts of the identity; the current purple/pink look is not binding.
+- The night-time rhythm and music are real parts of the identity; the colours are not binding (warm near-black with an amber accent now).
 
 ## Evidence on Hand
 

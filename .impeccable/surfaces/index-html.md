@@ -11,7 +11,7 @@ Scope: zaebal.dev home page (index.html). Mode: Experience (personal bio page + 
 
 THESIS: A bio page that never lets go of the person: identity, links and live music sit in a sticky column while the portfolio scrolls beside it as a big index. Refuses the centred link-stack and the card-grid portfolio.
 
-OWN-WORLD: Near-black violet ground (#0b0a0f), one raised panel tone for the bio column, lilac accent (#c8a8ff) for hover and active, status colours only on dots. Archivo with the width axis: expanded black for the name and section heads, normal width for running text. Pills for small controls, 12-16px radii, hairline row rules.
+OWN-WORLD: Warm near-black ground (#0c0b0a), one raised panel tone for the bio column, amber accent (#f0ad52) for hover and active, status colours only on dots. Archivo with the width axis: expanded black for the name and section heads, normal width for running text. Pills for small controls, 12-16px radii, hairline row rules.
 
 STORY: Visitors see who it is and what is playing within one glance, then skim fourteen projects by name, hover any row to see the site itself, and leave through a social link or a playlist.
 

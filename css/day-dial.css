@@ -36,7 +36,7 @@
 /* --share (from JS) is the hour's commits against the busiest hour's: it sets
    the bar's length there and its place on the heatmap's ramp here. */
 .dial__bar {
-    stroke: color-mix(in srgb, var(--accent) calc(var(--share) * 100%), #3a3150);
+    stroke: color-mix(in srgb, var(--accent) calc(var(--share) * 100%), var(--heat-1));
     stroke-width: 7;
     stroke-linecap: round;
     /* One dash as long as the bar (pathLength, day-dial.js): offset by its
