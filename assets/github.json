@@ -384,18 +384,18 @@
   },
   "recent": [
     {
+      "name": "redstone-md/shield",
+      "url": "https://github.com/redstone-md/shield",
+      "pushedAt": "2026-11-14T04:30:48Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
       "pushedAt": "2026-11-13T22:27:09Z",
       "language": "Rust",
       "color": "#dea584"
-    },
-    {
-      "name": "redstone-md/shield",
-      "url": "https://github.com/redstone-md/shield",
-      "pushedAt": "2026-11-13T22:24:31Z",
-      "language": "Go",
-      "color": "#00ADD8"
     },
     {
       "name": "redstone-md/Overhaul",
