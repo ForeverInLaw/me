@@ -592,34 +592,14 @@
         background: var(--panel);
     }
 
-    .project-shot__bar {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 10px;
-    }
-
-    .project-shot__bar span {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--raised-hover);
-    }
-
-    .project-shot__domain {
-        margin-left: 6px;
-        overflow: hidden;
-        color: var(--muted);
-        font-size: 11px;
-        font-style: normal;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
+    /* A desktop screenshot whole is too small to read at this width, so the
+       frame is taller than it and shows the middle of its top at a larger
+       scale. */
     .project-shot img {
         width: 100%;
-        height: auto;
-        aspect-ratio: auto 16 / 9;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        object-position: center top;
         opacity: 0;
         transform: scale(1.04);
         transition:

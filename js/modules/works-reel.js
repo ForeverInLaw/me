@@ -3,7 +3,7 @@ import { isTouchReel } from './viewport.js';
 
 // The desktop stage (project-stage.js) is inert on touch, so the project
 // screenshots never reached mobile at all. Here every card that has one carries
-// it inline in a browser frame that opens as the card scrolls into view. Scroll
+// it inline, in a frame that opens as the card scrolls into view. Scroll
 // is the only input, so the card can stay a plain <a> and tapping still just
 // opens the project.
 //
@@ -24,23 +24,18 @@ const FETCH_MARGIN = '200% 0px 200% 0px';
 // The inner frame is the single grid item the 0fr -> 1fr reveal collapses.
 const FRAME_TEMPLATE = `
     <div class="project-shot__frame">
-        <div class="project-shot__bar">
-            <span></span><span></span><span></span>
-            <em class="project-shot__domain"></em>
-        </div>
         <img alt="" decoding="async">
     </div>`;
 
 // Returns false when the card has no usable screenshot, so the caller can skip
 // observing a card that would never have anything to reveal.
 function mountShot(card) {
-    const { screenshot, title, domain } = readProjectCard(card);
+    const { screenshot, title } = readProjectCard(card);
     if (!screenshot) return false;
 
     const shot = document.createElement('div');
     shot.className = 'project-shot';
     shot.innerHTML = FRAME_TEMPLATE;
-    shot.querySelector('.project-shot__domain').textContent = domain;
     shot.dataset.src = screenshot;
 
     const image = shot.querySelector('img');
