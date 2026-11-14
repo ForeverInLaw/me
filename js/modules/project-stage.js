@@ -18,6 +18,7 @@ import { projectCards, readProjectCard } from './project-card.js';
 import { hasStage, prefersReducedMotion } from './viewport.js';
 import { createShotStack } from './shot-stack.js';
 import { watchRowIntent } from './row-intent.js';
+import { WORKS_BACK_EVENT } from './works-scroll.js';
 
 const SWAP_IN = { autoAlpha: 1, filter: 'blur(0px)', duration: 0.35, ease: 'sine.out', clearProps: 'filter', overwrite: true, lazy: false };
 const SWAP_FROM = { autoAlpha: 0, filter: 'blur(4px)' };
@@ -198,6 +199,19 @@ export function initProjectStage() {
     const section = stage.closest('.projects');
     const { show, skim } = createStage(stage, cards, prefersReducedMotion());
     watchRowIntent(cards, { area: section, onLook: show, onPass: skim });
+
+    // Back from under the sheet, the list may lie under a pointer that came to
+    // rest while it was out of reach: no row was entered, so the stage is told
+    // which one that is.
+    let pointer = null;
+    window.addEventListener('pointermove', ({ clientX, clientY }) => {
+        pointer = { clientX, clientY };
+    }, { passive: true });
+    section.addEventListener(WORKS_BACK_EVENT, () => {
+        const row = pointer && document.elementFromPoint(pointer.clientX, pointer.clientY)?.closest('.project-card');
+        const index = cards.indexOf(row);
+        if (index >= 0) show(index);
+    });
 
     // The stage's bottom row takes the height of one of the index's rows.
     stage.style.setProperty('--rows', String(cards.length));

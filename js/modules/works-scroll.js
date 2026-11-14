@@ -13,6 +13,13 @@ import { stageGrind } from './grind-reveal.js';
 // enough to round off the steps of a mouse wheel.
 const SCRUB_LAG = 0.4;
 
+/**
+ * Fired on the works section when it is back in full from under the sheet.
+ * Receding, it was out of the pointer's reach (works-scroll.css), so whatever
+ * follows the pointer over it has to look again at where the pointer is.
+ */
+export const WORKS_BACK_EVENT = 'works:back';
+
 /** Call once "The grind" has rendered, so there is something to stage. */
 export function initWorksScroll() {
     const works = document.querySelector('.works');
@@ -40,8 +47,10 @@ export function initWorksScroll() {
     let recorded = false;
     const markReceding = (tween) => {
         const progress = tween.progress();
+        const wasReceding = projects.classList.contains('is-receding');
         projects.classList.toggle('is-receding', progress > 0);
         projects.classList.toggle('is-covered', progress === 1);
+        if (wasReceding && progress === 0) projects.dispatchEvent(new CustomEvent(WORKS_BACK_EVENT));
     };
 
     const recede = gsap.fromTo(projects, { '--recede': 0 }, {
