@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10426,
-    "commits": 9231,
-    "pullRequests": 544,
+    "contributions": 10445,
+    "commits": 9248,
+    "pullRequests": 546,
     "issues": 397,
     "repos": 92
   },
@@ -372,22 +372,22 @@
       76,
       123,
       23,
-      46,
-      0
+      51,
+      14
     ]
   },
   "recent": [
     {
       "name": "redstone-md/Overhaul",
       "url": "https://github.com/redstone-md/Overhaul",
-      "pushedAt": "2026-11-15T06:06:26Z",
+      "pushedAt": "2026-11-15T14:43:02Z",
       "language": "Java",
       "color": "#b07219"
     },
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-14T21:41:12Z",
+      "pushedAt": "2026-11-15T13:31:18Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -425,10 +425,10 @@
       318,
       279,
       185,
-      136,
-      140,
-      125,
-      86,
+      138,
+      142,
+      128,
+      91,
       98,
       184,
       271,
@@ -436,48 +436,48 @@
       443,
       420,
       497,
-      556,
-      502,
-      551,
+      557,
+      505,
+      552,
       616
     ]
   },
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #165 from redstone-md/feat/ios-testflight",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1fd937b8b12fab766d13c3d7a25cd4511045288d",
-      "at": "2026-11-14T18:23:40Z"
+      "message": "Merge pull request #166 from redstone-md/feat/ios-calls",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/10d291f5a692d593bc9a5dc22655467b32db26b0",
+      "at": "2026-11-15T11:29:28Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #164 from redstone-md/feat/macos-notarization",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/24c87a0a331801da8efaa45ca00f644a8dff40fa",
-      "at": "2026-11-14T18:23:24Z"
+      "message": "fix(diagnostics): close three races in reporting and log sharing",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/82257bd96528392af1df72e06d7d89ecb04bccd8",
+      "at": "2026-11-15T11:08:58Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ios): unique build numbers, uploads that fail without a key, clea…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/32528531c2b463813553c1d93cba90e8e6e9dd3d",
-      "at": "2026-11-14T17:03:44Z"
+      "message": "fix(ios): keep the call's audio route in step with headsets",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c4a2221fb03e2f251712ffaeb80e6e29f0ced4a7",
+      "at": "2026-11-15T11:08:58Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge branch 'feat/macos-notarization' into feat/ios-testflight",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/3a4b2cebda4f8e59d22cbd28a1e1b75e33558fbc",
-      "at": "2026-11-14T17:03:28Z"
+      "message": "fix(ios): check the packaged frameworks without a SIGPIPE",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/8e52880c7785c8c942317318fe61bcff8364ca52",
+      "at": "2026-11-15T11:08:58Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(macos): keep the certificate from PRs and never ship an unnotariz…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/b24b002c95c9832938cc69ce19cbf001c6247343",
-      "at": "2026-11-14T17:03:15Z"
+      "message": "build(media): record the iOS keychain store in the bench lockfile",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/fff053d5b60dd7ddb0c8857f61ab130b199c445e",
+      "at": "2026-11-15T11:08:58Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "ci(ios): upload release tags to TestFlight",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/ed4fc2a7e851398bc09b7b9837cb8e206020bb95",
-      "at": "2026-11-14T15:55:04Z"
+      "message": "refactor(diagnostics): name the Rust capture for what it carries",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c5647e6f0538e5bd316d701206366fba1c99bff5",
+      "at": "2026-11-15T10:53:21Z"
     }
   ]
 }
