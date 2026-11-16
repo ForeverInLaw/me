@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10385,
-    "commits": 9190,
-    "pullRequests": 545,
+    "contributions": 10396,
+    "commits": 9200,
+    "pullRequests": 546,
     "issues": 397,
     "repos": 91
   },
@@ -373,22 +373,22 @@
       123,
       23,
       51,
-      14,
-      0
+      18,
+      7
     ]
   },
   "recent": [
     {
       "name": "redstone-md/Overhaul",
       "url": "https://github.com/redstone-md/Overhaul",
-      "pushedAt": "2026-11-16T01:29:15Z",
+      "pushedAt": "2026-11-16T19:37:02Z",
       "language": "Java",
       "color": "#b07219"
     },
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-15T13:31:18Z",
+      "pushedAt": "2026-11-16T18:35:02Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -430,13 +430,13 @@
       142,
       128,
       91,
-      98,
-      184,
+      102,
+      187,
       271,
       344,
       443,
       420,
-      497,
+      500,
       557,
       505,
       552,
@@ -446,39 +446,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #166 from redstone-md/feat/ios-calls",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/10d291f5a692d593bc9a5dc22655467b32db26b0",
-      "at": "2026-11-15T11:29:28Z"
+      "message": "Merge pull request #168 from redstone-md/fix/windows-crash-symbols",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/e37ed84b701e63764cba021b759dbba5a4e5b672",
+      "at": "2026-11-16T18:35:00Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(diagnostics): close three races in reporting and log sharing",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/82257bd96528392af1df72e06d7d89ecb04bccd8",
-      "at": "2026-11-15T11:08:58Z"
+      "message": "ci(windows): keep runner and plugin PDBs with diagnostic installers",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1c30277e73a6ed2c6d2e52fb2d4c3609da7291e6",
+      "at": "2026-11-16T18:02:05Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ios): keep the call's audio route in step with headsets",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/c4a2221fb03e2f251712ffaeb80e6e29f0ced4a7",
-      "at": "2026-11-15T11:08:58Z"
+      "message": "Merge pull request #167 from redstone-md/fix/ios-call-audio",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/77653d7ef48d221caed511440144f0f21277ce70",
+      "at": "2026-11-16T18:00:20Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ios): check the packaged frameworks without a SIGPIPE",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/8e52880c7785c8c942317318fe61bcff8364ca52",
-      "at": "2026-11-15T11:08:58Z"
+      "message": "ci(windows): find the runner PDB under its configuration folder",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/0ecfee07cdcfb1d98ec4f5d8d0ba9a1a56c395d1",
+      "at": "2026-11-16T12:30:23Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "build(media): record the iOS keychain store in the bench lockfile",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/fff053d5b60dd7ddb0c8857f61ab130b199c445e",
-      "at": "2026-11-15T11:08:58Z"
+      "message": "fix(windows): keep runner and plugin symbols for crash reports",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/2ad8c3604dd7f78dc35a6988be7978b7c8fdb93c",
+      "at": "2026-11-16T12:12:30Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(diagnostics): name the Rust capture for what it carries",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/c5647e6f0538e5bd316d701206366fba1c99bff5",
-      "at": "2026-11-15T10:53:21Z"
+      "message": "fix(ios): ignore SIGPIPE so a closed peer cannot kill the app",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/43fa797d4629928854d9f8bfe20c0feedce8af77",
+      "at": "2026-11-16T12:01:22Z"
     }
   ]
 }
