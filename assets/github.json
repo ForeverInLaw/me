@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10396,
-    "commits": 9200,
-    "pullRequests": 546,
+    "contributions": 10403,
+    "commits": 9205,
+    "pullRequests": 548,
     "issues": 397,
     "repos": 91
   },
@@ -375,28 +375,35 @@
       51,
       18,
       7,
-      0
+      7
     ]
   },
   "recent": [
     {
       "name": "redstone-md/Overhaul",
       "url": "https://github.com/redstone-md/Overhaul",
-      "pushedAt": "2026-11-17T02:06:31Z",
+      "pushedAt": "2026-11-17T16:05:50Z",
       "language": "Java",
       "color": "#b07219"
     },
     {
+      "name": "redstone-md/shield",
+      "url": "https://github.com/redstone-md/shield",
+      "pushedAt": "2026-11-17T15:41:12Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-16T23:08:20Z",
+      "pushedAt": "2026-11-17T15:31:20Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
-      "name": "redstone-md/shield",
-      "url": "https://github.com/redstone-md/shield",
-      "pushedAt": "2026-11-14T04:30:48Z",
+      "name": "redstone-md/moss",
+      "url": "https://github.com/redstone-md/moss",
+      "pushedAt": "2026-11-17T12:59:42Z",
       "language": "Go",
       "color": "#00ADD8"
     },
@@ -406,13 +413,6 @@
       "pushedAt": "2026-11-12T19:37:23Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "redstone-md/relic",
-      "url": "https://github.com/redstone-md/relic",
-      "pushedAt": "2026-11-12T09:34:15Z",
-      "language": "Rust",
-      "color": "#dea584"
     }
   ],
   "hours": {
@@ -434,7 +434,7 @@
       102,
       187,
       271,
-      344,
+      349,
       443,
       420,
       500,
@@ -446,40 +446,40 @@
   },
   "commits": [
     {
+      "repo": "redstone-md/shield",
+      "message": "Merge pull request #61 from redstone-md/fix/external-reply-quote",
+      "url": "https://github.com/redstone-md/shield/commit/6e1ccfcc6c19e97de1fbabc407f9cd8925706045",
+      "at": "2026-11-17T15:41:12Z"
+    },
+    {
+      "repo": "redstone-md/shield",
+      "message": "ci(e2e-ui): pin runner to ubuntu-24.04 for playwright chromium",
+      "url": "https://github.com/redstone-md/shield/commit/f5f21a5cae074498cba7a71bc28ff9181df0ff90",
+      "at": "2026-11-17T15:37:56Z"
+    },
+    {
+      "repo": "redstone-md/shield",
+      "message": "fix(bot): keep outside-post quote out of history when message has no …",
+      "url": "https://github.com/redstone-md/shield/commit/ed6c627565b3b6873f458024074a24458526fc20",
+      "at": "2026-11-17T15:37:55Z"
+    },
+    {
+      "repo": "redstone-md/shield",
+      "message": "fix(bot): label outside-post quotes for the LLM and keep them out of …",
+      "url": "https://github.com/redstone-md/shield/commit/9d6509967ac5ba5e10e4be5f2f0619147453d055",
+      "at": "2026-11-17T15:32:42Z"
+    },
+    {
+      "repo": "redstone-md/shield",
+      "message": "fix(bot): check quoted posts from outside channels",
+      "url": "https://github.com/redstone-md/shield/commit/71511c28ae7d9625374e3721214d57a11435a49c",
+      "at": "2026-11-17T15:23:49Z"
+    },
+    {
       "repo": "redstone-md/mosh-flutter",
       "message": "Merge pull request #168 from redstone-md/fix/windows-crash-symbols",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/e37ed84b701e63764cba021b759dbba5a4e5b672",
       "at": "2026-11-16T18:35:00Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "ci(windows): keep runner and plugin PDBs with diagnostic installers",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1c30277e73a6ed2c6d2e52fb2d4c3609da7291e6",
-      "at": "2026-11-16T18:02:05Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #167 from redstone-md/fix/ios-call-audio",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/77653d7ef48d221caed511440144f0f21277ce70",
-      "at": "2026-11-16T18:00:20Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "ci(windows): find the runner PDB under its configuration folder",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/0ecfee07cdcfb1d98ec4f5d8d0ba9a1a56c395d1",
-      "at": "2026-11-16T12:30:23Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(windows): keep runner and plugin symbols for crash reports",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/2ad8c3604dd7f78dc35a6988be7978b7c8fdb93c",
-      "at": "2026-11-16T12:12:30Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ios): ignore SIGPIPE so a closed peer cannot kill the app",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/43fa797d4629928854d9f8bfe20c0feedce8af77",
-      "at": "2026-11-16T12:01:22Z"
     }
   ]
 }
