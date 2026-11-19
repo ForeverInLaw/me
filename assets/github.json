@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10434,
-    "commits": 9234,
-    "pullRequests": 550,
+    "contributions": 10439,
+    "commits": 9238,
+    "pullRequests": 551,
     "issues": 397,
     "repos": 91
   },
@@ -373,18 +373,25 @@
       123,
       23,
       51,
-      18,
+      20,
       12,
       14,
       19,
-      0
+      3
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-18T22:46:16Z",
+      "pushedAt": "2026-11-19T09:50:30Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "redstone-md/relic",
+      "url": "https://github.com/redstone-md/relic",
+      "pushedAt": "2026-11-19T09:16:00Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -408,13 +415,6 @@
       "pushedAt": "2026-11-17T15:41:12Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "ForeverInLaw/picoclaw",
-      "url": "https://github.com/ForeverInLaw/picoclaw",
-      "pushedAt": "2026-11-12T19:37:23Z",
-      "language": "Go",
-      "color": "#00ADD8"
     }
   ],
   "hours": {
@@ -429,8 +429,8 @@
       318,
       279,
       185,
-      138,
-      142,
+      140,
+      144,
       130,
       97,
       102,
@@ -447,6 +447,18 @@
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #170 from redstone-md/feat/ios-wake-service",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/39945518fc6522f05c190ff7c850082ce3b2afd6",
+      "at": "2026-11-19T09:50:30Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): spend a wake slot only on a delivered push and bound the l…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/2d385bc96a5078e83af28f4edc55a050afd19fc2",
+      "at": "2026-11-19T09:25:58Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "Merge pull request #169 from redstone-md/feat/ios-call-wake",
@@ -470,18 +482,6 @@
       "message": "test(wake): a wake announcement keeps the counterpart connected",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/229a011ac13eed386ec5bf8e634c5163b1d80203",
       "at": "2026-11-18T19:28:18Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): decide in the runtime which service a contact is woken thr…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/b7206111a1946bdfb2bb4e257f0eeac292969feb",
-      "at": "2026-11-18T19:27:53Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): send wakes only to the build's own wake service",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/9e812251b7533990cadb6530cae05c882d3b553f",
-      "at": "2026-11-18T18:20:02Z"
     }
   ]
 }
