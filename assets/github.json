@@ -1,7 +1,7 @@
 {
   "totals": {
-    "contributions": 10409,
-    "commits": 9209,
+    "contributions": 10434,
+    "commits": 9234,
     "pullRequests": 550,
     "issues": 397,
     "repos": 91
@@ -374,23 +374,24 @@
       23,
       51,
       18,
-      7,
-      7,
-      6
+      12,
+      14,
+      19,
+      0
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-18T19:59:11Z",
+      "pushedAt": "2026-11-18T22:46:16Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
       "name": "redstone-md/moss",
       "url": "https://github.com/redstone-md/moss",
-      "pushedAt": "2026-11-18T15:50:00Z",
+      "pushedAt": "2026-11-18T22:09:55Z",
       "language": "Go",
       "color": "#00ADD8"
     },
@@ -419,7 +420,7 @@
   "hours": {
     "timeZone": "CET",
     "counts": [
-      529,
+      532,
       525,
       533,
       499,
@@ -430,57 +431,57 @@
       185,
       138,
       142,
-      128,
-      95,
+      130,
+      97,
       102,
-      187,
+      188,
       271,
-      349,
-      443,
+      350,
+      448,
       420,
-      500,
-      557,
-      505,
-      552,
-      616
+      501,
+      561,
+      507,
+      555,
+      617
     ]
   },
   "commits": [
     {
-      "repo": "redstone-md/shield",
-      "message": "Merge pull request #61 from redstone-md/fix/external-reply-quote",
-      "url": "https://github.com/redstone-md/shield/commit/6e1ccfcc6c19e97de1fbabc407f9cd8925706045",
-      "at": "2026-11-17T15:41:12Z"
-    },
-    {
-      "repo": "redstone-md/shield",
-      "message": "ci(e2e-ui): pin runner to ubuntu-24.04 for playwright chromium",
-      "url": "https://github.com/redstone-md/shield/commit/f5f21a5cae074498cba7a71bc28ff9181df0ff90",
-      "at": "2026-11-17T15:37:56Z"
-    },
-    {
-      "repo": "redstone-md/shield",
-      "message": "fix(bot): keep outside-post quote out of history when message has no …",
-      "url": "https://github.com/redstone-md/shield/commit/ed6c627565b3b6873f458024074a24458526fc20",
-      "at": "2026-11-17T15:37:55Z"
-    },
-    {
-      "repo": "redstone-md/shield",
-      "message": "fix(bot): label outside-post quotes for the LLM and keep them out of …",
-      "url": "https://github.com/redstone-md/shield/commit/9d6509967ac5ba5e10e4be5f2f0619147453d055",
-      "at": "2026-11-17T15:32:42Z"
-    },
-    {
-      "repo": "redstone-md/shield",
-      "message": "fix(bot): check quoted posts from outside channels",
-      "url": "https://github.com/redstone-md/shield/commit/71511c28ae7d9625374e3721214d57a11435a49c",
-      "at": "2026-11-17T15:23:49Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #169 from redstone-md/feat/ios-call-wake",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/08a7c1af68410a5a22ba6f86eb3493d81da60167",
+      "at": "2026-11-18T22:46:13Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #168 from redstone-md/fix/windows-crash-symbols",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/e37ed84b701e63764cba021b759dbba5a4e5b672",
-      "at": "2026-11-16T18:35:00Z"
+      "message": "refactor(ios): keep Dart's channel in its own extension of SystemCalls",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/f40059bbdc7e62f05f5330a34962db7b62ee47c2",
+      "at": "2026-11-18T19:31:58Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): confirm the registration with the service at every launch",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1b2b088fe4ce21dd3c9d680994a51e4fda91d564",
+      "at": "2026-11-18T19:31:16Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "test(wake): a wake announcement keeps the counterpart connected",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/229a011ac13eed386ec5bf8e634c5163b1d80203",
+      "at": "2026-11-18T19:28:18Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): decide in the runtime which service a contact is woken thr…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/b7206111a1946bdfb2bb4e257f0eeac292969feb",
+      "at": "2026-11-18T19:27:53Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): send wakes only to the build's own wake service",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/9e812251b7533990cadb6530cae05c882d3b553f",
+      "at": "2026-11-18T18:20:02Z"
     }
   ]
 }
