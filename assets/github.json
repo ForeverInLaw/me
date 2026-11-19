@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10439,
-    "commits": 9238,
-    "pullRequests": 551,
+    "contributions": 10450,
+    "commits": 9248,
+    "pullRequests": 552,
     "issues": 397,
     "repos": 91
   },
@@ -377,14 +377,14 @@
       12,
       14,
       19,
-      3
+      14
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-19T09:50:30Z",
+      "pushedAt": "2026-11-19T17:53:30Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -433,10 +433,10 @@
       144,
       130,
       97,
-      102,
-      188,
-      271,
-      350,
+      106,
+      191,
+      273,
+      351,
       448,
       420,
       501,
@@ -449,39 +449,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #170 from redstone-md/feat/ios-wake-service",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/39945518fc6522f05c190ff7c850082ce3b2afd6",
-      "at": "2026-11-19T09:50:30Z"
+      "message": "Merge pull request #171 from redstone-md/feat/ios-message-preview",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/73c6d98cd54e1c8b73cb480d94ea4313c5eee591",
+      "at": "2026-11-19T15:26:04Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): spend a wake slot only on a delivered push and bound the l…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/2d385bc96a5078e83af28f4edc55a050afd19fc2",
-      "at": "2026-11-19T09:25:58Z"
+      "message": "fix(wake): replace the Keychain items in place and describe the limit…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c8a7684ceb4d4731b09d2613a2c1c75cdb1859a8",
+      "at": "2026-11-19T14:50:39Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #169 from redstone-md/feat/ios-call-wake",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/08a7c1af68410a5a22ba6f86eb3493d81da60167",
-      "at": "2026-11-18T22:46:13Z"
+      "message": "refactor(wake): keep a chat's texts wake state in one type",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/48af7c9cb674e738b28f31152619b3763953a468",
+      "at": "2026-11-19T14:26:10Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(ios): keep Dart's channel in its own extension of SystemCalls",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/f40059bbdc7e62f05f5330a34962db7b62ee47c2",
-      "at": "2026-11-18T19:31:58Z"
+      "message": "refactor(wake): build both message pushes from one alert",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/c265e2f6eeace9205f437ed9bdd6d3bee90614e4",
+      "at": "2026-11-19T13:40:26Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): confirm the registration with the service at every launch",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1b2b088fe4ce21dd3c9d680994a51e4fda91d564",
-      "at": "2026-11-18T19:31:16Z"
+      "message": "fix(wake): a texts wake the service refused hands its texts back",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/3bc68cf4183d96f97710d0114e9fc71a0376566f",
+      "at": "2026-11-19T13:40:26Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "test(wake): a wake announcement keeps the counterpart connected",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/229a011ac13eed386ec5bf8e634c5163b1d80203",
-      "at": "2026-11-18T19:28:18Z"
+      "message": "fix(wake): leave an empty preview key set out of the session record",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/8b080d26c65b09f3770892d52fceec2db07904c5",
+      "at": "2026-11-19T13:26:17Z"
     }
   ]
 }
