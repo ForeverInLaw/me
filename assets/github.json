@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10456,
-    "commits": 9253,
-    "pullRequests": 553,
+    "contributions": 10466,
+    "commits": 9259,
+    "pullRequests": 557,
     "issues": 397,
     "repos": 91
   },
@@ -378,16 +378,37 @@
       14,
       19,
       20,
-      0
+      10
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-20T00:15:10Z",
+      "pushedAt": "2026-11-20T20:19:33Z",
       "language": "Rust",
       "color": "#dea584"
+    },
+    {
+      "name": "ForeverInLaw/picoclaw",
+      "url": "https://github.com/ForeverInLaw/picoclaw",
+      "pushedAt": "2026-11-20T20:02:18Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
+      "name": "LaunchVPN/launchvpn-client",
+      "url": "https://github.com/LaunchVPN/launchvpn-client",
+      "pushedAt": "2026-11-20T14:54:26Z",
+      "language": "Dart",
+      "color": "#00B4AB"
+    },
+    {
+      "name": "LaunchVPN/libXray",
+      "url": "https://github.com/LaunchVPN/libXray",
+      "pushedAt": "2026-11-20T14:14:06Z",
+      "language": "Go",
+      "color": "#00ADD8"
     },
     {
       "name": "redstone-md/relic",
@@ -395,27 +416,6 @@
       "pushedAt": "2026-11-19T09:16:00Z",
       "language": "Rust",
       "color": "#dea584"
-    },
-    {
-      "name": "redstone-md/moss",
-      "url": "https://github.com/redstone-md/moss",
-      "pushedAt": "2026-11-18T22:09:55Z",
-      "language": "Go",
-      "color": "#00ADD8"
-    },
-    {
-      "name": "redstone-md/Overhaul",
-      "url": "https://github.com/redstone-md/Overhaul",
-      "pushedAt": "2026-11-17T20:38:22Z",
-      "language": "Java",
-      "color": "#b07219"
-    },
-    {
-      "name": "redstone-md/shield",
-      "url": "https://github.com/redstone-md/shield",
-      "pushedAt": "2026-11-17T15:41:12Z",
-      "language": "Go",
-      "color": "#00ADD8"
     }
   ],
   "hours": {
@@ -436,53 +436,53 @@
       97,
       106,
       191,
-      273,
+      274,
       351,
       448,
       421,
-      501,
-      561,
-      507,
+      502,
+      564,
+      508,
       557,
       619
     ]
   },
   "commits": [
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #172 from redstone-md/feat/ios-group-preview",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/0567ae006d458361a8af03c708bd30b2de86b537",
-      "at": "2026-11-19T22:45:24Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "Merge pull request #8 from ForeverInLaw/fix/group-chatter-steering",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/3148c479efb08a79f85359e7110c3702bd76f36e",
+      "at": "2026-11-20T20:02:18Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): hear devices on every authenticated frame and refuse per d…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/8f378c44c42fd970d63039e45eb9deae3327deaa",
-      "at": "2026-11-19T22:19:39Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "style(agent): wrap capacity test lines for golines",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/af643c40c64be32d9ba869aab4d456b3cd6a3cb6",
+      "at": "2026-11-20T19:58:08Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): an announcement changed in the same millisecond is still n…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/0fd1d366e7fbb1dd023c1ace7172ef25347151d5",
-      "at": "2026-11-19T21:43:11Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "fix(agent): bound observed chatter queued during a turn",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/5f7ad10bef3741720d413d5b830b32cca6047962",
+      "at": "2026-11-20T19:53:33Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(wake): one book of member devices and one own announcement",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/d4a56baa1b7b13342cf1733ee667a9f66e05dce7",
-      "at": "2026-11-19T21:27:32Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "fix(agent): keep observed chatter when the request queue is full",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/093efb0ab69314e62df02d7e9a6b9955c68b5ad1",
+      "at": "2026-11-20T19:51:17Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(wake): wake members' iPhones for group texts with signed previews",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/6daf8730c060fc7965afa666872c015d940b49f3",
-      "at": "2026-11-19T17:53:27Z"
+      "repo": "ForeverInLaw/picoclaw",
+      "message": "fix(agent): never answer group chatter that arrives during a turn",
+      "url": "https://github.com/ForeverInLaw/picoclaw/commit/f6c3584e0e4bb5575d144a1c5813b543831d9fbc",
+      "at": "2026-11-20T18:21:23Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #171 from redstone-md/feat/ios-message-preview",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/73c6d98cd54e1c8b73cb480d94ea4313c5eee591",
-      "at": "2026-11-19T15:26:04Z"
+      "repo": "LaunchVPN/launchvpn-client",
+      "message": "fix(ping): delays read like ping, not like a cold HTTPS request (LVPN…",
+      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/8725c99f8ec9833e28782154bc6c5adbf55bf7dd",
+      "at": "2026-11-20T14:54:08Z"
     }
   ]
 }
