@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10450,
-    "commits": 9248,
-    "pullRequests": 552,
+    "contributions": 10456,
+    "commits": 9253,
+    "pullRequests": 553,
     "issues": 397,
     "repos": 91
   },
@@ -377,14 +377,15 @@
       12,
       14,
       19,
-      14
+      20,
+      0
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-19T17:53:30Z",
+      "pushedAt": "2026-11-20T00:15:10Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -438,50 +439,50 @@
       273,
       351,
       448,
-      420,
+      421,
       501,
       561,
       507,
-      555,
-      617
+      557,
+      619
     ]
   },
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #172 from redstone-md/feat/ios-group-preview",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/0567ae006d458361a8af03c708bd30b2de86b537",
+      "at": "2026-11-19T22:45:24Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): hear devices on every authenticated frame and refuse per d…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/8f378c44c42fd970d63039e45eb9deae3327deaa",
+      "at": "2026-11-19T22:19:39Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(wake): an announcement changed in the same millisecond is still n…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/0fd1d366e7fbb1dd023c1ace7172ef25347151d5",
+      "at": "2026-11-19T21:43:11Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "refactor(wake): one book of member devices and one own announcement",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/d4a56baa1b7b13342cf1733ee667a9f66e05dce7",
+      "at": "2026-11-19T21:27:32Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(wake): wake members' iPhones for group texts with signed previews",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/6daf8730c060fc7965afa666872c015d940b49f3",
+      "at": "2026-11-19T17:53:27Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
       "message": "Merge pull request #171 from redstone-md/feat/ios-message-preview",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/73c6d98cd54e1c8b73cb480d94ea4313c5eee591",
       "at": "2026-11-19T15:26:04Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): replace the Keychain items in place and describe the limit…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/c8a7684ceb4d4731b09d2613a2c1c75cdb1859a8",
-      "at": "2026-11-19T14:50:39Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(wake): keep a chat's texts wake state in one type",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/48af7c9cb674e738b28f31152619b3763953a468",
-      "at": "2026-11-19T14:26:10Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(wake): build both message pushes from one alert",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/c265e2f6eeace9205f437ed9bdd6d3bee90614e4",
-      "at": "2026-11-19T13:40:26Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): a texts wake the service refused hands its texts back",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/3bc68cf4183d96f97710d0114e9fc71a0376566f",
-      "at": "2026-11-19T13:40:26Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(wake): leave an empty preview key set out of the session record",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/8b080d26c65b09f3770892d52fceec2db07904c5",
-      "at": "2026-11-19T13:26:17Z"
     }
   ]
 }
