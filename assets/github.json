@@ -1,10 +1,10 @@
 {
   "totals": {
-    "contributions": 10466,
-    "commits": 9259,
-    "pullRequests": 557,
+    "contributions": 10511,
+    "commits": 9298,
+    "pullRequests": 563,
     "issues": 397,
-    "repos": 91
+    "repos": 92
   },
   "calendar": {
     "start": "2025-11-16",
@@ -345,11 +345,11 @@
       11,
       4,
       14,
-      9,
+      10,
       6,
       78,
       38,
-      97,
+      98,
       21,
       22,
       26,
@@ -378,16 +378,24 @@
       14,
       19,
       20,
-      10
+      49,
+      4
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-20T20:19:33Z",
+      "pushedAt": "2026-11-21T00:20:13Z",
       "language": "Rust",
       "color": "#dea584"
+    },
+    {
+      "name": "redstone-md/shield",
+      "url": "https://github.com/redstone-md/shield",
+      "pushedAt": "2026-11-20T21:02:09Z",
+      "language": "Go",
+      "color": "#00ADD8"
     },
     {
       "name": "ForeverInLaw/picoclaw",
@@ -409,22 +417,15 @@
       "pushedAt": "2026-11-20T14:14:06Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "redstone-md/relic",
-      "url": "https://github.com/redstone-md/relic",
-      "pushedAt": "2026-11-19T09:16:00Z",
-      "language": "Rust",
-      "color": "#dea584"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
-      532,
-      525,
+      543,
+      527,
       533,
-      499,
+      500,
       533,
       399,
       318,
@@ -440,49 +441,49 @@
       351,
       448,
       421,
-      502,
+      504,
       564,
-      508,
-      557,
-      619
+      512,
+      565,
+      630
     ]
   },
   "commits": [
     {
-      "repo": "ForeverInLaw/picoclaw",
-      "message": "Merge pull request #8 from ForeverInLaw/fix/group-chatter-steering",
-      "url": "https://github.com/ForeverInLaw/picoclaw/commit/3148c479efb08a79f85359e7110c3702bd76f36e",
-      "at": "2026-11-20T20:02:18Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #174 from redstone-md/fix/log-floods",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/226e8d316498b754a20656ba07fc3f890f944836",
+      "at": "2026-11-21T00:20:10Z"
     },
     {
-      "repo": "ForeverInLaw/picoclaw",
-      "message": "style(agent): wrap capacity test lines for golines",
-      "url": "https://github.com/ForeverInLaw/picoclaw/commit/af643c40c64be32d9ba869aab4d456b3cd6a3cb6",
-      "at": "2026-11-20T19:58:08Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(groups): keep an unsigned text's id from a signed import",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/2c6b03fa0d5dcdf1a488471a8b54efda3bef5039",
+      "at": "2026-11-20T23:49:16Z"
     },
     {
-      "repo": "ForeverInLaw/picoclaw",
-      "message": "fix(agent): bound observed chatter queued during a turn",
-      "url": "https://github.com/ForeverInLaw/picoclaw/commit/5f7ad10bef3741720d413d5b830b32cca6047962",
-      "at": "2026-11-20T19:53:33Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(log): name a rerouted stream and pin the unsigned-row export rule",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/0a0700cd5b3a54c10f4204e0021306e7ba1d2b84",
+      "at": "2026-11-20T23:14:00Z"
     },
     {
-      "repo": "ForeverInLaw/picoclaw",
-      "message": "fix(agent): keep observed chatter when the request queue is full",
-      "url": "https://github.com/ForeverInLaw/picoclaw/commit/093efb0ab69314e62df02d7e9a6b9955c68b5ad1",
-      "at": "2026-11-20T19:51:17Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(ios): log a ringtone's audio route change as a note",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/e4b56e348da4f27609278638c4fc75f04104f160",
+      "at": "2026-11-20T22:14:13Z"
     },
     {
-      "repo": "ForeverInLaw/picoclaw",
-      "message": "fix(agent): never answer group chatter that arrives during a turn",
-      "url": "https://github.com/ForeverInLaw/picoclaw/commit/f6c3584e0e4bb5575d144a1c5813b543831d9fbc",
-      "at": "2026-11-20T18:21:23Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(log): write a repeating warning once per five minutes",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/42fdc5d717c40afd5c7b026641814814b4b2fff2",
+      "at": "2026-11-20T22:14:13Z"
     },
     {
-      "repo": "LaunchVPN/launchvpn-client",
-      "message": "fix(ping): delays read like ping, not like a cold HTTPS request (LVPN…",
-      "url": "https://github.com/LaunchVPN/launchvpn-client/commit/8725c99f8ec9833e28782154bc6c5adbf55bf7dd",
-      "at": "2026-11-20T14:54:08Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(groups): keep history sync going past unsigned texts and own probes",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/3c998cad179253b7ee677591cbbd229c1f0c3d2b",
+      "at": "2026-11-20T22:14:13Z"
     }
   ]
 }
