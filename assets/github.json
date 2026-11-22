@@ -1,21 +1,14 @@
 {
   "totals": {
-    "contributions": 10519,
-    "commits": 9303,
-    "pullRequests": 566,
+    "contributions": 10521,
+    "commits": 9304,
+    "pullRequests": 567,
     "issues": 397,
     "repos": 92
   },
   "calendar": {
-    "start": "2025-11-16",
+    "start": "2025-11-23",
     "counts": [
-      1,
-      8,
-      8,
-      7,
-      13,
-      4,
-      2,
       11,
       0,
       15,
@@ -379,21 +372,36 @@
       20,
       20,
       49,
-      11
+      13,
+      0
     ]
   },
   "recent": [
     {
-      "name": "redstone-md/tessera",
-      "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-21T19:24:17Z",
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-22T01:04:04Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-21T16:56:44Z",
+      "name": "redstone-md/tessera",
+      "url": "https://github.com/redstone-md/tessera",
+      "pushedAt": "2026-11-21T23:57:51Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "LaunchVPN/libXray",
+      "url": "https://github.com/LaunchVPN/libXray",
+      "pushedAt": "2026-11-21T23:24:42Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
+      "name": "redstone-md/relic",
+      "url": "https://github.com/redstone-md/relic",
+      "pushedAt": "2026-11-21T21:51:36Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -403,52 +411,44 @@
       "pushedAt": "2026-11-21T10:48:01Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "LaunchVPN/libXray",
-      "url": "https://github.com/LaunchVPN/libXray",
-      "pushedAt": "2026-11-21T10:33:02Z",
-      "language": "Go",
-      "color": "#00ADD8"
-    },
-    {
-      "name": "redstone-md/shield",
-      "url": "https://github.com/redstone-md/shield",
-      "pushedAt": "2026-11-20T21:02:09Z",
-      "language": "Go",
-      "color": "#00ADD8"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
       543,
-      527,
-      533,
-      500,
-      533,
-      399,
+      525,
+      531,
+      498,
+      531,
+      395,
       318,
-      279,
-      185,
+      278,
+      184,
       140,
       144,
-      132,
+      130,
       98,
       106,
       191,
-      274,
-      351,
+      272,
+      347,
       449,
       421,
-      504,
-      564,
+      500,
+      562,
       512,
-      565,
-      631
+      563,
+      629
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(theme): move the app to the Foundations tokens (#177)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/8286c545549faee51ba174e185b5be2022e826c3",
+      "at": "2026-11-21T22:57:49Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "chore(scripts): capture the Flutter UI into Figma (#176)",
@@ -478,12 +478,6 @@
       "message": "Merge pull request #174 from redstone-md/fix/log-floods",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/226e8d316498b754a20656ba07fc3f890f944836",
       "at": "2026-11-21T00:20:10Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(groups): keep an unsigned text's id from a signed import",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/2c6b03fa0d5dcdf1a488471a8b54efda3bef5039",
-      "at": "2026-11-20T23:49:16Z"
     }
   ]
 }
