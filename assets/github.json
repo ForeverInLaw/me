@@ -1,10 +1,10 @@
 {
   "totals": {
-    "contributions": 10521,
-    "commits": 9304,
-    "pullRequests": 567,
+    "contributions": 10523,
+    "commits": 9305,
+    "pullRequests": 568,
     "issues": 397,
-    "repos": 92
+    "repos": 93
   },
   "calendar": {
     "start": "2025-11-23",
@@ -373,21 +373,21 @@
       20,
       49,
       13,
-      0
+      2
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-22T01:04:04Z",
+      "pushedAt": "2026-11-22T11:17:20Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
       "name": "redstone-md/tessera",
       "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-21T23:57:51Z",
+      "pushedAt": "2026-11-22T08:43:25Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -418,7 +418,7 @@
     "counts": [
       543,
       525,
-      531,
+      532,
       498,
       531,
       395,
@@ -443,6 +443,12 @@
     ]
   },
   "commits": [
+    {
+      "repo": "XTLS/libXray",
+      "message": "feat: add a warm delay option to pingBatch (#174)",
+      "url": "https://github.com/XTLS/libXray/commit/6e33510350d18a9b906495ff81ae9eb572144ddd",
+      "at": "2026-11-22T01:41:21Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "feat(theme): move the app to the Foundations tokens (#177)",
@@ -472,12 +478,6 @@
       "message": "chore(licenses): ship multiless and sync under their own LICENCE files",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/51addca22853e2c8a1167955ac57f0837aed2f96",
       "at": "2026-11-21T10:12:32Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #174 from redstone-md/fix/log-floods",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/226e8d316498b754a20656ba07fc3f890f944836",
-      "at": "2026-11-21T00:20:10Z"
     }
   ]
 }
