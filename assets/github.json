@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10491,
-    "commits": 9278,
-    "pullRequests": 565,
+    "contributions": 10493,
+    "commits": 9279,
+    "pullRequests": 566,
     "issues": 397,
     "repos": 93
   },
@@ -374,14 +374,14 @@
       49,
       13,
       13,
-      0
+      2
     ]
   },
   "recent": [
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-22T23:06:48Z",
+      "pushedAt": "2026-11-23T12:38:45Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -430,7 +430,7 @@
       144,
       130,
       99,
-      106,
+      107,
       193,
       272,
       347,
@@ -444,6 +444,12 @@
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(scripts): build the chat list and message feed components in Fig…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/4883cb1c7626228c1c818ab12853350daeb75a0c",
+      "at": "2026-11-23T12:38:45Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "feat(scripts): build the base control components in Figma (#183)",
@@ -473,12 +479,6 @@
       "message": "fix(ci): verify FCM release APKs as FCM builds (#179)",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/09153b3e2542c579abbaab3a6381ee319b743318",
       "at": "2026-11-22T13:08:50Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "ci: build apps with the pinned Rust toolchain so cargokit caches stay…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/f6944abd0de94b135cc3fb7584a1262a2cfb3e1e",
-      "at": "2026-11-22T11:40:57Z"
     }
   ]
 }
