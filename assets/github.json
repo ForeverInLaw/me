@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10503,
-    "commits": 9283,
-    "pullRequests": 572,
+    "contributions": 10507,
+    "commits": 9286,
+    "pullRequests": 573,
     "issues": 397,
     "repos": 93
   },
@@ -375,21 +375,21 @@
       13,
       13,
       10,
-      2
+      6
     ]
   },
   "recent": [
     {
-      "name": "redstone-md/tessera",
-      "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-24T01:52:44Z",
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-24T12:16:14Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-24T00:51:30Z",
+      "name": "redstone-md/tessera",
+      "url": "https://github.com/redstone-md/tessera",
+      "pushedAt": "2026-11-24T01:52:44Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -429,9 +429,9 @@
       184,
       140,
       144,
-      130,
+      132,
       99,
-      107,
+      108,
       193,
       272,
       348,
@@ -445,6 +445,24 @@
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "build(fdroid): follow the fdroiddata Flutter template (#192)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1e20088ae9ae977629071748a859c84694228dba",
+      "at": "2026-11-24T12:15:34Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(icons): draw the app's icons from Phosphor (#190)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/f971a80c35ea0577e1b427c6c03bfac6a86de6ce",
+      "at": "2026-11-24T10:53:48Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "refactor(theme): read colours through the theme and add the light pal…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/d7b66d9dc6b2274342fad8da7c5ecca9487b42e6",
+      "at": "2026-11-24T10:53:48Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "feat(scripts): build the reference screens in Figma (#188)",
@@ -462,24 +480,6 @@
       "message": "perf(scripts): rebuild one Figma card without the cards after it (#186)",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/1aac2066dd385f2cad74ce233d59fb6a39155437",
       "at": "2026-11-23T17:56:31Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): build the surface and feedback components in Figma (#185)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/3e3c76a3166bd005472924e2db550b1833001c94",
-      "at": "2026-11-23T15:49:59Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): build the chat list and message feed components in Fig…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/4883cb1c7626228c1c818ab12853350daeb75a0c",
-      "at": "2026-11-23T12:38:45Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): build the base control components in Figma (#183)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/5890537942b5ba8ae060949dcb8a6bfb894a348b",
-      "at": "2026-11-22T21:06:32Z"
     }
   ]
 }
