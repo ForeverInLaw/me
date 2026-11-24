@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10493,
-    "commits": 9279,
-    "pullRequests": 566,
+    "contributions": 10503,
+    "commits": 9283,
+    "pullRequests": 572,
     "issues": 397,
     "repos": 93
   },
@@ -374,14 +374,22 @@
       49,
       13,
       13,
+      10,
       2
     ]
   },
   "recent": [
     {
+      "name": "redstone-md/tessera",
+      "url": "https://github.com/redstone-md/tessera",
+      "pushedAt": "2026-11-24T01:52:44Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-23T12:38:45Z",
+      "pushedAt": "2026-11-24T00:51:30Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -391,13 +399,6 @@
       "pushedAt": "2026-11-22T22:35:43Z",
       "language": "TypeScript",
       "color": "#3178c6"
-    },
-    {
-      "name": "redstone-md/tessera",
-      "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-22T13:04:33Z",
-      "language": "Rust",
-      "color": "#dea584"
     },
     {
       "name": "LaunchVPN/libXray",
@@ -433,17 +434,41 @@
       107,
       193,
       272,
-      347,
+      348,
       450,
-      421,
+      422,
       500,
       563,
-      512,
-      564,
+      513,
+      565,
       629
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(scripts): build the reference screens in Figma (#188)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/74728e6d7cfd1123d2f204fdf1a9714d56b58339",
+      "at": "2026-11-23T21:20:25Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(scripts): build the call components in Figma (#187)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/59fa60c89fbc19e56b8b92e38726c3e0dcd36d83",
+      "at": "2026-11-23T20:00:23Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "perf(scripts): rebuild one Figma card without the cards after it (#186)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1aac2066dd385f2cad74ce233d59fb6a39155437",
+      "at": "2026-11-23T17:56:31Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(scripts): build the surface and feedback components in Figma (#185)",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/3e3c76a3166bd005472924e2db550b1833001c94",
+      "at": "2026-11-23T15:49:59Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "feat(scripts): build the chat list and message feed components in Fig…",
@@ -455,30 +480,6 @@
       "message": "feat(scripts): build the base control components in Figma (#183)",
       "url": "https://github.com/redstone-md/mosh-flutter/commit/5890537942b5ba8ae060949dcb8a6bfb894a348b",
       "at": "2026-11-22T21:06:32Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): component inventory from the capture (#182)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/947a495a7c5793658633087ff8cb657a34fb39d4",
-      "at": "2026-11-22T19:36:58Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "test: prune tests that guard no behavior (#181)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/5c22c6797228ea0aa2740aedb6a32497bd251c4e",
-      "at": "2026-11-22T16:31:47Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ci): accept classes in the root Firebase package in FCM builds (#…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/b491e3cef460e9c96674adaef003f7bd9e7cccd5",
-      "at": "2026-11-22T13:55:03Z"
-    },
-    {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "fix(ci): verify FCM release APKs as FCM builds (#179)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/09153b3e2542c579abbaab3a6381ee319b743318",
-      "at": "2026-11-22T13:08:50Z"
     }
   ]
 }
