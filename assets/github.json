@@ -1,10 +1,10 @@
 {
   "totals": {
-    "contributions": 10507,
-    "commits": 9286,
-    "pullRequests": 573,
+    "contributions": 10533,
+    "commits": 9307,
+    "pullRequests": 576,
     "issues": 397,
-    "repos": 93
+    "repos": 95
   },
   "calendar": {
     "start": "2025-11-23",
@@ -375,14 +375,29 @@
       13,
       13,
       10,
-      6
+      19,
+      13
     ]
   },
   "recent": [
     {
+      "name": "ForeverInLaw/watchable",
+      "url": "https://github.com/ForeverInLaw/watchable",
+      "pushedAt": "2026-11-24T23:33:06Z",
+      "language": "Swift",
+      "color": "#F05138"
+    },
+    {
+      "name": "ForeverInLaw/sc9863a-server-kernel",
+      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel",
+      "pushedAt": "2026-11-24T23:24:36Z",
+      "language": "Python",
+      "color": "#3572A5"
+    },
+    {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-24T12:16:14Z",
+      "pushedAt": "2026-11-24T22:18:52Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -399,26 +414,12 @@
       "pushedAt": "2026-11-22T22:35:43Z",
       "language": "TypeScript",
       "color": "#3178c6"
-    },
-    {
-      "name": "LaunchVPN/libXray",
-      "url": "https://github.com/LaunchVPN/libXray",
-      "pushedAt": "2026-11-21T23:24:42Z",
-      "language": "Go",
-      "color": "#00ADD8"
-    },
-    {
-      "name": "redstone-md/relic",
-      "url": "https://github.com/redstone-md/relic",
-      "pushedAt": "2026-11-21T21:51:36Z",
-      "language": "Rust",
-      "color": "#dea584"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
-      543,
+      555,
       525,
       532,
       498,
@@ -440,46 +441,46 @@
       500,
       563,
       513,
-      565,
-      629
+      567,
+      636
     ]
   },
   "commits": [
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "build(fdroid): follow the fdroiddata Flutter template (#192)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1e20088ae9ae977629071748a859c84694228dba",
-      "at": "2026-11-24T12:15:34Z"
+      "repo": "ForeverInLaw/watchable",
+      "message": "Merge pull request #2 from ForeverInLaw/feat/watch-6-apns-test-push",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/aef49b2457bbf3721eb69e0733a81d5ef8bc45b5",
+      "at": "2026-11-24T23:32:53Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(icons): draw the app's icons from Phosphor (#190)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/f971a80c35ea0577e1b427c6c03bfac6a86de6ce",
-      "at": "2026-11-24T10:53:48Z"
+      "repo": "ForeverInLaw/watchable",
+      "message": "docs(relay): note that replyable pushes need the watch reply category",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/b907c20e9e40a4a6493f7f3ff2b85e55c5a60f8b",
+      "at": "2026-11-24T23:32:12Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "refactor(theme): read colours through the theme and add the light pal…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/d7b66d9dc6b2274342fad8da7c5ecca9487b42e6",
-      "at": "2026-11-24T10:53:48Z"
+      "repo": "ForeverInLaw/watchable",
+      "message": "fix(relay): report an unreadable APNs key as a settings error",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/66d9163bbbeaa07024ae2694c7f661ffa9719302",
+      "at": "2026-11-24T23:32:11Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): build the reference screens in Figma (#188)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/74728e6d7cfd1123d2f204fdf1a9714d56b58339",
-      "at": "2026-11-23T21:20:25Z"
+      "repo": "ForeverInLaw/sc9863a-server-kernel",
+      "message": "build: use ThinLTO and fix early exit on fragments without options",
+      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel/commit/e8d7f7571b073848f1cfffcc91e3af6874a60e37",
+      "at": "2026-11-24T23:24:35Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "feat(scripts): build the call components in Figma (#187)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/59fa60c89fbc19e56b8b92e38726c3e0dcd36d83",
-      "at": "2026-11-23T20:00:23Z"
+      "repo": "ForeverInLaw/watchable",
+      "message": "docs(relay): clarify ttl 0, aioapns client name and planned relay scope",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/e2c7090810e255ad9d928eed5d4c06463716699a",
+      "at": "2026-11-24T23:24:24Z"
     },
     {
-      "repo": "redstone-md/mosh-flutter",
-      "message": "perf(scripts): rebuild one Figma card without the cards after it (#186)",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1aac2066dd385f2cad74ce233d59fb6a39155437",
-      "at": "2026-11-23T17:56:31Z"
+      "repo": "ForeverInLaw/watchable",
+      "message": "ci(relay): pin checkout and runner, drop unused Python cache",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/72efe72ea77449ab9b568123acd6d361a9f11160",
+      "at": "2026-11-24T23:24:23Z"
     }
   ]
 }
