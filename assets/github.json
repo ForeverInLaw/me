@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10533,
-    "commits": 9307,
-    "pullRequests": 576,
+    "contributions": 10616,
+    "commits": 9376,
+    "pullRequests": 590,
     "issues": 397,
     "repos": 95
   },
@@ -376,44 +376,44 @@
       13,
       10,
       19,
-      13
+      96
     ]
   },
   "recent": [
     {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-24T23:57:56Z",
-      "language": "Rust",
-      "color": "#dea584"
+      "name": "LaunchVPN/launchvpn-client",
+      "url": "https://github.com/LaunchVPN/launchvpn-client",
+      "pushedAt": "2026-11-25T19:07:23Z",
+      "language": "Dart",
+      "color": "#00B4AB"
     },
     {
       "name": "ForeverInLaw/watchable",
       "url": "https://github.com/ForeverInLaw/watchable",
-      "pushedAt": "2026-11-24T23:33:06Z",
+      "pushedAt": "2026-11-25T19:01:08Z",
       "language": "Python",
       "color": "#3572A5"
     },
     {
-      "name": "ForeverInLaw/sc9863a-server-kernel",
-      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel",
-      "pushedAt": "2026-11-24T23:24:36Z",
-      "language": "Python",
-      "color": "#3572A5"
-    },
-    {
-      "name": "redstone-md/tessera",
-      "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-24T01:52:44Z",
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-25T18:50:34Z",
       "language": "Rust",
       "color": "#dea584"
     },
     {
-      "name": "Rxflex/host.pink",
-      "url": "https://github.com/Rxflex/host.pink",
-      "pushedAt": "2026-11-22T22:35:43Z",
-      "language": "TypeScript",
-      "color": "#3178c6"
+      "name": "LaunchVPN/libXray",
+      "url": "https://github.com/LaunchVPN/libXray",
+      "pushedAt": "2026-11-25T16:33:10Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
+      "name": "ForeverInLaw/sc9863a-server-kernel",
+      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel",
+      "pushedAt": "2026-11-25T13:14:44Z",
+      "language": "Shell",
+      "color": "#89e051"
     }
   ],
   "hours": {
@@ -430,15 +430,15 @@
       184,
       140,
       144,
-      132,
-      99,
-      108,
-      193,
-      272,
-      348,
-      450,
-      422,
-      500,
+      139,
+      104,
+      120,
+      207,
+      278,
+      353,
+      455,
+      429,
+      508,
       563,
       513,
       567,
@@ -448,39 +448,39 @@
   "commits": [
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "Merge pull request #2 from ForeverInLaw/feat/watch-6-apns-test-push",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/aef49b2457bbf3721eb69e0733a81d5ef8bc45b5",
-      "at": "2026-11-24T23:32:53Z"
+      "message": "Merge pull request #11 from ForeverInLaw/feat/watch-20-pairing",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/e139a7b2018fc860906462bff6f24e7c203e4088",
+      "at": "2026-11-25T18:32:35Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "docs(relay): note that replyable pushes need the watch reply category",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/b907c20e9e40a4a6493f7f3ff2b85e55c5a60f8b",
-      "at": "2026-11-24T23:32:12Z"
+      "message": "docs: record the pairing secret's residual risk and rotation",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/a3d389bb90bba7b27ec27023b64880bc049e8ece",
+      "at": "2026-11-25T18:30:55Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "fix(relay): report an unreadable APNs key as a settings error",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/66d9163bbbeaa07024ae2694c7f661ffa9719302",
-      "at": "2026-11-24T23:32:11Z"
-    },
-    {
-      "repo": "ForeverInLaw/sc9863a-server-kernel",
-      "message": "build: use ThinLTO and fix early exit on fragments without options",
-      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel/commit/e8d7f7571b073848f1cfffcc91e3af6874a60e37",
-      "at": "2026-11-24T23:24:35Z"
+      "message": "fix(relay): refuse a watch push token APNs would reject",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/910f53ab9027ad75008b7c4e8f0282be9b970f89",
+      "at": "2026-11-25T18:30:55Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "docs(relay): clarify ttl 0, aioapns client name and planned relay scope",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/e2c7090810e255ad9d928eed5d4c06463716699a",
-      "at": "2026-11-24T23:24:24Z"
+      "message": "docs: list the pairing secret among CI secrets and keep it apart from…",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/5b13cf1355f83e4fbfab84c99d0fc895d98db03a",
+      "at": "2026-11-25T18:12:58Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "ci(relay): pin checkout and runner, drop unused Python cache",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/72efe72ea77449ab9b568123acd6d361a9f11160",
-      "at": "2026-11-24T23:24:23Z"
+      "message": "test(relay): call post_event and check the 429 body one way",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/46d563bc15a4e238a7051521400947dfeb0d4b9f",
+      "at": "2026-11-25T18:12:58Z"
+    },
+    {
+      "repo": "ForeverInLaw/watchable",
+      "message": "fix(relay): refuse a pairing secret the watch cannot send in a header",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/f04368c1c37454e0a1b7290eb2c5d669df98f5d8",
+      "at": "2026-11-25T18:12:58Z"
     }
   ]
 }
