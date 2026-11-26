@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10616,
-    "commits": 9376,
-    "pullRequests": 590,
+    "contributions": 10685,
+    "commits": 9438,
+    "pullRequests": 597,
     "issues": 397,
     "repos": 95
   },
@@ -376,30 +376,38 @@
       13,
       10,
       19,
-      96
+      155,
+      10
     ]
   },
   "recent": [
     {
-      "name": "LaunchVPN/launchvpn-client",
-      "url": "https://github.com/LaunchVPN/launchvpn-client",
-      "pushedAt": "2026-11-25T19:07:23Z",
-      "language": "Dart",
-      "color": "#00B4AB"
-    },
-    {
-      "name": "ForeverInLaw/watchable",
-      "url": "https://github.com/ForeverInLaw/watchable",
-      "pushedAt": "2026-11-25T19:01:08Z",
-      "language": "Python",
-      "color": "#3572A5"
+      "name": "redstone-md/Overhaul",
+      "url": "https://github.com/redstone-md/Overhaul",
+      "pushedAt": "2026-11-26T03:12:27Z",
+      "language": "Java",
+      "color": "#b07219"
     },
     {
       "name": "redstone-md/mosh-flutter",
       "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-25T18:50:34Z",
+      "pushedAt": "2026-11-25T23:58:20Z",
       "language": "Rust",
       "color": "#dea584"
+    },
+    {
+      "name": "ForeverInLaw/watchable",
+      "url": "https://github.com/ForeverInLaw/watchable",
+      "pushedAt": "2026-11-25T23:35:24Z",
+      "language": "Python",
+      "color": "#3572A5"
+    },
+    {
+      "name": "LaunchVPN/launchvpn-client",
+      "url": "https://github.com/LaunchVPN/launchvpn-client",
+      "pushedAt": "2026-11-25T23:33:19Z",
+      "language": "Dart",
+      "color": "#00B4AB"
     },
     {
       "name": "LaunchVPN/libXray",
@@ -407,19 +415,12 @@
       "pushedAt": "2026-11-25T16:33:10Z",
       "language": "Go",
       "color": "#00ADD8"
-    },
-    {
-      "name": "ForeverInLaw/sc9863a-server-kernel",
-      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel",
-      "pushedAt": "2026-11-25T13:14:44Z",
-      "language": "Shell",
-      "color": "#89e051"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
-      555,
+      562,
       525,
       532,
       498,
@@ -438,49 +439,49 @@
       353,
       455,
       429,
-      508,
-      563,
-      513,
-      567,
-      636
+      510,
+      570,
+      517,
+      592,
+      653
     ]
   },
   "commits": [
     {
-      "repo": "ForeverInLaw/watchable",
-      "message": "Merge pull request #11 from ForeverInLaw/feat/watch-20-pairing",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/e139a7b2018fc860906462bff6f24e7c203e4088",
-      "at": "2026-11-25T18:32:35Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(overlays): draw dialogs, menus, banners, toasts and the media vi…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1e4a9600a29c18afc7c7bdf0f33112c799defbaf",
+      "at": "2026-11-25T23:58:11Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "docs: record the pairing secret's residual risk and rotation",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/a3d389bb90bba7b27ec27023b64880bc049e8ece",
-      "at": "2026-11-25T18:30:55Z"
+      "message": "Merge pull request #13 from ForeverInLaw/feat/watch-24-reply",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/79322ea6c43e5f2b88a95bcbba2b2c9e564b243f",
+      "at": "2026-11-25T23:35:06Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "fix(relay): refuse a watch push token APNs would reject",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/910f53ab9027ad75008b7c4e8f0282be9b970f89",
-      "at": "2026-11-25T18:30:55Z"
+      "message": "fix(relay): keep the database file readable by its owner only",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/72289e3be4805de6c532be02473b08d3a9c976a3",
+      "at": "2026-11-25T23:26:51Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "docs: list the pairing secret among CI secrets and keep it apart from…",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/5b13cf1355f83e4fbfab84c99d0fc895d98db03a",
-      "at": "2026-11-25T18:12:58Z"
+      "message": "fix(relay): stop serving the API docs and OpenAPI schema",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/1f51d742c3a60f96312a01966a0637b325c340ce",
+      "at": "2026-11-25T23:26:51Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "test(relay): call post_event and check the 429 body one way",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/46d563bc15a4e238a7051521400947dfeb0d4b9f",
-      "at": "2026-11-25T18:12:58Z"
+      "message": "fix(watch): accept only an HTTPS relay URL",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/dd2b92cd3dc60f83c94ec5c0ed2097e8934677c5",
+      "at": "2026-11-25T23:10:06Z"
     },
     {
       "repo": "ForeverInLaw/watchable",
-      "message": "fix(relay): refuse a pairing secret the watch cannot send in a header",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/f04368c1c37454e0a1b7290eb2c5d669df98f5d8",
-      "at": "2026-11-25T18:12:58Z"
+      "message": "fix(relay): keep the Companion's result when FCM's answer fails later",
+      "url": "https://github.com/ForeverInLaw/watchable/commit/3288c03e49688c68cf2725e30433782094ab6246",
+      "at": "2026-11-25T23:10:05Z"
     }
   ]
 }
