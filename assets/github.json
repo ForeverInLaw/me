@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10685,
-    "commits": 9438,
-    "pullRequests": 597,
+    "contributions": 10687,
+    "commits": 9439,
+    "pullRequests": 598,
     "issues": 397,
     "repos": 95
   },
@@ -377,23 +377,30 @@
       10,
       19,
       155,
-      10
+      12
     ]
   },
   "recent": [
+    {
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-26T16:50:41Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "redstone-md/relic",
+      "url": "https://github.com/redstone-md/relic",
+      "pushedAt": "2026-11-26T09:17:10Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
     {
       "name": "redstone-md/Overhaul",
       "url": "https://github.com/redstone-md/Overhaul",
       "pushedAt": "2026-11-26T03:12:27Z",
       "language": "Java",
       "color": "#b07219"
-    },
-    {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-25T23:58:20Z",
-      "language": "Rust",
-      "color": "#dea584"
     },
     {
       "name": "ForeverInLaw/watchable",
@@ -408,13 +415,6 @@
       "pushedAt": "2026-11-25T23:33:19Z",
       "language": "Dart",
       "color": "#00B4AB"
-    },
-    {
-      "name": "LaunchVPN/libXray",
-      "url": "https://github.com/LaunchVPN/libXray",
-      "pushedAt": "2026-11-25T16:33:10Z",
-      "language": "Go",
-      "color": "#00ADD8"
     }
   ],
   "hours": {
@@ -435,7 +435,7 @@
       104,
       120,
       207,
-      278,
+      279,
       353,
       455,
       429,
@@ -447,6 +447,12 @@
     ]
   },
   "commits": [
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "feat(calls): draw the open call from the Call controls and Call windo…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/31ff5466dd232807672430a2b046ce9b2be0f55f",
+      "at": "2026-11-26T14:55:11Z"
+    },
     {
       "repo": "redstone-md/mosh-flutter",
       "message": "feat(overlays): draw dialogs, menus, banners, toasts and the media vi…",
@@ -476,12 +482,6 @@
       "message": "fix(watch): accept only an HTTPS relay URL",
       "url": "https://github.com/ForeverInLaw/watchable/commit/dd2b92cd3dc60f83c94ec5c0ed2097e8934677c5",
       "at": "2026-11-25T23:10:06Z"
-    },
-    {
-      "repo": "ForeverInLaw/watchable",
-      "message": "fix(relay): keep the Companion's result when FCM's answer fails later",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/3288c03e49688c68cf2725e30433782094ab6246",
-      "at": "2026-11-25T23:10:05Z"
     }
   ]
 }
