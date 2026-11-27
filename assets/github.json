@@ -1,10 +1,10 @@
 {
   "totals": {
-    "contributions": 10728,
-    "commits": 9444,
-    "pullRequests": 634,
+    "contributions": 10807,
+    "commits": 9552,
+    "pullRequests": 605,
     "issues": 397,
-    "repos": 96
+    "repos": 95
   },
   "calendar": {
     "start": "2025-11-23",
@@ -377,15 +377,37 @@
       10,
       19,
       155,
-      53,
-      0
+      61,
+      67,
+      4
     ]
   },
   "recent": [
     {
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-27T23:31:38Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
+    {
+      "name": "ForeverInLaw/sc9863a-server-kernel",
+      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel",
+      "pushedAt": "2026-11-27T22:51:38Z",
+      "language": "Shell",
+      "color": "#89e051"
+    },
+    {
+      "name": "redstone-md/shield",
+      "url": "https://github.com/redstone-md/shield",
+      "pushedAt": "2026-11-27T22:23:58Z",
+      "language": "Go",
+      "color": "#00ADD8"
+    },
+    {
       "name": "redstone-md/tessera",
       "url": "https://github.com/redstone-md/tessera",
-      "pushedAt": "2026-11-27T08:07:03Z",
+      "pushedAt": "2026-11-27T19:19:28Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -395,34 +417,13 @@
       "pushedAt": "2026-11-27T06:54:04Z",
       "language": "Rust",
       "color": "#dea584"
-    },
-    {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-27T00:30:37Z",
-      "language": "Rust",
-      "color": "#dea584"
-    },
-    {
-      "name": "redstone-md/mosh-flutter-review",
-      "url": "https://github.com/redstone-md/mosh-flutter-review",
-      "pushedAt": "2026-11-26T18:09:26Z",
-      "language": null,
-      "color": null
-    },
-    {
-      "name": "redstone-md/relic",
-      "url": "https://github.com/redstone-md/relic",
-      "pushedAt": "2026-11-26T09:17:10Z",
-      "language": "Rust",
-      "color": "#dea584"
     }
   ],
   "hours": {
     "timeZone": "CET",
     "counts": [
-      562,
-      525,
+      574,
+      526,
       532,
       498,
       531,
@@ -435,54 +436,54 @@
       139,
       104,
       120,
-      207,
-      279,
-      353,
-      455,
-      431,
+      226,
+      284,
+      359,
+      457,
+      439,
       510,
-      572,
-      518,
-      592,
-      653
+      573,
+      523,
+      635,
+      659
     ]
   },
   "commits": [
     {
-      "repo": "redstone-md/mosh-flutter-review",
-      "message": "chore: empty base for review snapshot",
-      "url": "https://github.com/redstone-md/mosh-flutter-review/commit/34aad99d45ab13aa9480e2e43d34c04188fad5d1",
-      "at": "2026-11-26T17:47:04Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "Merge pull request #205 from redstone-md/feat/redesign-screens-onboar…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/e3afad9cab7b13f391e2275ba49c22b2b8759e06",
+      "at": "2026-11-27T23:31:38Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "feat(calls): draw the minimized and the ringing call from the Minimiz…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/262617fb921b9024a01529ea6489d6a7fb95f1bf",
-      "at": "2026-11-26T17:42:07Z"
+      "message": "fix(onboarding): say when the wizard's top moves and close the test's…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/7da126598d52a3b3beed8a4fab7855390e38265c",
+      "at": "2026-11-27T23:31:22Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "feat(calls): draw the open call from the Call controls and Call windo…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/31ff5466dd232807672430a2b046ce9b2be0f55f",
-      "at": "2026-11-26T14:55:11Z"
+      "message": "fix(onboarding): make giving up a pending link a text button",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/f6f63aa53ea15b1f0b9882b37bf447df69533a05",
+      "at": "2026-11-27T23:17:32Z"
+    },
+    {
+      "repo": "ForeverInLaw/sc9863a-server-kernel",
+      "message": "feat(android): keep Bluetooth on in airplane mode",
+      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel/commit/609540436b78519ac2d5ba854a71b97b0904563b",
+      "at": "2026-11-27T22:51:33Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "feat(overlays): draw dialogs, menus, banners, toasts and the media vi…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/1e4a9600a29c18afc7c7bdf0f33112c799defbaf",
-      "at": "2026-11-25T23:58:11Z"
+      "message": "fix(onboarding): keep the profile editor's field apart from setup's",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/af2015f75d5a8a942f7392b6dc8bae0a2720a1c8",
+      "at": "2026-11-27T22:37:04Z"
     },
     {
-      "repo": "ForeverInLaw/watchable",
-      "message": "Merge pull request #13 from ForeverInLaw/feat/watch-24-reply",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/79322ea6c43e5f2b88a95bcbba2b2c9e564b243f",
-      "at": "2026-11-25T23:35:06Z"
-    },
-    {
-      "repo": "ForeverInLaw/watchable",
-      "message": "fix(relay): keep the database file readable by its owner only",
-      "url": "https://github.com/ForeverInLaw/watchable/commit/72289e3be4805de6c532be02473b08d3a9c976a3",
-      "at": "2026-11-25T23:26:51Z"
+      "repo": "redstone-md/mosh-flutter",
+      "message": "fix(onboarding): open the link card in the device step from the start",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/141da9a3b78c5fd48d23f25b683e1c5daa395dbc",
+      "at": "2026-11-27T22:23:31Z"
     }
   ]
 }
