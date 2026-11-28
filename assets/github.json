@@ -1,8 +1,8 @@
 {
   "totals": {
-    "contributions": 10807,
-    "commits": 9552,
-    "pullRequests": 605,
+    "contributions": 10881,
+    "commits": 9617,
+    "pullRequests": 613,
     "issues": 397,
     "repos": 95
   },
@@ -379,10 +379,17 @@
       155,
       61,
       67,
-      4
+      78
     ]
   },
   "recent": [
+    {
+      "name": "redstone-md/mosh-flutter",
+      "url": "https://github.com/redstone-md/mosh-flutter",
+      "pushedAt": "2026-11-28T17:36:49Z",
+      "language": "Rust",
+      "color": "#dea584"
+    },
     {
       "name": "redstone-md/moss",
       "url": "https://github.com/redstone-md/moss",
@@ -401,13 +408,6 @@
       "name": "redstone-md/tessera",
       "url": "https://github.com/redstone-md/tessera",
       "pushedAt": "2026-11-28T01:53:35Z",
-      "language": "Rust",
-      "color": "#dea584"
-    },
-    {
-      "name": "redstone-md/mosh-flutter",
-      "url": "https://github.com/redstone-md/mosh-flutter",
-      "pushedAt": "2026-11-27T23:31:40Z",
       "language": "Rust",
       "color": "#dea584"
     },
@@ -434,12 +434,12 @@
       140,
       144,
       139,
-      104,
-      120,
-      226,
-      284,
-      359,
-      457,
+      112,
+      137,
+      245,
+      288,
+      371,
+      462,
       439,
       510,
       573,
@@ -451,39 +451,39 @@
   "commits": [
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "Merge pull request #205 from redstone-md/feat/redesign-screens-onboar…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/e3afad9cab7b13f391e2275ba49c22b2b8759e06",
-      "at": "2026-11-27T23:31:38Z"
+      "message": "Merge pull request #213 from redstone-md/feat/redesign-screens-dialog…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/d9522d1b3c889695ffbd64e3f36a9651fe9f76b7",
+      "at": "2026-11-28T16:30:10Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(onboarding): say when the wizard's top moves and close the test's…",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/7da126598d52a3b3beed8a4fab7855390e38265c",
-      "at": "2026-11-27T23:31:22Z"
+      "message": "Merge pull request #212 from redstone-md/feat/redesign-screens-plus",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/765d2f96df9ec7425458ee0c432dcaf1859b3d71",
+      "at": "2026-11-28T16:30:06Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(onboarding): make giving up a pending link a text button",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/f6f63aa53ea15b1f0b9882b37bf447df69533a05",
-      "at": "2026-11-27T23:17:32Z"
-    },
-    {
-      "repo": "ForeverInLaw/sc9863a-server-kernel",
-      "message": "feat(android): keep Bluetooth on in airplane mode",
-      "url": "https://github.com/ForeverInLaw/sc9863a-server-kernel/commit/609540436b78519ac2d5ba854a71b97b0904563b",
-      "at": "2026-11-27T22:51:33Z"
+      "message": "Merge pull request #211 from redstone-md/feat/redesign-screens-link",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/ac5e0686dd51a419002396dbc6b9bb73f79b498e",
+      "at": "2026-11-28T16:30:03Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(onboarding): keep the profile editor's field apart from setup's",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/af2015f75d5a8a942f7392b6dc8bae0a2720a1c8",
-      "at": "2026-11-27T22:37:04Z"
+      "message": "docs(plus): say in the walkthrough that a phone pays by link, not QR",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/23a65aaf1bb230f9cf6cd37435ffdf984bec42b3",
+      "at": "2026-11-28T16:11:49Z"
     },
     {
       "repo": "redstone-md/mosh-flutter",
-      "message": "fix(onboarding): open the link card in the device step from the start",
-      "url": "https://github.com/redstone-md/mosh-flutter/commit/141da9a3b78c5fd48d23f25b683e1c5daa395dbc",
-      "at": "2026-11-27T22:23:31Z"
+      "message": "fix(device-link): keep the scanner and the code readable where room i…",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/7f814f2b62b7325c9e7d04ee81c1a05f601a066b",
+      "at": "2026-11-28T16:11:25Z"
+    },
+    {
+      "repo": "redstone-md/mosh-flutter",
+      "message": "chore(figma-capture): classify the Mosh+ card's parts",
+      "url": "https://github.com/redstone-md/mosh-flutter/commit/1b8d70cd5046e4d6fbbf594e2ca1369385ba9c25",
+      "at": "2026-11-28T15:30:44Z"
     }
   ]
 }
